@@ -21,13 +21,13 @@
 
 ###START HERE WITH FUNCTIONS
 # Biplot object of all data
-bp <- biplot(Africa_climate2,scaled=TRUE) |> PCA(group.aes = Africa_climate2$Region)
+bp <- biplot(Africa_climate,scaled=TRUE) |> PCA(group.aes = Africa_climate$Region)
 
 # Samples
 Z <- bp$Z
 #reg.col <- c("blue","green","gold","cyan","magenta","black","red","grey","purple","salmon")
 
-Z <- suppressMessages(bind_cols(Z, Africa_climate2$Region, Africa_climate2$Year,Africa_climate2$Month))
+Z <- suppressMessages(bind_cols(Z, Africa_climate$Region, Africa_climate$Year,Africa_climate$Month))
 colnames(Z)[1:5] <- c("V1","V2","Region","Year","Month")
 
 Z_tbl <- Z |> mutate(key = interaction(Z$Year, Z$Region))
@@ -65,6 +65,10 @@ colnames(chull_reg)[1:2] <- c("V1","V2")
 
 chull_reg <- chull_reg |>
   mutate(Region = as.factor(Region))
+
+load("data/Africa_climate.rda")
+Africa_climate$Year <- droplevels(Africa_climate$Year)
+bp <- biplot(Africa_climate) |> PCA(group.aes=Africa_climate$Region)
 
 # Z (polygons) animation 1
 
