@@ -4,7 +4,7 @@ Version: 1.0.0
 Authors@R: 
     c(person("Raeesa", "Ganey", , "raeesa.ganey@wits.ac.za", role = c("aut", "cre","cph"),
            comment = c(ORCID = "0009-0008-6973-0999")),
-      person("Johané", "Nienkemper-Swanepoel", ,"nienkemperj@sun.ac.za", role =  c("aut", "cre","cph"),
+      person("Johané", "Nienkemper-Swanepoel", ,"nienkemperj@sun.ac.za", role =  c("aut","cph"),
        comment = c(ORCID = "0000-0001-6086-8272")))
 Description: Create animated biplots from `biplotEZ` objtects.
 License: MIT + file LICENSE
