@@ -1,51 +1,83 @@
-
-
-#' Title
+#' Provide axes coordinates
 #'
-#' @param bp
+#' @param bp Object
+#' @param which.var which variable(s) to find coordinates
 #'
-#' @returns
-#' @noRd
-config <- function(bp)
+#' @returns Axes coordinates
+#'
+axes_coordinates <- function(bp)
 {
-  Z <- bp$Z
-  Z <- suppressMessages(bind_cols(Z, bp$Xcat))
-  colnames(Z)[1:5] <- c("V1","V2","Region","Year","Month")
+  slope <- c()
+  intcpt <- c()
+  z.axes <- lapply(1:bp$p, .calibrate.axis, bp$X, bp$means, bp$sd,
+                     bp$ax.one.unit,1:bp$p,rep(20,bp$p),
+                     rep(0,bp$p), rep(0,bp$p))
+  for(i in 1:bp$p) slope[i] <- z.axes[[i]][[3]]
+  for(i in 1:bp$p) intcpt[i] <- z.axes[[i]][[2]]
+  for(i in 1:length(z.axes)) z.axes[[i]] <- z.axes[[i]][[1]]
 
-  Z_tbl <- Z |> mutate(key = interaction(Z$Year, Z$Region))
+  return(list(z.axes=z.axes,slope=slope,intcpt=intcpt))
+}
 
-  # Axes coordinates
-  Vr_coords <- axes_coordinates(bp)
-  Vr <- bp$Vr
-  for(i in 1:6) Vr_coords[[i]] <- cbind(Vr_coords[[i]],var=i)
-  Vr_coords <- do.call(rbind, Vr_coords)
-  colnames(Vr_coords)[1:3] <- c("V1","V2","tick")
-  Vr_coords_tbl <- as_tibble(Vr_coords)
+#' Calibrate axis
+#'
+#' @param j j
+#' @param Xhat Xhat
+#' @param means means
+#' @param sd sd
+#' @param axes.rows axes.rows
+#' @param ax.which ax.which
+#' @param ax.tickvec ax.tickvec
+#' @param ax.orthogxvec ax.orthogxvec
+#' @param ax.orthogyvec ax.orothogyvec
+#'
+#' @returns Calibrated axes
+#'
+.calibrate.axis <- function (j, Xhat, means, sd,
+                             axes.rows, ax.which, ax.tickvec,
+                             ax.orthogxvec, ax.orthogyvec)
+{
+
+  ax.num <- ax.which[j]
+  tick <- ax.tickvec[j]
+  ax.direction <- axes.rows[ax.num,]
+  r <- ncol(axes.rows)
+  ax.orthog <- rbind(ax.orthogxvec, ax.orthogyvec)
+  if (nrow(ax.orthog) < r)    ax.orthog <- rbind(ax.orthog, 0)
+  if (nrow(axes.rows) > 1)    phi.vec <- diag(1 / diag(axes.rows %*% t(axes.rows))) %*% axes.rows %*% ax.orthog[, ax.num] else
+    phi.vec <- (1 / (axes.rows %*% t(axes.rows))) %*% axes.rows %*% ax.orthog[, ax.num]
 
 
-  # C Hulls for points
-  chull_reg <- vector("list", 8)
-  for(i in 1:length(years))
-  {
-    idx <- which(Africa_climate2$Year == years[i])
+  std.ax.tick.label <- pretty(range(Xhat[, ax.num]), n = tick)
+  std.range <- range(std.ax.tick.label)
+  std.ax.tick.label.min <-  std.ax.tick.label - (std.range[2] - std.range[1])
+  std.ax.tick.label.max <-  std.ax.tick.label + (std.range[2] - std.range[1])
+  std.ax.tick.label <-  c(std.ax.tick.label,  std.ax.tick.label.min, std.ax.tick.label.max)
+  interval <- (std.ax.tick.label - means[ax.num]) / sd[ax.num]
+  axis.vals <- sort(unique(interval))
 
-    Y <- Z[idx,]
 
-    chull_reg_yearly <- vector("list", 10)
-    for(j in 1:10)
-    {
-      temp <- which(Y[,3] == levels(Africa_climate2$Region)[j])
-      chull_reg_yearly[[j]] <- Y[temp,][chull(Y[temp,]),]
-      chull_reg[[i]][[j]] <- chull_reg_yearly[[j]]
-    }
-    chull_reg[[i]] <- do.call(rbind,chull_reg[[i]])
+  number.points <- length(axis.vals)
+  axis.points <- matrix(0, nrow = number.points, ncol = r)
+  for (i in 1:r)
+    axis.points[, i] <-  ax.orthog[i, ax.num] + (axis.vals - phi.vec[ax.num]) * ax.direction[i]
+  axis.points <- cbind(axis.points, axis.vals * sd[ax.num] + means[ax.num])
+
+  #slope = delta y / delta x of two datapoints
+  slope <- (axis.points[1, 2] - axis.points[2, 2]) / (axis.points[1, 1] - axis.points[2, 1])
+  #if slope is infinite then all x-values are same
+  v <- NULL
+  if (is.na(slope)){
+    v <- axis.points[1, 1]
+    slope = NULL
+  } else if (abs(slope) == Inf) {  v <- axis.points[1, 1]
+  slope = NULL
   }
 
-  chull_reg <- do.call(rbind,chull_reg)
+  #y=mx+c... c=y-mx
+  intercept <- axis.points[1, 2] - slope * axis.points[1, 1]
 
-  colnames(chull_reg)[1:2] <- c("V1","V2")
-
-  chull_reg <- chull_reg |>
-    mutate(Region = as.factor(Region))
-
+  details <- list(a = intercept, b = slope, v = v)
+  retvals <- list(coords = axis.points, a = intercept, b = slope, v = v)
+  return(retvals)
 }
