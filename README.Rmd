@@ -74,12 +74,12 @@ bp |> moveplot(time.var="Year",group.var="Region",hulls=TRUE,moveS = TRUE)
 
 # 2. Dynamic Frame `moveplot2()`
 
-```{r}
+```{r,warning=FALSE}
 # Facet Z, V
 bp |> moveplot2(time.var="Year",group.var="Region",hulls=TRUE,move = FALSE)
 ```
 
-```{r}
+```{r,warning=FALSE}
 # Animated Z, V
 bp |> moveplot2(time.var="Year",group.var="Region",hulls=TRUE,move = TRUE)
 ```
