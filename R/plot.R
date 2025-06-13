@@ -82,37 +82,37 @@ moveplot <- function(bp,time.var,group.var,moveS=TRUE,hulls=TRUE,scale.var=5)
 
   # MoveS – TRUE --- Animated sliced Z
   # MoveS – FALSE  --- Facet on sliced Z
-    ggplot() +
+    ggplot2::ggplot() +
       # Axes
-      geom_segment(data=Vr_tbl,aes(x=0,y=0,xend=V1*scale.var,yend=V2*scale.var,group=var),
-                   arrow=arrow(length=unit(0.1,"inches"))) +
-      geom_text(data=Vr_tbl,aes(x=V1*scale.var, y=V2*scale.var,
+      ggplot2::geom_segment(data=Vr_tbl,ggplot2::aes(x=0,y=0,xend=V1*scale.var,yend=V2*scale.var,group=var),
+                   arrow=ggplot2::arrow(length=ggplot2::unit(0.1,"inches"))) +
+      ggplot2::geom_text(data=Vr_tbl,ggplot2::aes(x=V1*scale.var, y=V2*scale.var,
                                 label = var,
                                 hjust="outward", vjust="outward",group=var),colour="black",size=4) +
       # Sample polygons or points
       {if(hulls){
-        geom_polygon(data = chull_reg,
-                     aes(x=V1, y=V2,group = .data[[group.var]],
+        ggplot2::geom_polygon(data = chull_reg,
+                              ggplot2::aes(x=V1, y=V2,group = .data[[group.var]],
                          fill = .data[[group.var]]), alpha=0.5)
 
       } else {
-        geom_point(data = Z_tbl,
-                   aes(x=V1, y=V2,
+        ggplot2::geom_point(data = Z_tbl,
+                            ggplot2::aes(x=V1, y=V2,
                        group = .data[[group.var]],
                        fill =.data[[group.var]],
                        colour = .data[[group.var]]),size=2, alpha=0.8)
       }} +
-      {if(moveS) { transition_states(.data[[time.var]],
+      {if(moveS) { gganimate::transition_states(.data[[time.var]],
                                      transition_length = 2,
                                      state_length = 1) } else {
-                                       facet_wrap(~.data[[time.var]]) }} +
-      {if(moveS) labs(title = '{time.var}: {closest_state}',x="",y="")} +
-      xlim(xlim) +
-      ylim(ylim) +
-      theme_classic() +
-      theme(axis.ticks = element_blank(),
-            axis.text.x = element_blank(),
-            axis.text.y = element_blank())
+                                       ggplot2::facet_wrap(~.data[[time.var]]) }} +
+      {if(moveS) ggplot2::labs(title = '{time.var}: {closest_state}',x="",y="")} +
+      ggplot2::xlim(xlim) +
+      ggplot2::ylim(ylim) +
+      ggplot2::theme_classic() +
+      ggplot2::theme(axis.ticks = ggplot2::element_blank(),
+            axis.text.x = ggplot2::element_blank(),
+            axis.text.y = ggplot2::element_blank())
 
 
 }
@@ -221,68 +221,68 @@ moveplot2 <- function(bp,time.var,group.var,move=TRUE,hulls=TRUE,scale.var=5)
   # Move – FALSE Facet separate Z,V
   if(move==TRUE)
   {
-    ggplot() +
+    ggplot2::ggplot() +
       # Axes
-      geom_segment(data=Vr_tbl,aes(x=0,y=0,xend=V1*scale.var,yend=V2*scale.var,group=var),
-                   arrow=arrow(length=unit(0.1,"inches"))) +
-      geom_text(data=Vr_tbl,aes(x=V1*scale.var, y=V2*scale.var,
+      ggplot2::geom_segment(data=Vr_tbl,ggplot2::aes(x=0,y=0,xend=V1*scale.var,yend=V2*scale.var,group=var),
+                   arrow=ggplot2::arrow(length=ggplot2::unit(0.1,"inches"))) +
+      ggplot2::geom_text(data=Vr_tbl,ggplot2::aes(x=V1*scale.var, y=V2*scale.var,
                                 label = var,
                                 hjust="outward", vjust="outward",group=var),colour="black",size=4) +
-      transition_states(.data[[time.var]],
+      gganimate::transition_states(.data[[time.var]],
                         transition_length = 2,
                         state_length = 1) +
       # Sample polygons or points
       {if(hulls){
-        geom_polygon(data = chull_reg,
-                     aes(x=V1, y=V2,group = .data[[group.var]],
+        ggplot2::geom_polygon(data = chull_reg,
+                              ggplot2::aes(x=V1, y=V2,group = .data[[group.var]],
                          fill = .data[[group.var]]), alpha=0.5)
 
       } else {
-        geom_point(data = Z_tbl,
-                   aes(x=V1, y=V2,
+        ggplot2::geom_point(data = Z_tbl,
+                            ggplot2::aes(x=V1, y=V2,
                        group = .data[[group.var]],
                        fill =.data[[group.var]],
                        colour = .data[[group.var]]),size=2, alpha=0.8)
       }} +
-      transition_states(.data[[time.var]],
+      gganimate::transition_states(.data[[time.var]],
                         transition_length = 2,
                         state_length = 1) +
-      labs(title = '{time.var}: {closest_state}',x="",y="") +
-      xlim(xlim) +
-      ylim(ylim) +
-      theme_classic() +
-      theme(axis.ticks = element_blank(),
-            axis.text.x = element_blank(),
-            axis.text.y = element_blank())
+      ggplot2::labs(title = '{time.var}: {closest_state}',x="",y="") +
+      ggplot2::xlim(xlim) +
+      ggplot2::ylim(ylim) +
+      ggplot2::theme_classic() +
+      ggplot2::theme(axis.ticks = ggplot2::element_blank(),
+            axis.text.x = ggplot2::element_blank(),
+            axis.text.y = ggplot2::element_blank())
 
   } else {
 
-    ggplot() +
+    ggplot2::ggplot() +
       # Axes
-      geom_segment(data=Vr_tbl,aes(x=0,y=0,xend=V1*scale.var,yend=V2*scale.var,group=var),
-                   arrow=arrow(length=unit(0.1,"inches"))) +
-      geom_text(data=Vr_tbl,aes(x=V1*scale.var, y=V2*scale.var,
+      ggplot2::geom_segment(data=Vr_tbl,ggplot2::aes(x=0,y=0,xend=V1*scale.var,yend=V2*scale.var,group=var),
+                   arrow=ggplot2::arrow(length=ggplot2::unit(0.1,"inches"))) +
+      ggplot2::geom_text(data=Vr_tbl,ggplot2::aes(x=V1*scale.var, y=V2*scale.var,
                                 label = var,
                                 hjust="outward", vjust="outward",group=var),colour="black",size=4) +
       # Sample polygons or points
       {if(hulls){
-        geom_polygon(data = chull_reg,
-                     aes(x=V1, y=V2,group = .data[[group.var]],
+        ggplot2::geom_polygon(data = chull_reg,
+                              ggplot2::aes(x=V1, y=V2,group = .data[[group.var]],
                          fill = .data[[group.var]]), alpha=0.5)
 
       } else {
-        geom_point(data = Z_tbl,
-                   aes(x=V1, y=V2,
+        ggplot2::geom_point(data = Z_tbl,
+                            ggplot2::aes(x=V1, y=V2,
                        group = .data[[group.var]],
                        fill =.data[[group.var]],
                        colour = .data[[group.var]]),size=2, alpha=0.8)
-      }} + facet_wrap(~.data[[time.var]]) +
-      xlim(xlim) +
-      ylim(ylim) +
-      theme_classic() +
-      theme(axis.ticks = element_blank(),
-            axis.text.x = element_blank(),
-            axis.text.y = element_blank())
+      }} + ggplot2::facet_wrap(~.data[[time.var]]) +
+      ggplot2::xlim(xlim) +
+      ggplot2::ylim(ylim) +
+      ggplot2::theme_classic() +
+      ggplot2::theme(axis.ticks = ggplot2::element_blank(),
+            axis.text.x = ggplot2::element_blank(),
+            axis.text.y = ggplot2::element_blank())
 
   }
 
