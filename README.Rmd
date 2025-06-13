@@ -60,13 +60,13 @@ bp <- biplot(Africa_climate,scaled=TRUE) |>
 
 # 1. Fixed Variable Frame with `moveplot()`
 
-```{r}
+```{r,warning=FALSE}
 # Facet Z
 bp |> moveplot(time.var="Year",group.var="Region",hulls=TRUE,moveS = FALSE)
 ```
 
 
-```{r}
+```{r,warning=FALSE}
 # Animated Z
 bp |> moveplot(time.var="Year",group.var="Region",hulls=TRUE,moveS = TRUE)
 ```
