@@ -2,3 +2,5 @@
 
 export(moveplot)
 export(moveplot2)
+importFrom(ggplot2,geom_segment)
+importFrom(ggplot2,ggplot)

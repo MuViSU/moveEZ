@@ -221,11 +221,11 @@ moveplot2 <- function(bp,time.var,group.var,move=TRUE,hulls=TRUE,scale.var=5)
   # Move – FALSE Facet separate Z,V
   if(move==TRUE)
   {
-    ggplot2::ggplot() +
+    ggplot() +
       # Axes
-      ggplot2::geom_segment(data=Vr_tbl,ggplot2::aes(x=0,y=0,xend=V1*scale.var,yend=V2*scale.var,group=var),
+      geom_segment(data=Vr_tbl,ggplot2::aes(x=0,y=0,xend=V1*scale.var,yend=V2*scale.var,group=var),
                    arrow=ggplot2::arrow(length=ggplot2::unit(0.1,"inches"))) +
-      ggplot2::geom_text(data=Vr_tbl,ggplot2::aes(x=V1*scale.var, y=V2*scale.var,
+      geom_text(data=Vr_tbl,ggplot2::aes(x=V1*scale.var, y=V2*scale.var,
                                 label = var,
                                 hjust="outward", vjust="outward",group=var),colour="black",size=4) +
       gganimate::transition_states(.data[[time.var]],

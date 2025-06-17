@@ -17,10 +17,8 @@ Imports:
     biplotEZ,
     gganimate,
     ggplot2,
-    tourr
 Suggests:
     testthat,
-    knitr,
     rmarkdown
 VignetteBuilder: knitr
 Config/Needs/website: rmarkdown
