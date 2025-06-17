@@ -54,7 +54,8 @@ We begin by constructing a standard PCA biplot using the `biplotEZ` package. Thi
 library(biplotEZ)
 bp <- biplot(Africa_climate,scaled=TRUE) |> 
   PCA(group.aes = Africa_climate$Region) |> 
-  samples(opacity = 0.8) |> 
+  samples(opacity = 0.8,col = scales::hue_pal()(10)) |>
+  legend.type(samples=TRUE,new = TRUE) |>
   plot()
 ```
 
