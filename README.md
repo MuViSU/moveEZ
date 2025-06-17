@@ -67,11 +67,10 @@ library(biplotEZ)
 bp <- biplot(Africa_climate,scaled=TRUE) |> 
   PCA(group.aes = Africa_climate$Region) |> 
   samples(opacity = 0.8,col = scales::hue_pal()(10)) |>
-  legend.type(samples=TRUE,new = TRUE) |>
   plot()
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" /><img src="man/figures/README-unnamed-chunk-3-2.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
 
 # 1. Fixed Variable Frame with `moveplot()`
 
