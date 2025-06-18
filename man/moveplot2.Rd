@@ -4,7 +4,16 @@
 \alias{moveplot2}
 \title{Move plot2}
 \usage{
-moveplot2(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.var = 5)
+moveplot2(
+  bp,
+  time.var,
+  group.var,
+  move = TRUE,
+  hulls = TRUE,
+  scale.var = 5,
+  align.time = NA,
+  reflect = NA
+)
 }
 \arguments{
 \item{bp}{biplot object from biplotEZ}
@@ -18,7 +27,18 @@ moveplot2(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.var = 5)
 \item{hulls}{whether to display sample points or convex hulls}
 
 \item{scale.var}{scaling the vectors representing the variables}
+
+\item{align.time}{a vector specifying the levels of time.var for which the biplots should be aligned. Only biplots corresponding to these time points will be used to compute the alignment transformation.}
+
+\item{reflect}{a character vector specifying the axis of reflection to apply at each corresponding time point in align.time. One of FALSE (default), "x" for reflection about the x-axis, "y" for reflection about the y-axis and "xy" for reflection about both axes.}
+}
+\value{
+An animated or a facet of biplots based on the dynamic frame.
 }
 \description{
 Create animated biplot on samples and variables in a biplot
+}
+\examples{
+bp <- biplot(Africa_climate, scaled = TRUE) |> PCA()
+bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
 }

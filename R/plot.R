@@ -9,10 +9,13 @@
 #' @param hulls whether to display sample points or convex hulls
 #' @param scale.var scaling the vectors representing the variables
 #'
-#' @returns
+#' @returns An animated or a facet of biplots based on the fixed variable frame.
 #' @export
 #'
 #' @examples
+#' bp <- biplot(Africa_climate, scaled = TRUE) |> PCA()
+#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
 moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.var = 5)
 {
 
@@ -129,11 +132,15 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.v
 #' @param move whether to animate (TRUE) or facet (FALSE) samples and variables, according to time.var
 #' @param hulls whether to display sample points or convex hulls
 #' @param scale.var scaling the vectors representing the variables
+#' @param align.time a vector specifying the levels of time.var for which the biplots should be aligned. Only biplots corresponding to these time points will be used to compute the alignment transformation.
+#' @param reflect a character vector specifying the axis of reflection to apply at each corresponding time point in align.time. One of FALSE (default), "x" for reflection about the x-axis, "y" for reflection about the y-axis and "xy" for reflection about both axes.
 #'
-#' @returns
+#' @returns An animated or a facet of biplots based on the dynamic frame.
 #' @export
 #'
 #' @examples
+#' bp <- biplot(Africa_climate, scaled = TRUE) |> PCA()
+#' bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
 moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.var = 5,
                       align.time = NA, reflect = NA)
 {

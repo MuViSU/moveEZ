@@ -150,7 +150,7 @@ bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = FA
 time point. Here, both the sample coordinates and variable axes differ
 across facets, reflecting temporal changes in the data structure.
 
-## Facet: `move = TRUE`
+## Animated: `move = TRUE`
 
 ``` r
 bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
@@ -162,11 +162,43 @@ Setting `move` to TRUE produces an animated biplot in which both the
 samples and variables transition across time, offering a dynamic view of
 structural shifts in the multivariate space.
 
+Notice that in both the faceted and animated biplots, there is a
+noticeable discontinuity in the transition from the year 1950 to 1960.
+From 1960 onwards, however, the biplots appear well-aligned. To address
+such inconsistencies, the \``moveplot2()` function provides two
+additional arguments — `align.time` and `reflect` — which enable
+alignment and optional axis reflections of the biplots at specified time
+points, resulting in smoother and more coherent animations.
+
+## Animated aligned
+
+``` r
+bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE,
+                align.time = "1950", reflect = "x")
+```
+
+<img src="man/figures/README-unnamed-chunk-8-1.gif" width="100%" />
+
+In the example above, we align the biplot at the 1950 time point and
+apply a reflection about the x-axis. Available options include:
+
+- “x” – Reflect about the x-axis
+
+- “y” – Reflect about the y-axis
+
+- “xy” – Reflect about both axes
+
+And of course, both `align.time` and `reflect` can be vectors when
+alignment is needed at multiple time points. Each entry in `reflect`
+corresponds to a time point in `align.time`, allowing fine-grained
+control over the alignment and orientation of biplots across the
+animation sequence.
+
 # Still to Come!
 
 Watch this space! We are actively working on enhancing `moveplot2()` by
-aligning the biplots across time slices. This will allow for smoother
-transitions and more interpretable animations when both samples and
-variable axes evolve.
+*automatically* aligning the biplots across time slices. This will allow
+for smoother transitions and more interpretable animations when both
+samples and variable axes evolve.
 
 Stay tuned for updates!
