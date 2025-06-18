@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# moveEZ <img src="logo.png" align="right" width="150" alt="" />
+# moveEZ <img src="logo.png" align="right" width="150"/>
 
 <!-- badges: start -->
 
@@ -145,10 +145,11 @@ for samples and variables.
 bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" /> When
-`move` is FALSE, a faceted plot is returned, showing the biplot at each
-time point. Here, both the sample coordinates and variable axes differ
-across facets, reflecting temporal changes in the data structure.
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
+
+When `move` is `FALSE`, a faceted plot is returned, showing the biplot
+at each time point. Here, both the sample coordinates and variable axes
+differ across facets, reflecting temporal changes in the data structure.
 
 ## Animated: `move = TRUE`
 
@@ -194,11 +195,105 @@ corresponds to a time point in `align.time`, allowing fine-grained
 control over the alignment and orientation of biplots across the
 animation sequence.
 
+# 3. Dynamic frame with alignment to a `target` with `moveplot3()`
+
+This function shares the same arguments as `moveplot()` and
+`moveplot2()`, with the addition of the `target` argument. `moveplot3()`
+utilises Generalised Orthogonal Procrustes Analysis (GPA) to align
+sample points and variable axes to either a specified target (for
+example: same measurements at a different time point) or to a centroid
+coordinate matrix representing all sample points and axes across time
+slices (`target = NULL`). GPA is applied by using the `GPAbin` package
+and makes use of admissible transformations (translation, scaling,
+rotation and reflection) to optimally align configurations, while
+preserving the distances between coordinates. As with `moveplot2()` the
+`move` argument determines whether the animations of changing sample
+points and variables axes are shown or presented as static facets.
+
+To illustrate the use of a fixed target, we use the year 1989 from the
+`Africa_climate` data set, which consists of the same variables and
+number of observations:
+
+``` r
+data("Africa_climate_target")
+tibble::tibble(Africa_climate_target)
+#> # A tibble: 120 × 9
+#>    Year  Month     Region AccPrec DailyEva  Temp SoilMois     SPI6  wind
+#>    <fct> <chr>     <chr>    <dbl>    <dbl> <dbl>    <dbl>    <dbl> <dbl>
+#>  1 1989  January   ARP     0.0740 -0.00416  14.9    1.11  -1.08     4.06
+#>  2 1989  February  ARP     0.235  -0.00161  17.3    1.55  -0.817    4.19
+#>  3 1989  March     ARP     0.815  -0.0220   21.5    2.70   0.00329  4.12
+#>  4 1989  April     ARP     0.495   0.0508   25.0    2.90   0.226    3.48
+#>  5 1989  May       ARP     0.0411 -0.0130   30.1    1.08   0.306    3.96
+#>  6 1989  June      ARP     0.0693 -0.0234   31.6    0.633  0.261    4.33
+#>  7 1989  July      ARP     0.0833 -0.0164   33.1    0.606  0.527    4.36
+#>  8 1989  August    ARP     0.137  -0.0209   32.6    0.685  0.575    4.05
+#>  9 1989  September ARP     0.102  -0.0246   30.1    0.656  0.0360   3.56
+#> 10 1989  October   ARP     0.0330 -0.0549   26.5    0.449 -0.919    3.45
+#> # ℹ 110 more rows
+```
+
+## Facet: `move = FALSE` and `target = NULL`
+
+``` r
+bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE,
+                target = NULL)
+```
+
+<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
+
+The separate biplots per `time.var` are transformed and aligned to the
+centroid coordinate matrix of all observed sample points and axes
+variables.
+
+## Facet: `move = FALSE` and `target = Africa_climate_target`
+
+``` r
+bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE, 
+                target = Africa_climate_target)
+```
+
+<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
+
+Now, the separate biplots per `time.var` are transformed and aligned to
+the sample points and axes variables of the 1989 `Africa_climate`
+dataset. **Take note**: the target biplot is not shown. This example
+showcases the difference between each the observations and variables for
+each year in `Africa_climate` compared to 1989.
+
+## Animated: `move = TRUE` and `target = NULL`
+
+``` r
+bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE, 
+                target = NULL)
+```
+
+<img src="man/figures/README-unnamed-chunk-12-1.gif" width="100%" />
+
+Here the animated view of the biplots over time are illustrated after
+aligning the visualisation to the centroid configuration.
+
+## Animated: `move = TRUE` and `target = Africa_climate_target`
+
+``` r
+bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE, 
+                target = Africa_climate_target)
+```
+
+<img src="man/figures/README-unnamed-chunk-13-1.gif" width="100%" />
+
+Finally, the animated biplots illustrate the transformations towards a
+specified target dataset. Again, the focus is on the movement that
+changes between the variables and sample representation as the target is
+set to a specific year compared to the movement observed in the previous
+example where `target = NULL`. Therefore, these animations expose the
+*jumps* that occur from 1989 to each of the years in `Africa_climate`
+from 1950 to 2020 (in increments of 10 years).
+
 # Still to Come!
 
-Watch this space! We are actively working on enhancing `moveplot2()` by
-*automatically* aligning the biplots across time slices. This will allow
-for smoother transitions and more interpretable animations when both
-samples and variable axes evolve.
+We are actively working to develop and enhance the dynamic plotting
+capabilities of these functions to expose and detect changes in
+observations and variables over time.
 
 Stay tuned for updates!

@@ -2,6 +2,7 @@
 
 export(moveplot)
 export(moveplot2)
+export(moveplot3)
 importFrom(ggplot2,aes)
 importFrom(ggplot2,arrow)
 importFrom(ggplot2,element_blank)

@@ -26,6 +26,7 @@ An animated or a facet of biplots based on the fixed variable frame.
 Create animated biplot on samples in a biplot
 }
 \examples{
+data(Africa_climate)
 bp <- biplot(Africa_climate, scaled = TRUE) |> PCA()
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
