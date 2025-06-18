@@ -64,7 +64,7 @@ according to their associated region:
 
 ``` r
 library(biplotEZ)
-bp <- biplot(Africa_climate,scaled=TRUE) |> 
+bp <- biplot(Africa_climate, scaled = TRUE) |> 
   PCA(group.aes = Africa_climate$Region) |> 
   samples(opacity = 0.8,col = scales::hue_pal()(10)) |>
   plot()
@@ -76,14 +76,14 @@ bp <- biplot(Africa_climate,scaled=TRUE) |>
 
 ``` r
 # Facet Z
-bp |> moveplot(time.var="Year",group.var="Region",hulls=TRUE,moveS = FALSE)
+bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 ```
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 
 ``` r
 # Animated Z
-bp |> moveplot(time.var="Year",group.var="Region",hulls=TRUE,moveS = TRUE)
+bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
 ```
 
 <img src="man/figures/README-unnamed-chunk-5-1.gif" width="100%" />
@@ -92,14 +92,10 @@ bp |> moveplot(time.var="Year",group.var="Region",hulls=TRUE,moveS = TRUE)
 
 ``` r
 # Facet Z, V
-bp |> moveplot2(time.var="Year",group.var="Region",hulls=TRUE,move = FALSE)
+bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 ```
-
-<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
 
 ``` r
 # Animated Z, V
-bp |> moveplot2(time.var="Year",group.var="Region",hulls=TRUE,move = TRUE)
+bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
 ```
-
-<img src="man/figures/README-unnamed-chunk-7-1.gif" width="100%" />

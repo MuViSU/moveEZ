@@ -52,7 +52,7 @@ data("Africa_climate")
 We begin by constructing a standard PCA biplot using the `biplotEZ` package. This biplot aggregates all samples across time and colours them according to their associated region:
 ```{r, message=FALSE}
 library(biplotEZ)
-bp <- biplot(Africa_climate,scaled=TRUE) |> 
+bp <- biplot(Africa_climate, scaled = TRUE) |> 
   PCA(group.aes = Africa_climate$Region) |> 
   samples(opacity = 0.8,col = scales::hue_pal()(10)) |>
   plot()
@@ -62,13 +62,13 @@ bp <- biplot(Africa_climate,scaled=TRUE) |>
 
 ```{r,warning=FALSE}
 # Facet Z
-bp |> moveplot(time.var="Year",group.var="Region",hulls=TRUE,moveS = FALSE)
+bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 ```
 
 
 ```{r,warning=FALSE}
 # Animated Z
-bp |> moveplot(time.var="Year",group.var="Region",hulls=TRUE,moveS = TRUE)
+bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
 ```
 
 
@@ -76,12 +76,12 @@ bp |> moveplot(time.var="Year",group.var="Region",hulls=TRUE,moveS = TRUE)
 
 ```{r,warning=FALSE}
 # Facet Z, V
-bp |> moveplot2(time.var="Year",group.var="Region",hulls=TRUE,move = FALSE)
+bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 ```
 
 ```{r,warning=FALSE}
 # Animated Z, V
-bp |> moveplot2(time.var="Year",group.var="Region",hulls=TRUE,move = TRUE)
+bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
 ```
 
 

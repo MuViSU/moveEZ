@@ -5,15 +5,15 @@
 #' @param bp biplot object from biplotEZ
 #' @param time.var time variable
 #' @param group.var group variable
-#' @param moveS whether to animate (TRUE) samples or facet (FALSE) samples, according to time.var
-#' @param hull whether to display sample points or convex hulls
+#' @param move whether to animate (TRUE) or facet (FALSE) samples, according to time.var
+#' @param hulls whether to display sample points or convex hulls
 #' @param scale.var scaling the vectors representing the variables
 #'
 #' @returns
 #' @export
 #'
 #' @examples
-moveplot <- function(bp,time.var,group.var,moveS=TRUE,hulls=TRUE,scale.var=5)
+moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.var = 5)
 {
 
   if(!is.null(group.var)) bp$group.aes <- bp$raw.X[,which(colnames(bp$raw.X) == group.var)] else
@@ -52,6 +52,7 @@ moveplot <- function(bp,time.var,group.var,moveS=TRUE,hulls=TRUE,scale.var=5)
 
   axes_info <- axes_moveEZ(bp)
   Vr <- bp$Vr
+  colnames(Vr) <- c("V1","V2")
   Vr <- dplyr::as_tibble(Vr)
   Vr_tbl <- Vr |> dplyr::mutate(var = colnames(bp$X)) |>
     dplyr::mutate(slope = sign(axes_info$slope)) |>
@@ -80,8 +81,8 @@ moveplot <- function(bp,time.var,group.var,moveS=TRUE,hulls=TRUE,scale.var=5)
 
   # Plotting
 
-  # MoveS – TRUE --- Animated sliced Z
-  # MoveS – FALSE  --- Facet on sliced Z
+  # move – TRUE --- Animated sliced Z
+  # move – FALSE  --- Facet on sliced Z
     ggplot() +
       # Axes
       geom_segment(data=Vr_tbl,aes(x=0,y=0,xend=V1*scale.var,yend=V2*scale.var,group=var),
@@ -102,11 +103,11 @@ moveplot <- function(bp,time.var,group.var,moveS=TRUE,hulls=TRUE,scale.var=5)
                        fill =.data[[group.var]],
                        colour = .data[[group.var]]),size=2, alpha=0.8)
       }} +
-      {if(moveS) { gganimate::transition_states(.data[[time.var]],
+      {if(move) { gganimate::transition_states(.data[[time.var]],
                                      transition_length = 2,
                                      state_length = 1) } else {
                                        ggplot2::facet_wrap(~.data[[time.var]]) }} +
-      {if(moveS) labs(title = '{time.var}: {closest_state}',x="",y="")} +
+      {if(move) labs(title = '{time.var}: {closest_state}',x="",y="")} +
       xlim(xlim) +
       ylim(ylim) +
       theme_classic() +
@@ -126,14 +127,14 @@ moveplot <- function(bp,time.var,group.var,moveS=TRUE,hulls=TRUE,scale.var=5)
 #' @param time.var time variable
 #' @param group.var group variable
 #' @param move whether to animate (TRUE) or facet (FALSE) samples and variables, according to time.var
-#' @param hull whether to display sample points or convex hulls
+#' @param hulls whether to display sample points or convex hulls
 #' @param scale.var scaling the vectors representing the variables
 #'
 #' @returns
 #' @export
 #'
 #' @examples
-moveplot2 <- function(bp,time.var,group.var,move=TRUE,hulls=TRUE,scale.var=5)
+moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.var = 5)
 {
 
   if(!is.null(group.var)) bp$group.aes <- bp$raw.X[,which(colnames(bp$raw.X) == group.var)] else
@@ -183,12 +184,12 @@ moveplot2 <- function(bp,time.var,group.var,move=TRUE,hulls=TRUE,scale.var=5)
 
     temp <- bp$raw.X |> dplyr::filter(bp$raw.X[[tvi]] == iter_levels[i])
     bp_list[[i]] <- biplotEZ::biplot(temp,scaled=bp$scaled) |> biplotEZ::PCA(group.aes = temp[[gvi]])
+    colnames(bp_list[[i]]$Z) <- c("V1","V2")
     Z_list[[i]] <- dplyr::as_tibble(bp_list[[i]]$Z)
     Z_list[[i]] <- suppressMessages(dplyr::bind_cols(Z_list[[i]], bp_list[[i]]$Xcat))
-    colnames(Z_list[[i]])[1:2] <- c("V1","V2")
-
 
     axes_info[[i]] <- axes_moveEZ(bp_list[[i]])
+    colnames(bp_list[[i]]$Vr) <- c("V1","V2")
     Vr_list[[i]] <- dplyr::as_tibble(bp_list[[i]]$Vr)
     Vr_list[[i]] <- Vr_list[[i]] |> dplyr::mutate(var = colnames(bp$X)) |>
       dplyr::mutate(slope = sign(axes_info[[i]]$slope)) |>
@@ -285,6 +286,9 @@ moveplot2 <- function(bp,time.var,group.var,move=TRUE,hulls=TRUE,scale.var=5)
             axis.text.y = element_blank())
 
   }
+
+  bp$Z_tbl <- Z_tbl
+  bp$Vr_tbl <- Vr_tbl
 
 }
 

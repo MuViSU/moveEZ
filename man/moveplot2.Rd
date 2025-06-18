@@ -15,9 +15,9 @@ moveplot2(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.var = 5)
 
 \item{move}{whether to animate (TRUE) or facet (FALSE) samples and variables, according to time.var}
 
-\item{scale.var}{scaling the vectors representing the variables}
+\item{hulls}{whether to display sample points or convex hulls}
 
-\item{hull}{whether to display sample points or convex hulls}
+\item{scale.var}{scaling the vectors representing the variables}
 }
 \description{
 Create animated biplot on samples and variables in a biplot

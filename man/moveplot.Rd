@@ -4,7 +4,7 @@
 \alias{moveplot}
 \title{Move plot}
 \usage{
-moveplot(bp, time.var, group.var, moveS = TRUE, hulls = TRUE, scale.var = 5)
+moveplot(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.var = 5)
 }
 \arguments{
 \item{bp}{biplot object from biplotEZ}
@@ -13,11 +13,11 @@ moveplot(bp, time.var, group.var, moveS = TRUE, hulls = TRUE, scale.var = 5)
 
 \item{group.var}{group variable}
 
-\item{moveS}{whether to animate (TRUE) samples or facet (FALSE) samples, according to time.var}
+\item{move}{whether to animate (TRUE) or facet (FALSE) samples, according to time.var}
+
+\item{hulls}{whether to display sample points or convex hulls}
 
 \item{scale.var}{scaling the vectors representing the variables}
-
-\item{hull}{whether to display sample points or convex hulls}
 }
 \description{
 Create animated biplot on samples in a biplot
