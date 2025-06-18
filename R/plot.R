@@ -188,6 +188,8 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
     Z_list[[i]] <- dplyr::as_tibble(bp_list[[i]]$Z)
     Z_list[[i]] <- suppressMessages(dplyr::bind_cols(Z_list[[i]], bp_list[[i]]$Xcat))
 
+
+
     axes_info[[i]] <- axes_moveEZ(bp_list[[i]])
     colnames(bp_list[[i]]$Vr) <- c("V1","V2")
     Vr_list[[i]] <- dplyr::as_tibble(bp_list[[i]]$Vr)
@@ -215,6 +217,9 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
     names(Vr_tbl)[7] <- time.var
     chull_reg <- do.call(rbind,chull_reg)
     chull_reg <- dplyr::as_tibble(chull_reg)
+
+    bp$Z_tbl <- Z_tbl
+    bp$Vr_tbl <- Vr_tbl
 
   # Plotting
 
@@ -287,8 +292,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
 
   }
 
-  bp$Z_tbl <- Z_tbl
-  bp$Vr_tbl <- Vr_tbl
+
 
 }
 
