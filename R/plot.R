@@ -292,7 +292,5 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
 
   }
 
-
-
 }
 
