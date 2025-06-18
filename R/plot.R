@@ -134,7 +134,8 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.v
 #' @export
 #'
 #' @examples
-moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.var = 5)
+moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.var = 5,
+                      align.time = NA, reflect = NA)
 {
 
   if(!is.null(group.var)) bp$group.aes <- bp$raw.X[,which(colnames(bp$raw.X) == group.var)] else
@@ -148,6 +149,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
 
   group_levels <- levels(bp$raw.X[[gvi]])
 
+  align_levels <- which(iter_levels==align.time)
 
   # Samples
   Z <- bp$Z
@@ -184,11 +186,14 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
 
     temp <- bp$raw.X |> dplyr::filter(bp$raw.X[[tvi]] == iter_levels[i])
     bp_list[[i]] <- biplotEZ::biplot(temp,scaled=bp$scaled) |> biplotEZ::PCA(group.aes = temp[[gvi]])
+
+    # if(i == any(align_levels)) bp_list[[i]] <- bp_list[[i]] |> reflect_biplot(reflect.axis = reflect[i])
+
+    if (i %in% align_levels) bp_list[[i]] <- bp_list[[i]] |> reflect_biplot(reflect.axis = reflect[which(align_levels == i)])
+
     colnames(bp_list[[i]]$Z) <- c("V1","V2")
     Z_list[[i]] <- dplyr::as_tibble(bp_list[[i]]$Z)
     Z_list[[i]] <- suppressMessages(dplyr::bind_cols(Z_list[[i]], bp_list[[i]]$Xcat))
-
-
 
     axes_info[[i]] <- axes_moveEZ(bp_list[[i]])
     colnames(bp_list[[i]]$Vr) <- c("V1","V2")
