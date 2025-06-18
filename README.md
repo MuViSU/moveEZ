@@ -44,10 +44,12 @@ on two conceptual frameworks:
     approach, the variable axes remain fixed, and only the sample points
     are animated over time.
 
-2.  Dynamic Frame `moveplot2()`: Separate biplots are constructed for
-    each time slice of the data. Both the sample points and variable
-    axes evolve over time, resulting in a fully dynamic animation that
-    reflects temporal changes in the underlying data structure.
+2.  Dynamic Frame `moveplot2()` and `moveplot3()`: Separate biplots are
+    constructed for each time slice of the data. Both the sample points
+    and variable axes evolve over time, resulting in a fully dynamic
+    animation that reflects temporal changes in the underlying data
+    structure. The differences between these functions are highlighted
+    in the subsequent sections.
 
 To illustrate the animated biplots, we use a climate dataset included in
 the package. This dataset, Africa_climate, contains climate measurements

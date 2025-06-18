@@ -40,7 +40,7 @@ The animation of the biplots—currently limited to PCA biplots—is based on tw
 
 1.  Fixed Variable Frame `moveplot()`: A biplot is first constructed using the full dataset ${\bf{X}}$, and the animation is achieved by slicing the observations according to the "time" variable. In this approach, the variable axes remain fixed, and only the sample points are animated over time.
 
-2.  Dynamic Frame `moveplot2()`: Separate biplots are constructed for each time slice of the data. Both the sample points and variable axes evolve over time, resulting in a fully dynamic animation that reflects temporal changes in the underlying data structure.
+2.  Dynamic Frame `moveplot2()` and `moveplot3()`: Separate biplots are constructed for each time slice of the data. Both the sample points and variable axes evolve over time, resulting in a fully dynamic animation that reflects temporal changes in the underlying data structure. The differences between these functions are highlighted in the subsequent sections.
 
 To illustrate the animated biplots, we use a climate dataset included in the package. This dataset, Africa_climate, contains climate measurements from 10 African regions over time:
 
