@@ -56,6 +56,21 @@ from 10 African regions over time:
 ``` r
 library(moveEZ)
 data("Africa_climate")
+tibble::tibble(Africa_climate)
+#> # A tibble: 960 × 9
+#>    Year  Month     Region AccPrec DailyEva  Temp SoilMois  SPI6  wind
+#>    <fct> <fct>     <fct>    <dbl>    <dbl> <dbl>    <dbl> <dbl> <dbl>
+#>  1 1950  January   ARP      0.177  0.0316   14.8    2.75  1.62   4.07
+#>  2 1950  February  ARP      0.208 -0.0249   15.4    2.22  1.32   4.24
+#>  3 1950  March     ARP      0.306  0.0122   20.9    2.08  0.987  4.04
+#>  4 1950  April     ARP      0.196  0.00396  24.8    1.73  0.916  3.72
+#>  5 1950  May       ARP      0.590 -0.0448   28.4    2.47  0.691  3.91
+#>  6 1950  June      ARP      0.32  -0.00754  30.4    1.17  0.249  4.40
+#>  7 1950  July      ARP      1.33   0.00184  30.8    2.00  0.673  4.93
+#>  8 1950  August    ARP      1.82  -0.00944  30.5    2.67  0.937  4.45
+#>  9 1950  September ARP      0.706 -0.0107   29.7    1.98  1.22   3.67
+#> 10 1950  October   ARP      0.102 -0.0259   25.9    0.976 1.65   3.18
+#> # ℹ 950 more rows
 ```
 
 We begin by constructing a standard PCA biplot using the `biplotEZ`
@@ -66,7 +81,7 @@ according to their associated region:
 library(biplotEZ)
 bp <- biplot(Africa_climate, scaled = TRUE) |> 
   PCA(group.aes = Africa_climate$Region) |> 
-  samples(opacity = 0.8,col = scales::hue_pal()(10)) |>
+  samples(opacity = 0.8, col = scales::hue_pal()(10)) |>
   plot()
 ```
 
@@ -74,12 +89,38 @@ bp <- biplot(Africa_climate, scaled = TRUE) |>
 
 # 1. Fixed Variable Frame with `moveplot()`
 
+Using the previously created PCA biplot object `bp`, the `moveplot()`
+function enables animation of the sample points over time. This function
+is piped with several key arguments:
+
+- `time.var`: Specifies the name of the variable in the dataset that
+  represents the temporal or sequential dimension. In this case, the
+  variable “Year” relates to the time variable.
+
+- `group.var`: Indicates a grouping variable used for colour-coding. In
+  this case, the variable “Region” relates to the group variable.
+
+- `hulls`: A logical flag that determines whether to display individual
+  sample points or to draw convex hulls around each group.
+
+`move`: A critical argument that controls whether the biplot is
+animated. If set to `TRUE`, the sample points are animated across time.
+If set to `FALSE`, the function returns a faceted plot showing a static
+biplot for each time level.
+
+This design provides flexibility in exploring temporal dynamics in
+multivariate data, with options for both animated and comparative static
+visualisations.
+
+## Facet: `move = FALSE`
+
 ``` r
-# Facet Z
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 ```
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+
+## Animation: `move = TRUE`
 
 ``` r
 # Animated Z
@@ -90,12 +131,41 @@ bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRU
 
 # 2. Dynamic Frame `moveplot2()`
 
+The `moveplot2()` function extends the animation to both the sample
+points and the variable axes. Unlike `moveplot()`, which keeps the
+variable axes fixed, `moveplot2()` constructs a separate biplot for each
+time slice, allowing both components to evolve over time. The function
+shares the same arguments as `moveplot()`, with the move argument
+determining whether the animation is shown or presented as static
+facets.
+
+## Facet: `move = FALSE`
+
 ``` r
-# Facet Z, V
 bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 ```
 
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" /> When
+`move = FALSE`, a faceted plot is returned, showing the biplot at each
+time point. Here, both the sample coordinates and variable axes differ
+across facets, reflecting temporal changes in the data structure.
+
+## Facet: `move = TRUE`
+
 ``` r
-# Animated Z, V
 bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
 ```
+
+<img src="man/figures/README-unnamed-chunk-7-1.gif" width="100%" />
+Setting `move = TRUE` produces an animated biplot in which both the
+samples and variables transition across time, offering a dynamic view of
+structural shifts in the multivariate space.
+
+# Still to Come!
+
+Watch this space! We are actively working on enhancing `moveplot2()` by
+aligning the biplots across time slices. This will allow for smoother
+transitions and more interpretable animations when both samples and
+variable axes evolve.
+
+Stay tuned for updates!
