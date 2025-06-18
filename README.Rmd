@@ -86,19 +86,20 @@ bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRU
 
 
 # 2. Dynamic Frame `moveplot2()`
-The `moveplot2()` function extends the animation to both the sample points and the variable axes. Unlike `moveplot()`, which keeps the variable axes fixed, `moveplot2()` constructs a separate biplot for each time slice, allowing both components to evolve over time. The function shares the same arguments as `moveplot()`, with the move argument determining whether the animation is shown or presented as static facets.
+The `moveplot2()` function extends the animation to both the sample points and the variable axes. Unlike `moveplot()`, which keeps the variable axes fixed, `moveplot2()` constructs a separate biplot for each time slice, allowing both components to evolve over time. The function shares the same arguments as `moveplot()`, with the `move` argument determining whether the animation is shown or presented as static facets for samples and variables.
 
 ## Facet: `move = FALSE`
 ```{r,warning=FALSE}
 bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 ```
-When `move = FALSE`, a faceted plot is returned, showing the biplot at each time point. Here, both the sample coordinates and variable axes differ across facets, reflecting temporal changes in the data structure.
+When `move` is FALSE, a faceted plot is returned, showing the biplot at each time point. Here, both the sample coordinates and variable axes differ across facets, reflecting temporal changes in the data structure.
 
 ## Facet: `move = TRUE`
 ```{r,warning=FALSE}
 bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
 ```
-Setting `move = TRUE` produces an animated biplot in which both the samples and variables transition across time, offering a dynamic view of structural shifts in the multivariate space.
+
+Setting `move` to TRUE produces an animated biplot in which both the samples and variables transition across time, offering a dynamic view of structural shifts in the multivariate space. 
 
 
 # Still to Come!
