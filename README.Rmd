@@ -79,7 +79,7 @@ bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FAL
 ```
 
 ## Animation: `move = TRUE`
-```{r,warning=FALSE}
+```{r,warning=FALSE, message=FALSE}
 # Animated Z
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
 ```
@@ -95,7 +95,7 @@ bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = FA
 When `move` is FALSE, a faceted plot is returned, showing the biplot at each time point. Here, both the sample coordinates and variable axes differ across facets, reflecting temporal changes in the data structure.
 
 ## Facet: `move = TRUE`
-```{r,warning=FALSE}
+```{r,warning=FALSE, message=FALSE}
 bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
 ```
 
