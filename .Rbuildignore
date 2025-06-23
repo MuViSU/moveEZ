@@ -3,5 +3,6 @@
 ^README\.Rmd$
 ^LICENSE\.md$
 ^.github
+^.git
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
