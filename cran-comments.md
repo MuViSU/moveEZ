@@ -1,7 +1,10 @@
 ## Overview
 
-── R CMD check results ─────────────────────────────────────────────────────────────────────────────────────────────────── moveEZ 1.0.0 ────
-Duration: 1m 17.2s
+
+Fixed tar.gz size to less than 5mb. 
+
+── R CMD check results ─────────────────────────────────────────────────────────────────────────────────────── moveEZ 1.0.1 ────
+Duration: 29.7s
 
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 

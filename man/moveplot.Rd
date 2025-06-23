@@ -30,5 +30,5 @@ data(Africa_climate)
 bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
-bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
+\dontrun{bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}
 }

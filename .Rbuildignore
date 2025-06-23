@@ -2,7 +2,9 @@
 ^\.Rproj\.user$
 ^README\.Rmd$
 ^LICENSE\.md$
-^.github
-^.git
+^\.github$
+^\.git$
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
+^doc$
+^docs$

@@ -1,6 +1,6 @@
 Package: moveEZ
 Title: Animated Biplots
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: 
     c(person("Raeesa", "Ganey", , "raeesa.ganey@wits.ac.za", role = c("aut", "cre","cph"),
            comment = c(ORCID = "0009-0008-6973-0999")),
@@ -21,5 +21,8 @@ Imports:
     GPAbin
 Suggests:
     testthat,
-    rmarkdown
+    rmarkdown,
+    knitr,
+    tibble,
+    scales
 Config/Needs/website: rmarkdown

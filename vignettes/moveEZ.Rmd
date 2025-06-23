@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup, include=FALSE}
-library(moveEZ)
+library(moveEZ) ; library(tibble) ; library(scales)
 ```
 
 Consider a dataset ${\bf{X}}$ comprising $n$ observations and $p$ continuous variables, along with an additional variable representing "time." This time variable need not correspond to chronological time; it could just as well represent another form of ordered index, such as algorithmic iterations or experimental stages.
@@ -37,7 +37,7 @@ The animation of the biplots—currently limited to PCA biplots—is based on tw
 To illustrate the animated biplots, we use a climate dataset included in the package. This dataset, Africa_climate, contains climate measurements from 10 African regions over time:
 
 ```{r}
-library(moveEZ)
+library(moveEZ) 
 data("Africa_climate")
 tibble::tibble(Africa_climate)
 ```
