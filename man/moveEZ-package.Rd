@@ -4,9 +4,11 @@
 \name{moveEZ-package}
 \alias{moveEZ}
 \alias{moveEZ-package}
-\title{moveEZ: Animated biplots}
+\title{moveEZ: Animated Biplots}
 \description{
-Create animated biplots from `biplotEZ` objtects.
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
+Create animated biplots from `biplotEZ` objects.
 }
 \author{
 \strong{Maintainer}: Raeesa Ganey \email{raeesa.ganey@wits.ac.za} (\href{https://orcid.org/0009-0008-6973-0999}{ORCID}) [copyright holder]

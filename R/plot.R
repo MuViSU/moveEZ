@@ -14,8 +14,9 @@
 #'
 #' @examples
 #' data(Africa_climate)
-#' bp <- biplot(Africa_climate, scaled = TRUE) |> PCA()
+#' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
 moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.var = 5)
 {
@@ -73,7 +74,7 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.v
     for(j in 1:length(group_levels))
     {
       temp <- which(Y[[group.var]] == group_levels[j]) # index of the group var
-      chull_reg_iter[[j]] <- Y[temp,][chull(Y[temp,]),]
+      chull_reg_iter[[j]] <- Y[temp,][grDevices::chull(Y[temp,]),]
       chull_reg[[i]][[j]] <- chull_reg_iter[[j]]
     }
     chull_reg[[i]] <- do.call(rbind,chull_reg[[i]])
@@ -123,7 +124,7 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.v
 }
 
 
-#' Move plot2
+#' Move plot 2
 #'
 #' Create animated biplot on samples and variables in a biplot
 #'
@@ -141,7 +142,7 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.v
 #'
 #' @examples
 #' data(Africa_climate)
-#' bp <- biplot(Africa_climate, scaled = TRUE) |> PCA()
+#' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
 #' bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
 moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.var = 5,
                       align.time = NA, reflect = NA)
@@ -219,7 +220,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
     for(j in 1:length(group_levels))
     {
       temp2 <- which(Y[[group.var]] == group_levels[j]) # index of the group var
-      chull_reg_iter[[j]] <- Y[temp2,][chull(Y[temp2,]),]
+      chull_reg_iter[[j]] <- Y[temp2,][grDevices::chull(Y[temp2,]),]
       #chull_reg[[i]][[j]] <- chull_reg_iter[[j]]
     }
     chull_reg[[i]] <- do.call(rbind,chull_reg_iter)
@@ -323,14 +324,15 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
 #' @examples
 #' data(Africa_climate)
 #' data(Africa_climate_target)
-#' bp <- biplot(Africa_climate, scaled = TRUE) |> PCA()
-#' bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE, target = NULL)
-#' bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE, target = NULL)
-#' bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE, target = NULL)
-#' bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = FALSE, move = TRUE, target = NULL)
-#' bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE, target = Africa_climate_target)
-#' bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE, target = Africa_climate_target)
-moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.var = 5, target = NULL)
+#' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
+#' bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
+#' move = FALSE, target = NULL)
+#' bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
+#' move = TRUE, target = NULL)
+#' bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
+#' move = FALSE, target = Africa_climate_target)
+moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
+                      scale.var = 5, target = NULL)
 {
   if(!is.null(group.var)) bp$group.aes <- bp$raw.X[,which(colnames(bp$raw.X) == group.var)] else
     bp$group.aes = NULL
@@ -391,12 +393,12 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
   Vr_tbl <- do.call(rbind,Vr_list)
   names(Vr_tbl)[4] <- time.var #don't want to hard code this
 
-  #GPA preparation
+  # GPA preparation
 
   tviGZ <- which(colnames(Z_tbl) == time.var)
   tviGVr <- which(colnames(Vr_tbl) == time.var)
 
-  #creating lists of row combined coordinates (Z and V)
+  # creating lists of row combined coordinates (Z and V)
   coord_set <- vector("list", iterations)
   for (i in 1:iterations)
   {
@@ -404,7 +406,7 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
     Vr_temp <- Vr_tbl |> dplyr::filter(Vr_tbl[[tviGVr]] == iter_levels[i])
     coord_set[[i]] <- dplyr::bind_rows(Z_temp[c("V1","V2")], Vr_temp[c("V1","V2")])
   }
-  #determine sizes after final coord_set
+  # determine sizes after final coord_set
   Z_split <- nrow(Z_temp)
   Vr_split <- nrow(Vr_temp)
   t_rows <- nrow(coord_set[[1]])
@@ -418,17 +420,17 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
     GPA.out <- GPAbin::GPA(coord_set,G.target=NULL)
   }
 
-  G.target <- GPA.out[[4]] #centroid configuration
-  Q.list <- GPA.out[[3]] #rotation matrix
-  s.list <- GPA.out[[2]] #scaling factor
-  #translation not used, since biplots are centred
+  G.target <- GPA.out[[4]] # centroid configuration
+  Q.list <- GPA.out[[3]] # rotation matrix
+  s.list <- GPA.out[[2]] # scaling factor
+  # translation not used, since biplots are centred
   GPA_list <- GPA.out[[1]]
 
   Z_GPA_list <- vector("list", iterations)
   Vr_GPA_list <- vector("list", iterations)
   chull_reg <- vector("list", iterations)
 
-  #now bind_rows() of Z_GPA_list and Vr_GPA_list and adding columns of Z_tbl and Vr_tbl
+  # now bind_rows() of Z_GPA_list and Vr_GPA_list and adding columns of Z_tbl and Vr_tbl
   for (i in 1:iterations)
   {
     Z_GPA_list[[i]] <- dplyr::as_tibble(GPA_list[[i]][1:Z_split,])
@@ -444,7 +446,7 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
     for(j in 1:length(group_levels))
     {
       temp2 <- which(Y[[group.var]] == group_levels[j]) # index of the group var
-      chull_reg_iter[[j]] <- Y[temp2,][chull(Y[temp2,]),]
+      chull_reg_iter[[j]] <- Y[temp2,][grDevices::chull(Y[temp2,]),]
     }
     chull_reg[[i]] <- do.call(rbind, chull_reg_iter)
 

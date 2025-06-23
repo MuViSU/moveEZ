@@ -5,7 +5,7 @@
 #'
 #' @returns Axes coordinates
 #'
-axes_moveEZ <- function(bp)
+axes_moveEZ <- function(bp,which.var)
 {
   slope <- c()
   intcpt <- c()

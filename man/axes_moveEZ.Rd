@@ -4,7 +4,7 @@
 \alias{axes_moveEZ}
 \title{Provide axes coordinates}
 \usage{
-axes_moveEZ(bp)
+axes_moveEZ(bp, which.var)
 }
 \arguments{
 \item{bp}{Object}

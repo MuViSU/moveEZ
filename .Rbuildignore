@@ -1,3 +1,7 @@
 ^moveEZ\.Rproj$
 ^\.Rproj\.user$
 ^README\.Rmd$
+^LICENSE\.md$
+^.github
+^cran-comments\.md$
+^CRAN-SUBMISSION$

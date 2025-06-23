@@ -38,9 +38,11 @@ Create animated biplot on samples and variables in a biplot with a given target
 \examples{
 data(Africa_climate)
 data(Africa_climate_target)
-bp <- biplot(Africa_climate, scaled = TRUE) |> PCA()
-bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE, target = NULL)
-bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE, target = NULL)
-bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE, target = Africa_climate_target)
-bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE, target = Africa_climate_target)
+bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
+bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
+move = FALSE, target = NULL)
+bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
+move = TRUE, target = NULL)
+bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
+move = FALSE, target = Africa_climate_target)
 }

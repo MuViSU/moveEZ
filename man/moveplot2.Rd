@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{moveplot2}
 \alias{moveplot2}
-\title{Move plot2}
+\title{Move plot 2}
 \usage{
 moveplot2(
   bp,
@@ -40,6 +40,6 @@ Create animated biplot on samples and variables in a biplot
 }
 \examples{
 data(Africa_climate)
-bp <- biplot(Africa_climate, scaled = TRUE) |> PCA()
+bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
 bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
 }

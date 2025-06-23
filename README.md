@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# moveEZ <img src="logo.png" align="right" width="150"/>
+# moveEZ <img src="man/figures/logo.png" align="right" width="150"/>
 
 <!-- badges: start -->
 
@@ -168,10 +168,10 @@ structural shifts in the multivariate space.
 Notice that in both the faceted and animated biplots, there is a
 noticeable discontinuity in the transition from the year 1950 to 1960.
 From 1960 onwards, however, the biplots appear well-aligned. To address
-such inconsistencies, the \``moveplot2()` function provides two
-additional arguments — `align.time` and `reflect` — which enable
-alignment and optional axis reflections of the biplots at specified time
-points, resulting in smoother and more coherent animations.
+such inconsistencies, the `moveplot2()` function provides two additional
+arguments — `align.time` and `reflect` — which enable alignment and
+optional axis reflections of the biplots at specified time points,
+resulting in smoother and more coherent animations.
 
 ## Animated aligned
 
