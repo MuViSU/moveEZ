@@ -7,7 +7,7 @@
 
 <!-- badges: end -->
 
-The goal of moveEZ is to create animated biplots.
+The goal of `moveEZ` is to create animated biplots.
 
 # Installation
 
