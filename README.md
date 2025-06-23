@@ -9,7 +9,7 @@
 
 The goal of moveEZ is to create animated biplots.
 
-## Installation
+# Installation
 
 You can install the development version of moveEZ from
 [GitHub](https://github.com/) with:
@@ -18,6 +18,8 @@ You can install the development version of moveEZ from
 # install.packages("pak")
 pak::pak("MuViSU/moveEZ")
 ```
+
+# Background
 
 Consider a dataset ${\bf{X}}$ comprising $n$ observations and $p$
 continuous variables, along with an additional variable representing
