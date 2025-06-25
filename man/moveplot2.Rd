@@ -41,5 +41,6 @@ Create animated biplot on samples and variables in a biplot
 \examples{
 data(Africa_climate)
 bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
-\dontrun{bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}
+if (interactive()) {
+bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}
 }

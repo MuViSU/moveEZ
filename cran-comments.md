@@ -1,12 +1,15 @@
 ## Overview
 
 
-Added \donttest{} to examples that run for more than 5 seconds 
+Fixed reference in description
 
-── R CMD check results ─────────────────────────────────────────────────────────────────────────────────────── moveEZ 1.0.2────
-Duration: 29.7s
+── R CMD check results ───────────────────────────────────────────────────────────────────────────────────────── moveEZ 1.0.2 ────
+Duration: 1m 24.9s
 
-0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+❯ checking for future file timestamps ... NOTE
+  unable to verify current time
+
+0 errors ✔ | 0 warnings ✔ | 1 note ✖
 
 
 

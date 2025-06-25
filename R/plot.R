@@ -17,8 +17,8 @@
 #' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
-#' \dontrun{
-#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}
+#' if (interactive()) {
+#'   bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}
 moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.var = 5)
 {
 
@@ -99,12 +99,12 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.v
       # Sample polygons or points
       {if(hulls){
         geom_polygon(data = chull_reg,
-                              aes(x=V1, y=V2,group = .data[[group.var]],
+                     aes(x=V1, y=V2,group = .data[[group.var]],
                          fill = .data[[group.var]]), alpha=0.5)
 
       } else {
         geom_point(data = Z_tbl,
-                            aes(x=V1, y=V2,
+                   aes(x=V1, y=V2,
                        group = .data[[group.var]],
                        fill =.data[[group.var]],
                        colour = .data[[group.var]]),size=2, alpha=0.8)
@@ -112,8 +112,8 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.v
       {if(move) { gganimate::transition_states(.data[[time.var]],
                                      transition_length = 2,
                                      state_length = 1) } else {
-                                       ggplot2::facet_wrap(~.data[[time.var]]) }} +
-      {if(move) ggplot2::labs(title = '{time.var}: {closest_state}',x="",y="")} +
+                                       facet_wrap(~.data[[time.var]]) }} +
+      {if(move) { labs(title = '{time.var}: {closest_state}',x="",y="")}} +
       xlim(xlim) +
       ylim(ylim) +
       theme_classic() +
@@ -144,7 +144,8 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.v
 #' @examples
 #' data(Africa_climate)
 #' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
-#' \dontrun{bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}
+#' if (interactive()) {
+#' bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}
 moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.var = 5,
                       align.time = NA, reflect = NA)
 {
@@ -286,12 +287,12 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
       # Sample polygons or points
       {if(hulls){
         geom_polygon(data = chull_reg,
-                              aes(x=V1, y=V2,group = .data[[group.var]],
+                     aes(x=V1, y=V2,group = .data[[group.var]],
                          fill = .data[[group.var]]), alpha=0.5)
 
       } else {
         geom_point(data = Z_tbl,
-                            aes(x=V1, y=V2,
+                   aes(x=V1, y=V2,
                        group = .data[[group.var]],
                        fill =.data[[group.var]],
                        colour = .data[[group.var]]),size=2, alpha=0.8)
@@ -328,10 +329,10 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
 #' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
 #' bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 #' move = FALSE, target = NULL)
-#' \dontrun{bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
+#' if (interactive()) {bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 #' move = TRUE, target = NULL)}
-#' bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
-#' move = FALSE, target = Africa_climate_target)
+#' if (interactive()) {bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
+#' move = FALSE, target = Africa_climate_target)}
 moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                       scale.var = 5, target = NULL)
 {
