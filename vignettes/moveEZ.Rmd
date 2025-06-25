@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup, include=FALSE}
-library(moveEZ) ; library(tibble) ; library(scales)
+library(moveEZ) ; library(tibble) ; library(scales); library(gganimate)
 ```
 
 Consider a dataset ${\bf{X}}$ comprising $n$ observations and $p$ continuous variables, along with an additional variable representing "time". This time variable need not correspond to chronological time; it could just as well represent another form of ordered index, such as algorithmic iterations or experimental stages.
