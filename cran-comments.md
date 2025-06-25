@@ -1,9 +1,9 @@
 ## Overview
 
 
-Fixed tar.gz size to less than 5mb. 
+Added \donttest{} to examples that run for more than 5 seconds 
 
-── R CMD check results ─────────────────────────────────────────────────────────────────────────────────────── moveEZ 1.0.1 ────
+── R CMD check results ─────────────────────────────────────────────────────────────────────────────────────── moveEZ 1.0.2────
 Duration: 29.7s
 
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔

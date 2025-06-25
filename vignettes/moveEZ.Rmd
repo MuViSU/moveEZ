@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 library(moveEZ) ; library(tibble) ; library(scales)
 ```
 
-Consider a dataset ${\bf{X}}$ comprising $n$ observations and $p$ continuous variables, along with an additional variable representing "time." This time variable need not correspond to chronological time; it could just as well represent another form of ordered index, such as algorithmic iterations or experimental stages.
+Consider a dataset ${\bf{X}}$ comprising $n$ observations and $p$ continuous variables, along with an additional variable representing "time". This time variable need not correspond to chronological time; it could just as well represent another form of ordered index, such as algorithmic iterations or experimental stages.
 
 A natural approach is to construct separate biplots for each level of the time variable, enabling the user to explore how samples and variable relationships evolve across time. However, when the time variable includes many levels, this quickly results in an overwhelming number of biplots.
 
@@ -75,7 +75,6 @@ bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FAL
 ## Animation: `move = TRUE`
 
 ```{r,warning=FALSE, message=FALSE}
-# Animated Z
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
 ```
 
