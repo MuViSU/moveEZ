@@ -15,8 +15,8 @@ You can install the development version of moveEZ from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("pak")
-pak::pak("MuViSU/moveEZ")
+library(devtools)
+install_github("MuViSU/moveEZ")
 ```
 
 # Background
