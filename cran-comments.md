@@ -1,16 +1,15 @@
 ## Overview
 
 
-Fixed reference in description
+This is a resubmission. In this version we have: 
+- Fixed reference in description
+- Added \donttest{} around examples that run longer than 5s. 
 
-── R CMD check results ───────────────────────────────────────────────────────────────────────────────────────── moveEZ 1.0.2 ────
-Duration: 1m 24.9s
 
-❯ checking for future file timestamps ... NOTE
-  unable to verify current time
+── R CMD check results ──────────────────────────────────────────────────────────── moveEZ 1.0.2 ────
+Duration: 3m 7.7s
 
-0 errors ✔ | 0 warnings ✔ | 1 note ✖
-
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
 
 ## Test environment

@@ -41,8 +41,9 @@ data(Africa_climate_target)
 bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
 bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 move = FALSE, target = NULL)
-if (interactive()) {bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
+\donttest{
+bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 move = TRUE, target = NULL)}
-if (interactive()) {bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
-move = FALSE, target = Africa_climate_target)}
+bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
+move = FALSE, target = Africa_climate_target)
 }

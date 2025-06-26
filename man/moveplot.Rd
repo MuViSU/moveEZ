@@ -30,6 +30,6 @@ data(Africa_climate)
 bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
-if (interactive()) {
-  bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}
+\donttest{
+bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}
 }
