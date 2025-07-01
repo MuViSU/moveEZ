@@ -2,14 +2,15 @@
 
 
 This is a resubmission. In this version we have: 
-- Fixed reference in description
-- Added \donttest{} around examples that run longer than 5s. 
+- Fixed package reference in description with single quotes. 
 
+── R CMD check results ──────────────────────────────────────────────────────────────────────── moveEZ 1.0.3 ────
+Duration: 2m 39.1s
 
-── R CMD check results ──────────────────────────────────────────────────────────── moveEZ 1.0.2 ────
-Duration: 3m 7.7s
+❯ checking for future file timestamps ... NOTE
+  unable to verify current time
 
-0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+0 errors ✔ | 0 warnings ✔ | 1 note ✖
 
 
 ## Test environment

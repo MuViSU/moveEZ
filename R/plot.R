@@ -18,7 +18,8 @@
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
 #' \donttest{
-#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}
+#' if(interactive()) {
+#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}}
 moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.var = 5)
 {
 
@@ -145,7 +146,8 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.v
 #' data(Africa_climate)
 #' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
 #' \donttest{
-#' bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}
+#' if(interactive()) {
+#' bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}}
 moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.var = 5,
                       align.time = NA, reflect = NA)
 {
@@ -330,8 +332,9 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
 #' bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 #' move = FALSE, target = NULL)
 #' \donttest{
+#' if(interactive()) {
 #' bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
-#' move = TRUE, target = NULL)}
+#' move = TRUE, target = NULL)}}
 #' bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 #' move = FALSE, target = Africa_climate_target)
 moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
