@@ -26,3 +26,4 @@ Suggests:
     tibble,
     scales
 Config/Needs/website: rmarkdown
+URL: https://muvisu.github.io/moveEZ/
