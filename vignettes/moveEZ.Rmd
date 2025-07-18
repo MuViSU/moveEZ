@@ -74,12 +74,12 @@ bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FAL
 
 ## Animation: `move = TRUE`
 
-![](https://github.com/MuViSU/moveEZ/blob/main/man/figures/anim1.gif)
+![](anim1.gif)
 
-```{r,warning=FALSE, message=FALSE}
-#anim1 <- bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
-#anim_save("man/figures/anim1.gif", animation = anim1,renderer = gifski_renderer())
-
+```{r,echo=FALSE,eval = FALSE,warning=FALSE, message=FALSE}
+anim1 <- bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
+anim_rendered <- animate(anim1, renderer = gifski_renderer(), nframes = 100, fps = 10)
+anim_save("vignettes/anim1.gif", animation = anim_rendered)
 ```
 
 # Dynamic Frame `moveplot2()`
@@ -98,10 +98,15 @@ There is a noticeable discontinuity in the transition from the year 1950 to 1960
 
 ## Animated: `move = TRUE`
 
-```{r,warning=FALSE, message=FALSE}
-bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE,
+![](anim2.gif)
+
+```{r,echo=FALSE,eval = FALSE,warning=FALSE, message=FALSE}
+anim2 <- bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE,
                 align.time = "1950", reflect = "x")
+anim_rendered <- animate(anim2, renderer = gifski_renderer(), nframes = 100, fps = 10)
+anim_save("vignettes/anim2.gif", animation = anim_rendered)
 ```
+
 
 Setting `move` to TRUE produces an animated biplot in which both the samples and variables transition across time, offering a dynamic view of structural shifts in the multivariate space.
 
@@ -146,18 +151,26 @@ Now, the separate biplots per `time.var` are transformed and aligned to the samp
 
 ## Animated: `move = TRUE` and `target = NULL`
 
-```{r,warning=FALSE, message=FALSE}
-bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE, 
+![](anim3.gif)
+
+```{r,echo=FALSE,eval = FALSE,warning=FALSE, message=FALSE}
+anim3 <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE, 
                 target = NULL)
+anim_rendered <- animate(anim3, renderer = gifski_renderer(), nframes = 100, fps = 10)
+anim_save("vignettes/anim3.gif", animation = anim_rendered)
 ```
 
 Here the animated view of the biplots over time are illustrated after aligning the visualisation to the centroid configuration.
 
 ## Animated: `move = TRUE` and `target = Africa_climate_target`
 
-```{r,warning=FALSE, message=FALSE}
-bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE, 
+![](anim4.gif)
+
+```{r,echo=FALSE,eval = FALSE,warning=FALSE, message=FALSE}
+anim4 <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE, 
                 target = Africa_climate_target)
+anim_rendered <- animate(anim4, renderer = gifski_renderer(), nframes = 100, fps = 10)
+anim_save("vignettes/anim4.gif", animation = anim_rendered)
 ```
 
 Finally, the animated biplots illustrate the transformations towards a specified target dataset.  Again, the focus is on the movement that changes between the variables and sample representation as the target is set to a specific year compared to the movement observed in the previous example where `target = NULL`. Therefore, these animations expose the *jumps* that occur from 1989 to each of the years in `Africa_climate` from 1950 to 2020 (in increments of 10 years).
