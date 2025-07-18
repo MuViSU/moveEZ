@@ -74,11 +74,10 @@ bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FAL
 
 ## Animation: `move = TRUE`
 
-
+![](https://github.com/MuViSU/moveEZ/blob/main/man/figures/anim1.gif)
 
 ```{r,warning=FALSE, message=FALSE}
-anim1 <- bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
-anim1
+#anim1 <- bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
 #anim_save("man/figures/anim1.gif", animation = anim1,renderer = gifski_renderer())
 
 ```
