@@ -157,10 +157,7 @@ visualisations.</p>
 <div class="section level3">
 <h3 id="animation-move-true">Animation: <code>move = TRUE</code><a class="anchor" aria-label="anchor" href="#animation-move-true"></a>
 </h3>
-<p><img src="https://github.com/MuViSU/moveEZ/blob/main/man/figures/anim1.gif"></p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#anim1 &lt;- bp |&gt; moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)</span></span>
-<span><span class="co">#anim_save("man/figures/anim1.gif", animation = anim1,renderer = gifski_renderer())</span></span></code></pre></div>
+<p><img src="anim1.gif"></p>
 </div>
 </div>
 <div class="section level2">
@@ -177,7 +174,7 @@ and variables.</p>
 <div class="section level3">
 <h3 id="facet-move-false-1">Facet: <code>move = FALSE</code><a class="anchor" aria-label="anchor" href="#facet-move-false-1"></a>
 </h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot2.html">moveplot2</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
 <p>When <code>move</code> is <code>FALSE</code>, a faceted plot is
@@ -195,10 +192,7 @@ points, resulting in smoother and more coherent animations.</p>
 <div class="section level3">
 <h3 id="animated-move-true">Animated: <code>move = TRUE</code><a class="anchor" aria-label="anchor" href="#animated-move-true"></a>
 </h3>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot2.html">moveplot2</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                align.time <span class="op">=</span> <span class="st">"1950"</span>, reflect <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; NULL</span></span></code></pre></div>
+<p><img src="anim2.gif"></p>
 <p>Setting <code>move</code> to TRUE produces an animated biplot in
 which both the samples and variables transition across time, offering a
 dynamic view of structural shifts in the multivariate space.</p>
@@ -237,7 +231,7 @@ shown or presented as static facets.</p>
 <p>To illustrate the use of a fixed target, we use the year 1989 from
 the <code>Africa_climate</code> data set, which consists of the same
 variables and number of observations:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"Africa_climate_target"</span><span class="op">)</span></span>
 <span><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span><span class="va">Africa_climate_target</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 120 × 9</span></span></span>
@@ -257,7 +251,7 @@ variables and number of observations:</p>
 <div class="section level3">
 <h3 id="facet-move-false-and-target-null">Facet: <code>move = FALSE</code> and <code>target = NULL</code><a class="anchor" aria-label="anchor" href="#facet-move-false-and-target-null"></a>
 </h3>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot3.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                target <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-9-1.png" width="672"></p>
@@ -269,7 +263,7 @@ and axes variables.</p>
 <h3 id="facet-move-false-and-target-africa_climate_target">Facet: <code>move = FALSE</code> and
 <code>target = Africa_climate_target</code><a class="anchor" aria-label="anchor" href="#facet-move-false-and-target-africa_climate_target"></a>
 </h3>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot3.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>, </span>
 <span>                target <span class="op">=</span> <span class="va">Africa_climate_target</span><span class="op">)</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
@@ -284,10 +278,7 @@ between each the observations and variables for each year in
 <h3 id="animated-move-true-and-target-null">Animated: <code>move = TRUE</code> and
 <code>target = NULL</code><a class="anchor" aria-label="anchor" href="#animated-move-true-and-target-null"></a>
 </h3>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot3.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">TRUE</span>, </span>
-<span>                target <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
-<span><span class="co">#&gt; NULL</span></span></code></pre></div>
+<p><img src="anim3.gif"></p>
 <p>Here the animated view of the biplots over time are illustrated after
 aligning the visualisation to the centroid configuration.</p>
 </div>
@@ -295,10 +286,7 @@ aligning the visualisation to the centroid configuration.</p>
 <h3 id="animated-move-true-and-target-africa_climate_target">Animated: <code>move = TRUE</code> and
 <code>target = Africa_climate_target</code><a class="anchor" aria-label="anchor" href="#animated-move-true-and-target-africa_climate_target"></a>
 </h3>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot3.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">TRUE</span>, </span>
-<span>                target <span class="op">=</span> <span class="va">Africa_climate_target</span><span class="op">)</span></span>
-<span><span class="co">#&gt; NULL</span></span></code></pre></div>
+<p><img src="anim4.gif"></p>
 <p>Finally, the animated biplots illustrate the transformations towards
 a specified target dataset. Again, the focus is on the movement that
 changes between the variables and sample representation as the target is
