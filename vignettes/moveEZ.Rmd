@@ -74,8 +74,13 @@ bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FAL
 
 ## Animation: `move = TRUE`
 
+
+
 ```{r,warning=FALSE, message=FALSE}
-bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
+anim1 <- bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)
+anim1
+#anim_save("man/figures/anim1.gif", animation = anim1,renderer = gifski_renderer())
+
 ```
 
 # Dynamic Frame `moveplot2()`
