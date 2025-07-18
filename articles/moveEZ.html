@@ -58,7 +58,8 @@
 
     
     
-<p>Consider a dataset <span class="math inline">${\bf{X}}$</span>
+<p>Consider a dataset
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐗</mi><annotation encoding="application/x-tex">{\mathbf{X}}</annotation></semantics></math>
 comprising
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
 observations and
@@ -79,10 +80,11 @@ visualisation of temporal or sequential changes in the data.</p>
 based on two conceptual frameworks:</p>
 <ol style="list-style-type: decimal">
 <li><p>Fixed Variable Frame <code><a href="../reference/moveplot.html">moveplot()</a></code>: A biplot is first
-constructed using the full dataset <span class="math inline">${\bf{X}}$</span>, and the animation is achieved by
-slicing the observations according to the “time” variable. In this
-approach, the variable axes remain fixed, and only the sample points are
-animated over time.</p></li>
+constructed using the full dataset
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐗</mi><annotation encoding="application/x-tex">{\mathbf{X}}</annotation></semantics></math>,
+and the animation is achieved by slicing the observations according to
+the “time” variable. In this approach, the variable axes remain fixed,
+and only the sample points are animated over time.</p></li>
 <li><p>Dynamic Frame <code><a href="../reference/moveplot2.html">moveplot2()</a></code> and
 <code><a href="../reference/moveplot3.html">moveplot3()</a></code>: Separate biplots are constructed for each time
 slice of the data. Both the sample points and variable axes evolve over
