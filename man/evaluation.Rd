@@ -2,23 +2,35 @@
 % Please edit documentation in R/evaluation.R
 \name{evaluation}
 \alias{evaluation}
-\title{List of evaluation measures}
+\title{Measures of comparison based on Orthogonal Procrustes Analysis}
 \usage{
-evaluation(bp)
+evaluation(bp, centring = TRUE)
 }
 \arguments{
-\item{bp}{}
+\item{centring}{logical argument to apply centring or not (default is \code{TRUE})}
+
+\item{target}{target configuration}
+
+\item{testee}{testee configuration}
 }
 \value{
-list of evaluation measures calculated by \code{compMeas}
+\item{PS}{Procrustes Statistic}
+\item{CC}{Congruence coefficient}
+\item{AMB}{Absolute Mean Bias}
+\item{MB}{Mean Bias}
+\item{RMSB}{Root Mean Squared Bias}
+\item{Res.SS}{Residual sum of squares}
+\item{Tot.SS}{Total sum of squares}
+\item{Fit.SS}{Fitted sum of squares}
 }
 \description{
-List of evaluation measures
+Measures of comparison based on Orthogonal Procrustes Analysis
 }
 \examples{
 data(Africa_climate)
 data(Africa_climate_target)
 bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
-bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
+bp <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 move = FALSE, target = NULL) |> evaluation()
+
 }
