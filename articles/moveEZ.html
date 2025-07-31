@@ -253,8 +253,10 @@ variables and number of observations:</p>
 </h3>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot3.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>                target <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
-<p><img src="moveEZ_files/figure-html/unnamed-chunk-9-1.png" width="672"></p>
+<span>                target <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Object of class biplot, based on 960 samples and 9 variables.</span></span>
+<span><span class="co">#&gt; 6 numeric variables.</span></span>
+<span><span class="co">#&gt; 3 categorical variables.</span></span></code></pre></div>
 <p>The separate biplots per <code>time.var</code> are transformed and
 aligned to the centroid coordinate matrix of all observed sample points
 and axes variables.</p>
@@ -265,8 +267,10 @@ and axes variables.</p>
 </h3>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot3.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>, </span>
-<span>                target <span class="op">=</span> <span class="va">Africa_climate_target</span><span class="op">)</span></span></code></pre></div>
-<p><img src="moveEZ_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
+<span>                target <span class="op">=</span> <span class="va">Africa_climate_target</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Object of class biplot, based on 960 samples and 9 variables.</span></span>
+<span><span class="co">#&gt; 6 numeric variables.</span></span>
+<span><span class="co">#&gt; 3 categorical variables.</span></span></code></pre></div>
 <p>Now, the separate biplots per <code>time.var</code> are transformed
 and aligned to the sample points and axes variables of the 1989
 <code>Africa_climate</code> dataset. <strong>Take note</strong>: the
