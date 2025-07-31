@@ -432,6 +432,10 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   # translation not used, since biplots are centred
   GPA_list <- GPA.out[[1]]
 
+  bp$G.target <- G.target
+  bp$coord_set <- coord_set
+  bp$GPA_list <- GPA_list
+
   Z_GPA_list <- vector("list", iterations)
   Vr_GPA_list <- vector("list", iterations)
   chull_reg <- vector("list", iterations)
@@ -532,5 +536,5 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
             axis.text.y = element_blank())
 
   }
-
+bp
 }
