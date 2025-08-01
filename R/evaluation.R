@@ -2,20 +2,17 @@
 
 #' Measures of comparison for move plot 3
 #'
-#' This function calculates measures of comparison after generalised orthogonal Procrustes Analysis is performed in \code{moveplot3}. Orthogonal Procrustes Analysis is used to compare a target to a testee configuration.
+#' This function calculates measures of comparison after generalised orthogonal Procrustes Analysis
+#' is performed in \code{moveplot3}. Orthogonal Procrustes Analysis is used to compare a target to a testee configuration.
+#' The following measures are calculate: Procrustes Statistic (PS), Congruence Coefficient (CC), Absolute Mean Bias (AMB),
+#' Mean Bias (MB) and Root Mean Squared Bias (RMSB).
+#'
 #'
 #' @param bp biplot object from moveEZ
 #' @param centring logical argument to apply centring or not (default is \code{TRUE})
 #'
 #' @return
-#' \item{PS}{Procrustes Statistic}
-#' \item{CC}{Congruence coefficient}
-#' \item{AMB}{Absolute Mean Bias}
-#' \item{MB}{Mean Bias}
-#' \item{RMSB}{Root Mean Squared Bias}
-#' \item{Res.SS}{Residual sum of squares}
-#' \item{Tot.SS}{Total sum of squares}
-#' \item{Fit.SS}{Fitted sum of squares}
+#' \item{eval.list}{Returns a list containing the measures of comparison for each level of the time variable.}
 #'
 #' @examples
 #' data(Africa_climate)
@@ -23,6 +20,13 @@
 #' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
 #' bp <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 #' move = FALSE, target = NULL) |> evaluation()
+#' bp$eval.list
+#'
+#' data(Africa_climate)
+#' data(Africa_climate_target)
+#' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
+#' bp <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
+#' move = FALSE, target = Africa_climate_target) |> evaluation()
 #' bp$eval.list
 #'
 evaluation <- function(bp, centring = TRUE)
