@@ -88,7 +88,7 @@ evaluation <- function(bp, centring = TRUE)
 
   bp$eval.list <- lapply(eval.list, round,4)
 } else
-  print("Evaulation measures only work for moveplot3().")
+  print("Evaulation measures can only be applied for moveplot3().")
 
     bp
 
