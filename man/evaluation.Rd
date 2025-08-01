@@ -2,16 +2,14 @@
 % Please edit documentation in R/evaluation.R
 \name{evaluation}
 \alias{evaluation}
-\title{Measures of comparison based on Orthogonal Procrustes Analysis}
+\title{Measures of comparison for move plot 3}
 \usage{
 evaluation(bp, centring = TRUE)
 }
 \arguments{
+\item{bp}{biplot object from moveEZ}
+
 \item{centring}{logical argument to apply centring or not (default is \code{TRUE})}
-
-\item{target}{target configuration}
-
-\item{testee}{testee configuration}
 }
 \value{
 \item{PS}{Procrustes Statistic}
@@ -24,7 +22,7 @@ evaluation(bp, centring = TRUE)
 \item{Fit.SS}{Fitted sum of squares}
 }
 \description{
-Measures of comparison based on Orthogonal Procrustes Analysis
+This function calculates measures of comparison after generalised orthogonal Procrustes Analysis is performed in \code{moveplot3}. Orthogonal Procrustes Analysis is used to compare a target to a testee configuration.
 }
 \examples{
 data(Africa_climate)

@@ -1,9 +1,10 @@
 # -----------------------------------------------------------------------------------------------------
 
-#' Measures of comparison based on Orthogonal Procrustes Analysis
+#' Measures of comparison for move plot 3
 #'
-#' @param target target configuration
-#' @param testee testee configuration
+#' This function calculates measures of comparison after generalised orthogonal Procrustes Analysis is performed in \code{moveplot3}. Orthogonal Procrustes Analysis is used to compare a target to a testee configuration.
+#'
+#' @param bp biplot object from moveEZ
 #' @param centring logical argument to apply centring or not (default is \code{TRUE})
 #'
 #' @return
@@ -22,9 +23,11 @@
 #' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
 #' bp <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 #' move = FALSE, target = NULL) |> evaluation()
+#' bp$eval.list
 #'
 evaluation <- function(bp, centring = TRUE)
 {
+  if (inherits(bp, "moveplot3")){
   eval.list <- vector("list", length(bp$coord_set))
 
   target <- bp$G.target
@@ -72,7 +75,7 @@ evaluation <- function(bp, centring = TRUE)
   AMB <- (sum(sum(abs(target-testee))))/length(testee)
 
   REStable <- data.frame(c(PS, CC, AMB, MB, RMSB))
-  colnames(REStable)<- c("Measure of comparison")
+  colnames(REStable)<- paste("Target vs. ",bp$iter_levels[i], sep="")
   rownames(REStable)<- c("PS", "CC", "AMB", "MB", "RMSB")
 
   eval.list[[i]] <- REStable
@@ -80,7 +83,9 @@ evaluation <- function(bp, centring = TRUE)
   }
 
   bp$eval.list <- lapply(eval.list, round,4)
+} else
+  print("Evaulation measures only work for moveplot3().")
 
-  bp
+    bp
 
 }

@@ -350,6 +350,8 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   iterations <- nlevels(bp$raw.X[[tvi]])
   iter_levels <- levels(bp$raw.X[[tvi]])
 
+  bp$iter_levels <- iter_levels
+
   group_levels <- levels(bp$raw.X[[gvi]])
 
   # Samples
@@ -412,6 +414,7 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
     Vr_temp <- Vr_tbl |> dplyr::filter(Vr_tbl[[tviGVr]] == iter_levels[i])
     coord_set[[i]] <- dplyr::bind_rows(Z_temp[c("V1","V2")], Vr_temp[c("V1","V2")])
   }
+
   # determine sizes after final coord_set
   Z_split <- nrow(Z_temp)
   Vr_split <- nrow(Vr_temp)
@@ -536,5 +539,6 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
             axis.text.y = element_blank())
 
   }
-bp
+  class(bp)<-append(class(bp),"moveplot3")
+  bp
 }
