@@ -120,8 +120,9 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.v
       theme_classic() +
       theme(axis.ticks = element_blank(),
             axis.text.x = element_blank(),
-            axis.text.y = element_blank())
-
+            axis.text.y = element_blank(),
+            axis.title.x = element_blank(),
+            axis.title.y = element_blank())
 
 }
 
@@ -275,7 +276,9 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
       theme_classic() +
       theme(axis.ticks = element_blank(),
             axis.text.x = element_blank(),
-            axis.text.y = element_blank())
+            axis.text.y = element_blank(),
+            axis.title.x = element_blank(),
+            axis.title.y = element_blank())
 
   } else {
 
@@ -304,7 +307,9 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
       theme_classic() +
       theme(axis.ticks = element_blank(),
             axis.text.x = element_blank(),
-            axis.text.y = element_blank())
+            axis.text.y = element_blank(),
+            axis.title.x = element_blank(),
+            axis.title.y = element_blank())
 
   }
 
@@ -469,6 +474,9 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   Vr_GPA_tbl <- do.call(rbind,Vr_GPA_list)
   chull_reg_GPA <- do.call(rbind,chull_reg)
 
+  class(bp) <- append(class(bp), "moveplot3")
+  bp
+
   # Plotting
 
   # Move – TRUE Animated separate Z,V
@@ -507,7 +515,9 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
       theme_classic() +
       theme(axis.ticks = element_blank(),
             axis.text.x = element_blank(),
-            axis.text.y = element_blank())
+            axis.text.y = element_blank(),
+            axis.title.x = element_blank(),
+            axis.title.y = element_blank())
 
   } else {
 
@@ -536,9 +546,9 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
       theme_classic() +
       theme(axis.ticks = element_blank(),
             axis.text.x = element_blank(),
-            axis.text.y = element_blank())
-
+            axis.text.y = element_blank(),
+            axis.title.x = element_blank(),
+            axis.title.y = element_blank())
   }
-  class(bp)<-append(class(bp),"moveplot3")
-  bp
+
 }
