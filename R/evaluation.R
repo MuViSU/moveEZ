@@ -90,6 +90,6 @@ evaluation <- function(bp, centring = TRUE)
 } else
   print("Evaluation measures can only be applied for moveplot3().")
 
-    bp
+  bp
 
 }

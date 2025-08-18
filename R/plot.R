@@ -90,7 +90,7 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.v
 
   # move – TRUE --- Animated sliced Z
   # move – FALSE  --- Facet on sliced Z
-    ggplot() +
+  bp$plot <- ggplot() +
       # Axes
       geom_segment(data=Vr_tbl,aes(x=0,y=0,xend=V1*scale.var,yend=V2*scale.var,group=var),
                    arrow=arrow(length=unit(0.1,"inches"))) +
@@ -124,6 +124,8 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.v
             axis.title.x = element_blank(),
             axis.title.y = element_blank())
 
+  print(bp$plot)
+  bp
 }
 
 
@@ -244,7 +246,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
   # Move – FALSE Facet separate Z,V
   if(move==TRUE)
   {
-    ggplot() +
+    bp$plot <- ggplot() +
       # Axes
       geom_segment(data=Vr_tbl,aes(x=0,y=0,xend=V1*scale.var,yend=V2*scale.var,group=var),
                    arrow=arrow(length=unit(0.1,"inches"))) +
@@ -282,7 +284,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
 
   } else {
 
-    ggplot() +
+    bp$plot <- ggplot() +
       # Axes
       geom_segment(data=Vr_tbl,aes(x=0,y=0,xend=V1*scale.var,yend=V2*scale.var,group=var),
                    arrow=arrow(length=unit(0.1,"inches"))) +
@@ -312,7 +314,8 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
             axis.title.y = element_blank())
 
   }
-
+    print(bp$plot)
+    bp
 }
 
 #' Move plot 3
@@ -474,16 +477,13 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   Vr_GPA_tbl <- do.call(rbind,Vr_GPA_list)
   chull_reg_GPA <- do.call(rbind,chull_reg)
 
-  class(bp) <- append(class(bp), "moveplot3")
-  bp
-
   # Plotting
 
   # Move – TRUE Animated separate Z,V
   # Move – FALSE Facet separate Z,V
   if(move==TRUE)
   {
-    ggplot() +
+    bp$plot <- ggplot() +
       # Axes
       geom_segment(data=Vr_GPA_tbl, aes(x=0, y=0, xend=V1*scale.var, yend=V2*scale.var, group=var),
                    arrow=arrow(length=unit(0.1,"inches"))) +
@@ -521,7 +521,7 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 
   } else {
 
-    ggplot() +
+    bp$plot <- ggplot() +
       # Axes
       geom_segment(data=Vr_GPA_tbl,aes(x=0,y=0,xend=V1*scale.var,yend=V2*scale.var,group=var),
                    arrow=arrow(length=unit(0.1,"inches"))) +
@@ -550,5 +550,7 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
             axis.title.x = element_blank(),
             axis.title.y = element_blank())
   }
-
+  class(bp) <- append(class(bp), "moveplot3")
+  print(bp$plot)
+  bp
 }
