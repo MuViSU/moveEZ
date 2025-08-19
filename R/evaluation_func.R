@@ -73,7 +73,7 @@ evaluation <- function(bp, centring = TRUE)
       Fit.SS <- 2*s.fact*sum(diag(svd.C[[1]]))
 
       PS <- Res.SS/sum(diag(t(target)%*%target))
-      CC <- sum(dist(testee) * dist(target))/(sqrt(sum(dist(testee)^2)) * sqrt(sum(dist(target)^2)))
+      CC <- sum(stats::dist(testee) * stats::dist(target))/(sqrt(sum(stats::dist(testee)^2)) * sqrt(sum(stats::dist(target)^2)))
       RMSB <- ((sum(sum((target-testee)^2)))/length(testee))^(0.5)
       MB <- (sum(sum((target-testee)^1)))/length(testee)
       AMB <- (sum(sum(abs(target-testee))))/length(testee)

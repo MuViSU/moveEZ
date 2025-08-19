@@ -213,7 +213,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
 
     # if(i == any(align_levels)) bp_list[[i]] <- bp_list[[i]] |> reflect_biplot(reflect.axis = reflect[i])
 
-    if (i %in% align_levels) bp_list[[i]] <- bp_list[[i]] |> reflect_biplot(reflect.axis = reflect[which(align_levels == i)])
+    if (i %in% align_levels) bp_list[[i]] <- bp_list[[i]] |> biplotEZ::reflect(reflect.axis = reflect[which(align_levels == i)])
 
     colnames(bp_list[[i]]$Z) <- c("V1","V2")
     Z_list[[i]] <- dplyr::as_tibble(bp_list[[i]]$Z)
