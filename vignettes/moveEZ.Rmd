@@ -4,6 +4,7 @@ output:
   rmarkdown::html_vignette:
     toc: true
     number_sections: true
+bibliography: references.bib
 vignette: >
   %\VignetteIndexEntry{moveEZ}
   %\VignetteEngine{knitr::rmarkdown}
@@ -19,7 +20,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup, include=FALSE}
-library(moveEZ) ; library(tibble) ; library(scales); library(gganimate)
+library(moveEZ); library(tibble); library(scales); library(gganimate)
 ```
 
 Consider a dataset ${\mathbf{X}}$ comprising $n$ observations and $p$ continuous variables, along with an additional variable representing "time". This time variable need not correspond to chronological time; it could just as well represent another form of ordered index, such as algorithmic iterations or experimental stages.
@@ -42,7 +43,7 @@ data("Africa_climate")
 tibble::tibble(Africa_climate)
 ```
 
-We begin by constructing a standard PCA biplot using the `biplotEZ` package. This biplot aggregates all samples across time and colours them according to their associated region:
+We begin by constructing a standard PCA biplot using the `biplotEZ` package (@biplotEZ). This biplot aggregates all samples across time and colours them according to their associated region:
 
 ```{r, message=FALSE}
 library(biplotEZ)
@@ -122,7 +123,7 @@ And of course, both `align.time` and `reflect` can be vectors when alignment is 
 
 # Dynamic frame with alignment to a `target` with `moveplot3()`
 
-This function shares the same arguments as `moveplot()` and `moveplot2()`, with the addition of the `target` argument. `moveplot3()` utilises Generalised Orthogonal Procrustes Analysis (GPA) to align sample points and variable axes to either a specified target (for example: same measurements at a different time point) or to a centroid coordinate matrix representing all sample points and axes across time slices (`target = NULL`). GPA is applied by using the `GPAbin` package and makes use of admissible transformations (translation, scaling, rotation and reflection) to optimally align configurations, while preserving the distances between coordinates. As with `moveplot2()` the `move` argument determines whether the animations of changing sample points and variables axes are shown or presented as static facets.
+This function shares the same arguments as `moveplot()` and `moveplot2()`, with the addition of the `target` argument. `moveplot3()` utilises Generalised Orthogonal Procrustes Analysis (GPA) (@Proc) to align sample points and variable axes to either a specified target (for example: same measurements at a different time point) or to a centroid coordinate matrix representing all sample points and axes across time slices (`target = NULL`). GPA is applied by using the `GPAbin` package and makes use of admissible transformations (translation, scaling, rotation and reflection) to optimally align configurations, while preserving the distances between coordinates. As with `moveplot2()` the `move` argument determines whether the animations of changing sample points and variables axes are shown or presented as static facets.
 
 To illustrate the use of a fixed target, we use the year 1989 from the `Africa_climate` data set, which consists of the same variables and number of observations:
 
@@ -175,9 +176,22 @@ anim_save("vignettes/anim4.gif", animation = anim_rendered)
 
 Finally, the animated biplots illustrate the transformations towards a specified target dataset.  Again, the focus is on the movement that changes between the variables and sample representation as the target is set to a specific year compared to the movement observed in the previous example where `target = NULL`. Therefore, these animations expose the *jumps* that occur from 1989 to each of the years in `Africa_climate` from 1950 to 2020 (in increments of 10 years).
 
+# Evaluation
+
+This function can only be used in conjunction with `moveplot3()`. Five measures of comparison are calculated to establish the differences between each individual biplot and the chosen `target` configuration as specified in `moveplot3()`. The measures are based on Orthogonal Procrustes analysis between the target and the specific individual biplot. There are three bias related measures: Absolute Mean Bias (AMB), Mean Bias (MB) and the Root Mean Squared Bias (RMSB). The measures express the *fit*, therefore, how *close* the coordinates of the two configurations are: Procrustes Statistic (PS) and Congruence Coefficient (CC). For more information on these metrics refer to @GPAbinart.
+
+The evaluation measures can be extracted as follows:
+
+```{r,warning=FALSE}
+results <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE, 
+                target = Africa_climate_target) |> evaluation()
+results$eval.list
+```
+
 # Still to Come!
 
 We are actively working to develop and enhance the dynamic plotting capabilities of these functions to expose and detect changes in observations and variables over time.
 
 Stay tuned for updates!
 
+# References
