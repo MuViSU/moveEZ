@@ -55,7 +55,7 @@ Mean Bias (MB) and Root Mean Squared Bias (RMSB).</p>
 
 
 <dl><dt id="arg-bp">bp<a class="anchor" aria-label="anchor" href="#arg-bp"></a></dt>
-<dd><p>biplot object from moveEZ</p></dd>
+<dd><p>biplot object from <code>moveEZ</code></p></dd>
 
 
 <dt id="arg-centring">centring<a class="anchor" aria-label="anchor" href="#arg-centring"></a></dt>
@@ -76,20 +76,20 @@ Mean Bias (MB) and Root Mean Squared Bias (RMSB).</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Africa_climate</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Africa_climate_target</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">bp</span> <span class="op">&lt;-</span> <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/biplot.html" class="external-link">biplot</a></span><span class="op">(</span><span class="va">Africa_climate</span>, scaled <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/PCA.html" class="external-link">PCA</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">bp</span> <span class="op">&lt;-</span> <span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="moveplot3.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="moveplot3.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>move <span class="op">=</span> <span class="cn">FALSE</span>, target <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">evaluation</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in evaluation(moveplot3(bp, time.var = "Year", group.var = "Region",     hulls = TRUE, move = FALSE, target = NULL)):</span> could not find function "evaluation"</span>
-<span class="r-in"><span><span class="va">bp</span><span class="op">$</span><span class="va">eval.list</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-in"><span><span class="va">results</span><span class="op">$</span><span class="va">eval.list</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'results' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Africa_climate</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Africa_climate_target</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">bp</span> <span class="op">&lt;-</span> <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/biplot.html" class="external-link">biplot</a></span><span class="op">(</span><span class="va">Africa_climate</span>, scaled <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/PCA.html" class="external-link">PCA</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">bp</span> <span class="op">&lt;-</span> <span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="moveplot3.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="moveplot3.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>move <span class="op">=</span> <span class="cn">FALSE</span>, target <span class="op">=</span> <span class="va">Africa_climate_target</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">evaluation</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in evaluation(moveplot3(bp, time.var = "Year", group.var = "Region",     hulls = TRUE, move = FALSE, target = Africa_climate_target)):</span> could not find function "evaluation"</span>
-<span class="r-in"><span><span class="va">bp</span><span class="op">$</span><span class="va">eval.list</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-in"><span><span class="va">results</span><span class="op">$</span><span class="va">eval.list</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'results' not found</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
