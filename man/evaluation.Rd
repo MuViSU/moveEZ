@@ -7,7 +7,7 @@
 evaluation(bp, centring = TRUE)
 }
 \arguments{
-\item{bp}{biplot object from moveEZ}
+\item{bp}{biplot object from \code{moveEZ}}
 
 \item{centring}{logical argument to apply centring or not (default is \code{TRUE})}
 }
@@ -24,15 +24,15 @@ Mean Bias (MB) and Root Mean Squared Bias (RMSB).
 data(Africa_climate)
 data(Africa_climate_target)
 bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
-bp <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
+results <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 move = FALSE, target = NULL) |> evaluation()
-bp$eval.list
+results$eval.list
 
 data(Africa_climate)
 data(Africa_climate_target)
 bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
-bp <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
+results <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 move = FALSE, target = Africa_climate_target) |> evaluation()
-bp$eval.list
+results$eval.list
 
 }

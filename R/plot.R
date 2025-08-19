@@ -9,7 +9,10 @@
 #' @param hulls whether to display sample points or convex hulls
 #' @param scale.var scaling the vectors representing the variables
 #'
-#' @returns An animated or a facet of biplots based on the fixed variable frame.
+#' @returns
+#' \item{bp}{Returns the elements of the biplot object \code{bp} from \code{biplotEZ}.}
+#' \item{plot}{An animated or a facet of biplots based on the dynamic frame.}
+#'
 #' @export
 #'
 #' @examples
@@ -20,7 +23,8 @@
 #' \donttest{
 #' if(interactive()) {
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}}
-moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.var = 5)
+moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
+                     scale.var = 5)
 {
 
   if(!is.null(group.var)) bp$group.aes <- bp$raw.X[,which(colnames(bp$raw.X) == group.var)] else
@@ -142,7 +146,10 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.v
 #' @param align.time a vector specifying the levels of time.var for which the biplots should be aligned. Only biplots corresponding to these time points will be used to compute the alignment transformation.
 #' @param reflect a character vector specifying the axis of reflection to apply at each corresponding time point in align.time. One of FALSE (default), "x" for reflection about the x-axis, "y" for reflection about the y-axis and "xy" for reflection about both axes.
 #'
-#' @returns An animated or a facet of biplots based on the dynamic frame.
+#' @returns
+#' \item{bp}{Returns the elements of the biplot object \code{bp} from \code{biplotEZ}.}
+#' \item{plot}{An animated or a facet of biplots based on the dynamic frame.}
+#'
 #' @export
 #'
 #' @examples
@@ -330,7 +337,13 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
 #' @param scale.var scaling the vectors representing the variables
 #' @param target Target data set to which all biplots should be matched consisting of the the same dimensions. If not specified, the centroid of all available biplot sample coordinates from \code{time.var} will be used. Default `NULL`.
 #'
-#' @returns An animated or a facet of biplots based on the dynamic frame.
+#' @returns
+#' \item{bp}{Returns the elements of the biplot object \code{bp} from \code{biplotEZ}.}
+#' \item{iter_levels}{The levels of the time variable.}
+#' \item{coord_set}{The coordinates of the configurations before applying Generalised Orthogonal Procrustes Analysis.}
+#' \item{GPA_list}{The coordinates of the configurations after applying Generalised Orthogonal Procrustes Analysis.}
+#' \item{plot}{An animated or a facet of biplots based on the dynamic frame.}
+#'
 #' @export
 #'
 #' @examples
@@ -454,6 +467,7 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   # now bind_rows() of Z_GPA_list and Vr_GPA_list and adding columns of Z_tbl and Vr_tbl
   for (i in 1:iterations)
   {
+    colnames(GPA_list[[i]]) <- c("V1","V2")
     Z_GPA_list[[i]] <- dplyr::as_tibble(GPA_list[[i]][1:Z_split,])
     Z_GPA_list[[i]] <- suppressMessages(dplyr::bind_cols(Z_GPA_list[[i]], bp_list[[i]]$Xcat))
     Vr_GPA_list[[i]] <- dplyr::as_tibble(GPA_list[[i]][((Z_split+1):t_rows),])
