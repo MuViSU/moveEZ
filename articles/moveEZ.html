@@ -114,8 +114,9 @@ measurements from 10 African regions over time:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 1950  October   ARP      0.102 -<span style="color: #BB0000;">0.025</span><span style="color: #BB0000; text-decoration: underline;">9</span>   25.9    0.976 1.65   3.18</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 950 more rows</span></span></span></code></pre></div>
 <p>We begin by constructing a standard PCA biplot using the
-<code>biplotEZ</code> package. This biplot aggregates all samples across
-time and colours them according to their associated region:</p>
+<code>biplotEZ</code> package (<span class="citation">Lubbe et al.
+(2024)</span>). This biplot aggregates all samples across time and
+colours them according to their associated region:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">biplotEZ</span><span class="op">)</span></span>
 <span><span class="va">bp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/biplot.html" class="external-link">biplot</a></span><span class="op">(</span><span class="va">Africa_climate</span>, scaled <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -223,8 +224,8 @@ alignment and orientation of biplots across the animation sequence.</p>
 <p>This function shares the same arguments as <code><a href="../reference/moveplot.html">moveplot()</a></code>
 and <code><a href="../reference/moveplot2.html">moveplot2()</a></code>, with the addition of the
 <code>target</code> argument. <code><a href="../reference/moveplot3.html">moveplot3()</a></code> utilises
-Generalised Orthogonal Procrustes Analysis (GPA) to align sample points
-and variable axes to either a specified target (for example: same
+Generalised Orthogonal Procrustes Analysis (GPA) (<span class="citation">Gower and Dijksterhuis (2004)</span>) to align sample
+points and variable axes to either a specified target (for example: same
 measurements at a different time point) or to a centroid coordinate
 matrix representing all sample points and axes across time slices
 (<code>target = NULL</code>). GPA is applied by using the
@@ -310,12 +311,119 @@ years).</p>
 </div>
 </div>
 <div class="section level2">
+<h2 id="evaluation">Evaluation<a class="anchor" aria-label="anchor" href="#evaluation"></a>
+</h2>
+<p>This function can only be used in conjunction with
+<code><a href="../reference/moveplot3.html">moveplot3()</a></code>. Five measures of comparison are calculated to
+establish the differences between each individual biplot and the chosen
+<code>target</code> configuration as specified in
+<code><a href="../reference/moveplot3.html">moveplot3()</a></code>. The measures are based on Orthogonal
+Procrustes analysis between the target and the specific individual
+biplot. There are three bias related measures: Absolute Mean Bias (AMB),
+Mean Bias (MB) and the Root Mean Squared Bias (RMSB). The measures
+express the <em>fit</em>, therefore, how <em>close</em> the coordinates
+of the two configurations are: Procrustes Statistic (PS) and Congruence
+Coefficient (CC). For more information on these metrics refer to <span class="citation">Nienkemper-Swanepoel, Roux, and Gardner-Lubbe
+(2023)</span>.</p>
+<p>The evaluation measures can be extracted as follows:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot3.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>, </span>
+<span>                target <span class="op">=</span> <span class="va">Africa_climate_target</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/evaluation.html">evaluation</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="moveEZ_files/figure-html/unnamed-chunk-13-1.png" width="672"></p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">results</span><span class="op">$</span><span class="va">eval.list</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt;      Target vs. 1950</span></span>
+<span><span class="co">#&gt; PS            0.2112</span></span>
+<span><span class="co">#&gt; CC            0.9556</span></span>
+<span><span class="co">#&gt; AMB           0.4976</span></span>
+<span><span class="co">#&gt; MB            0.0000</span></span>
+<span><span class="co">#&gt; RMSB          0.6549</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[2]]</span></span>
+<span><span class="co">#&gt;      Target vs. 1960</span></span>
+<span><span class="co">#&gt; PS            0.1738</span></span>
+<span><span class="co">#&gt; CC            0.9559</span></span>
+<span><span class="co">#&gt; AMB           1.6285</span></span>
+<span><span class="co">#&gt; MB            0.0000</span></span>
+<span><span class="co">#&gt; RMSB          2.3374</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[3]]</span></span>
+<span><span class="co">#&gt;      Target vs. 1970</span></span>
+<span><span class="co">#&gt; PS            0.2047</span></span>
+<span><span class="co">#&gt; CC            0.9521</span></span>
+<span><span class="co">#&gt; AMB           1.6469</span></span>
+<span><span class="co">#&gt; MB            0.0000</span></span>
+<span><span class="co">#&gt; RMSB          2.3450</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[4]]</span></span>
+<span><span class="co">#&gt;      Target vs. 1980</span></span>
+<span><span class="co">#&gt; PS            0.1570</span></span>
+<span><span class="co">#&gt; CC            0.9604</span></span>
+<span><span class="co">#&gt; AMB           1.5816</span></span>
+<span><span class="co">#&gt; MB            0.0000</span></span>
+<span><span class="co">#&gt; RMSB          2.3185</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[5]]</span></span>
+<span><span class="co">#&gt;      Target vs. 1990</span></span>
+<span><span class="co">#&gt; PS            0.1698</span></span>
+<span><span class="co">#&gt; CC            0.9603</span></span>
+<span><span class="co">#&gt; AMB           1.6250</span></span>
+<span><span class="co">#&gt; MB            0.0000</span></span>
+<span><span class="co">#&gt; RMSB          2.3322</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[6]]</span></span>
+<span><span class="co">#&gt;      Target vs. 2000</span></span>
+<span><span class="co">#&gt; PS            0.2472</span></span>
+<span><span class="co">#&gt; CC            0.9451</span></span>
+<span><span class="co">#&gt; AMB           1.6976</span></span>
+<span><span class="co">#&gt; MB            0.0000</span></span>
+<span><span class="co">#&gt; RMSB          2.3489</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[7]]</span></span>
+<span><span class="co">#&gt;      Target vs. 2010</span></span>
+<span><span class="co">#&gt; PS            0.1618</span></span>
+<span><span class="co">#&gt; CC            0.9635</span></span>
+<span><span class="co">#&gt; AMB           1.6034</span></span>
+<span><span class="co">#&gt; MB            0.0000</span></span>
+<span><span class="co">#&gt; RMSB          2.3178</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[8]]</span></span>
+<span><span class="co">#&gt;      Target vs. 2020</span></span>
+<span><span class="co">#&gt; PS            0.1277</span></span>
+<span><span class="co">#&gt; CC            0.9712</span></span>
+<span><span class="co">#&gt; AMB           1.5778</span></span>
+<span><span class="co">#&gt; MB            0.0000</span></span>
+<span><span class="co">#&gt; RMSB          2.2826</span></span></code></pre></div>
+</div>
+<div class="section level2">
 <h2 id="still-to-come">Still to Come!<a class="anchor" aria-label="anchor" href="#still-to-come"></a>
 </h2>
 <p>We are actively working to develop and enhance the dynamic plotting
 capabilities of these functions to expose and detect changes in
 observations and variables over time.</p>
 <p>Stay tuned for updates!</p>
+</div>
+<div class="section level2">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-Proc" class="csl-entry">
+Gower, J. C., and G. B. Dijksterhuis. 2004. <em>Procrustes
+Problems</em>. Book. Oxford: Oxford University Press.
+</div>
+<div id="ref-biplotEZ" class="csl-entry">
+Lubbe, Sugnet, Niël le Roux, Johané Nienkemper-Swanepoel, Raeesa Ganey,
+Ruan Buys, Zoë-Mae Adams, and Peter Manefeldt. 2024. <em>biplotEZ:
+EZ-to-Use Biplots</em>. <a href="https://doi.org/10.32614/CRAN.package.biplotEZ" class="external-link">https://doi.org/10.32614/CRAN.package.biplotEZ</a>.
+</div>
+<div id="ref-GPAbinart" class="csl-entry">
+Nienkemper-Swanepoel, J., N. J. le Roux, and S. Gardner-Lubbe. 2023.
+<span>“GPAbin: Unifying Visualizations of Multiple Imputations for
+Missing Values.”</span> <em>Communications in Statistics - Simulation
+and Computation</em> 52 (6): 2666–85. <a href="https://doi.org/10.1080/03610918.2021.1914089" class="external-link">https://doi.org/10.1080/03610918.2021.1914089</a>.
+</div>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
