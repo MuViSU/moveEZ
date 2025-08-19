@@ -1,16 +1,12 @@
 ## Overview
 
+This is a minor change submission. In this version we have: 
+- added an evaluation function
 
-This is a resubmission. In this version we have: 
-- Fixed package reference in description with single quotes. 
+── R CMD check results ─────────────────────────────────────────────────────────────────────────────────────────── moveEZ 1.1.0 ────
+Duration: 58.1s
 
-── R CMD check results ──────────────────────────────────────────────────────────────────────── moveEZ 1.0.3 ────
-Duration: 2m 39.1s
-
-❯ checking for future file timestamps ... NOTE
-  unable to verify current time
-
-0 errors ✔ | 0 warnings ✔ | 1 note ✖
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
 
 ## Test environment

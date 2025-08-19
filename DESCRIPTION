@@ -1,6 +1,6 @@
 Package: moveEZ
 Title: Animated Biplots
-Version: 1.0.3
+Version: 1.1.0
 Authors@R: 
     c(person("Raeesa", "Ganey", , "raeesa.ganey@wits.ac.za", role = c("aut", "cre","cph"),
            comment = c(ORCID = "0009-0008-6973-0999")),
