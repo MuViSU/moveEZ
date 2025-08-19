@@ -568,3 +568,4 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   print(bp$plot)
   bp
 }
+
