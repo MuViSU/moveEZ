@@ -326,8 +326,8 @@ more information on these metrics refer to <span class="citation">Nienkemper-Swa
 (2023)</span>.</p>
 <p>The evaluation measures can be extracted as follows:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot3.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>, </span>
-<span>                target <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/evaluation.html">evaluation</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot3.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>, </span>
+<span>                           move <span class="op">=</span> <span class="cn">FALSE</span>, target <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/evaluation.html">evaluation</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-13-1.png" width="672"></p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span><span class="op">$</span><span class="va">eval.list</span></span>
