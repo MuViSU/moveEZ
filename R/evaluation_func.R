@@ -11,6 +11,8 @@
 #'
 #' @returns
 #' \item{eval.list}{Returns a list containing the measures of comparison for each level of the time variable.}
+#' \item{fit.plot}{Returns a line plot with the fit measures that are bounded between zero and one: PS and CC. A small PS value and large CC value indicate good fit.}
+#' \item{bias.plot}{Returns a line plot with bias measures taht are unbounded: AMB, MB and RMSB. Small values indicate low bias.}
 #'
 #' @export
 #'
@@ -21,6 +23,8 @@
 #' results <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 #' move = FALSE, target = NULL) |> evaluation()
 #' results$eval.list
+#' results$fit.plot
+#' results$bias.plot
 #'
 #' data(Africa_climate)
 #' data(Africa_climate_target)
@@ -28,6 +32,8 @@
 #' results <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 #' move = FALSE, target = Africa_climate_target) |> evaluation()
 #' results$eval.list
+#' results$fit.plot
+#' results$bias.plot
 #'
 evaluation <- function(bp, centring = TRUE)
 {
@@ -86,7 +92,36 @@ evaluation <- function(bp, centring = TRUE)
 
     }
 
+    bias_meas <- c("AMB", "MB", "RMSB")
+    fit_meas <- c("PS", "CC")
+
+    eval_df <- do.call(rbind, lapply(eval.list, function(x) {
+      year <- as.numeric(gsub("Target vs. ", "", colnames(x)))
+      data.frame(
+        Year = year,
+        Measure = rownames(x),
+        Value = as.numeric(x[,1]),
+        row.names = NULL
+      )
+    }))
+
+    fit.plot <- ggplot() +
+      ggplot2::geom_line(data = eval_df |> dplyr::filter(Measure  %in% fit_meas),
+                         aes(x = Year, y = Value, color = Measure, group = Measure), linewidth = 1) +
+      labs(x = "Year", y = "Value", title = "Evaluation Metrics over Time") +
+      ggplot2::theme_minimal()
+
+    bias.plot <- ggplot() +
+      ggplot2::geom_line(data = eval_df |> dplyr::filter(Measure  %in% bias_meas),
+                         aes(x = Year, y = Value, color = Measure, group = Measure), linewidth = 1) +
+      labs(x = "Year", y = "Value", title = "Evaluation Metrics over Time") +
+      ggplot2::theme_minimal()
+
+    bp$bias.plot <- bias.plot
+    bp$fit.plot <- fit.plot
     bp$eval.list <- lapply(eval.list, round,4)
+    bp
+
   } else
     print("Evaluation measures can only be applied for moveplot3().")
 

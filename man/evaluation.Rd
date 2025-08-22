@@ -13,6 +13,8 @@ evaluation(bp, centring = TRUE)
 }
 \value{
 \item{eval.list}{Returns a list containing the measures of comparison for each level of the time variable.}
+\item{fit.plot}{Returns a line plot with the fit measures that are bounded between zero and one: PS and CC. A small PS value and large CC value indicate good fit.}
+\item{bias.plot}{Returns a line plot with bias measures taht are unbounded: AMB, MB and RMSB. Small values indicate low bias.}
 }
 \description{
 This function calculates measures of comparison after generalised orthogonal Procrustes Analysis
@@ -27,6 +29,8 @@ bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
 results <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 move = FALSE, target = NULL) |> evaluation()
 results$eval.list
+results$fit.plot
+results$bias.plot
 
 data(Africa_climate)
 data(Africa_climate_target)
@@ -34,5 +38,7 @@ bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
 results <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 move = FALSE, target = Africa_climate_target) |> evaluation()
 results$eval.list
+results$fit.plot
+results$bias.plot
 
 }

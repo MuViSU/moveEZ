@@ -178,15 +178,40 @@ Finally, the animated biplots illustrate the transformations towards a specified
 
 # Evaluation
 
-This function can only be used in conjunction with `moveplot3()`. Five measures of comparison are calculated to establish the differences between each individual biplot and the chosen `target` configuration as specified in `moveplot3()`. The measures are based on Orthogonal Procrustes analysis between the target and the specific individual biplot. There are three bias related measures: Absolute Mean Bias (AMB), Mean Bias (MB) and the Root Mean Squared Bias (RMSB). The measures express the *fit*, therefore, how *close* the coordinates of the two configurations are: Procrustes Statistic (PS) and Congruence Coefficient (CC). For more information on these metrics refer to @GPAbinart.
+This function can only be used in conjunction with `moveplot3()`. Five measures of comparison are calculated to establish the differences between each individual biplot and the chosen `target` configuration as specified in `moveplot3()`. The measures are based on Orthogonal Procrustes analysis between the target and the specific individual biplot. There are three bias related measures: Absolute Mean Bias (AMB), Mean Bias (MB) and the Root Mean Squared Bias (RMSB). There are two fit measures: Procrustes Statistic (PS) and Congruence Coefficient (CC). For more information on these metrics refer to @GPAbinart.
 
 The evaluation measures can be extracted as follows:
 
-```{r,warning=FALSE}
+```{r,echo=FALSE,eval = FALSE,warning=FALSE, message=FALSE}
 results <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE, 
-                target = Africa_climate_target) |> evaluation()
+                target = NULL) |> evaluation()
+```
+
+```{r}
 results$eval.list
 ```
+
+To ease interpretation, especially when there is a large number of time points, separate line plots are available for the fit and bias measures.
+
+## The fit measures
+
+The Procrustes Statistics(PS) and Congruence Coefficient (CC) is bounded by zero and one. A small PS value (close to zero) and a large CC value (close to one) indicate good fit. These measures express the magnitude of changes that has to be made for a particular biplot to match the target visualisation. Therefore, they measure how *close* the coordinates of the two configurations are.
+
+```{r, warning=FALSE}
+results$fit.plot
+```
+
+The line plot shows that the biplot of 2000 results in a lower CC and larger PS value compared to the other years. This means that there is a noticeable difference between the year 2000 and the average across years and the measurements of variables should be investigated in more detail for this year to understand the difference.
+
+## The bias measures
+
+Low values for the Absolute Mean Bias (AMB), Mean Bias (MB) and the Root Mean Squared Bias (RMSB) reflect unbiased representation between a biplot and the target it is being matched to.
+
+```{r, warning=FALSE}
+results$bias.plot
+```
+
+The line plot shows that the initially the bias is low, but increases and stabilises from 1960 with a slight increase in the AMB for 2000. The MB stays constant and close to zero for all comparisons.
 
 # Still to Come!
 
