@@ -183,8 +183,8 @@ This function can only be used in conjunction with `moveplot3()`. Five measures 
 The evaluation measures can be extracted as follows:
 
 ```{r,message=FALSE}
-results <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE, 
-                target = NULL) |> evaluation()
+results <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, 
+                           move = FALSE, target = NULL) |> evaluation()
 ```
 
 ```{r}
