@@ -182,7 +182,7 @@ This function can only be used in conjunction with `moveplot3()`. Five measures 
 
 The evaluation measures can be extracted as follows:
 
-```{r,echo=FALSE,eval = FALSE,warning=FALSE, message=FALSE}
+```{r,message=FALSE}
 results <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE, 
                 target = NULL) |> evaluation()
 ```
@@ -201,7 +201,7 @@ The Procrustes Statistics(PS) and Congruence Coefficient (CC) is bounded by zero
 results$fit.plot
 ```
 
-The line plot shows that the biplot of 2000 results in a lower CC and larger PS value compared to the other years. This means that there is a noticeable difference between the year 2000 and the average across years and the measurements of variables should be investigated in more detail for this year to understand the difference.
+The line plot shows that the biplot of 2000 results in a lower CC and larger PS value compared to the other years. This means that there is a noticeable difference between the year 2000 and the average across years and the measurements of 2000 should be investigated in more detail to understand the cause of this difference.
 
 ## The bias measures
 
@@ -211,7 +211,7 @@ Low values for the Absolute Mean Bias (AMB), Mean Bias (MB) and the Root Mean Sq
 results$bias.plot
 ```
 
-The line plot shows that the initially the bias is low, but increases and stabilises from 1960 with a slight increase in the AMB for 2000. The MB stays constant and close to zero for all comparisons.
+The line plot shows that the initial bias is high, but decreases and stabilises from 1960 with an increase in both the AMB and RMSB occurring for 2000. This is in agreement with the fit measures. The MB stays constant and close to zero for all comparisons.
 
 # Still to Come!
 
