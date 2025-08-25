@@ -126,9 +126,12 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
             axis.text.x = element_blank(),
             axis.text.y = element_blank(),
             axis.title.x = element_blank(),
-            axis.title.y = element_blank())
+            axis.title.y = element_blank(),
+            plot.title = element_text(size=30,face ="bold") )
 
-  print(bp$plot)
+  if(move==TRUE)
+    print(gganimate::animate(bp$plot,duration = 15,fps=10)) else
+      print(bp$plot)
   bp
 }
 
@@ -287,7 +290,8 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
             axis.text.x = element_blank(),
             axis.text.y = element_blank(),
             axis.title.x = element_blank(),
-            axis.title.y = element_blank())
+            axis.title.y = element_blank(),
+            plot.title = element_text(size=30,face ="bold"))
 
   } else {
 
@@ -321,8 +325,11 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
             axis.title.y = element_blank())
 
   }
-    print(bp$plot)
-    bp
+
+  if(move==TRUE)
+    print(gganimate::animate(bp$plot,duration = 15,fps=10)) else
+      print(bp$plot)
+  bp
 }
 
 #' Move plot 3
@@ -531,7 +538,8 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
             axis.text.x = element_blank(),
             axis.text.y = element_blank(),
             axis.title.x = element_blank(),
-            axis.title.y = element_blank())
+            axis.title.y = element_blank(),
+            plot.title = element_text(size=30,face ="bold"))
 
   } else {
 
@@ -565,7 +573,9 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
             axis.title.y = element_blank())
   }
   class(bp) <- append(class(bp), "moveplot3")
-  print(bp$plot)
+  if(move==TRUE)
+    print(gganimate::animate(bp$plot,duration = 15,fps=10)) else
+      print(bp$plot)
   bp
 }
 
