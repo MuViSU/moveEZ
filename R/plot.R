@@ -119,8 +119,10 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                                      state_length = 1) } else {
                                        facet_wrap(~.data[[time.var]]) }} +
       {if(move) { labs(title = '{time.var}: {closest_state}',x="",y="")}} +
-      xlim(xlim) +
-      ylim(ylim) +
+      #xlim(xlim) +
+      #ylim(ylim) +
+      scale_x_continuous(expand = expansion(mult = 0.2)) +
+      scale_y_continuous(expand = expansion(mult = 0.2)) +
       theme_classic() +
       theme(axis.ticks = element_blank(),
             axis.text.x = element_blank(),
@@ -283,8 +285,10 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
                         transition_length = 2,
                         state_length = 1) +
       labs(title = '{time.var}: {closest_state}',x="",y="") +
-      xlim(xlim) +
-      ylim(ylim) +
+      #xlim(xlim) +
+      #ylim(ylim) +
+      scale_x_continuous(expand = expansion(mult = 0.2)) +
+      scale_y_continuous(expand = expansion(mult = 0.2)) +
       theme_classic() +
       theme(axis.ticks = element_blank(),
             axis.text.x = element_blank(),
@@ -315,8 +319,10 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
                        fill =.data[[group.var]],
                        colour = .data[[group.var]]),size=2, alpha=0.8)
       }} + facet_wrap(~.data[[time.var]]) +
-      xlim(xlim) +
-      ylim(ylim) +
+      #xlim(xlim) +
+      #ylim(ylim) +
+      scale_x_continuous(expand = expansion(mult = 0.2)) +
+      scale_y_continuous(expand = expansion(mult = 0.2)) +
       theme_classic() +
       theme(axis.ticks = element_blank(),
             axis.text.x = element_blank(),
@@ -531,8 +537,10 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                                    transition_length = 2,
                                    state_length = 1) +
       labs(title = '{time.var}: {closest_state}',x="",y="") +
-      xlim(xlim) +
-      ylim(ylim) +
+      #xlim(xlim) +
+      #ylim(ylim) +
+      scale_x_continuous(expand = expansion(mult = 0.2)) +
+      scale_y_continuous(expand = expansion(mult = 0.2)) +
       theme_classic() +
       theme(axis.ticks = element_blank(),
             axis.text.x = element_blank(),
@@ -563,8 +571,10 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                        fill =.data[[group.var]],
                        colour = .data[[group.var]]),size=2, alpha=0.8)
       }} + facet_wrap(~.data[[time.var]]) +
-      xlim(xlim) +
-      ylim(ylim) +
+      #xlim(xlim) +
+      #ylim(ylim) +
+      scale_x_continuous(expand = expansion(mult = 0.2)) +
+      scale_y_continuous(expand = expansion(mult = 0.2)) +
       theme_classic() +
       theme(axis.ticks = element_blank(),
             axis.text.x = element_blank(),
