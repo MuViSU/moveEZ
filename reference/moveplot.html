@@ -38,7 +38,15 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">moveplot</span><span class="op">(</span><span class="va">bp</span>, <span class="va">time.var</span>, <span class="va">group.var</span>, move <span class="op">=</span> <span class="cn">TRUE</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>, scale.var <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">moveplot</span><span class="op">(</span></span>
+<span>  <span class="va">bp</span>,</span>
+<span>  <span class="va">time.var</span>,</span>
+<span>  <span class="va">group.var</span>,</span>
+<span>  move <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  hulls <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  scale.var <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  shadow <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -67,6 +75,10 @@
 
 <dt id="arg-scale-var">scale.var<a class="anchor" aria-label="anchor" href="#arg-scale-var"></a></dt>
 <dd><p>scaling the vectors representing the variables</p></dd>
+
+
+<dt id="arg-shadow">shadow<a class="anchor" aria-label="anchor" href="#arg-shadow"></a></dt>
+<dd><p>whether the animation will keep past states (only when hulls = FALSE)</p></dd>
 
 </dl></div>
     <div class="section level2">
