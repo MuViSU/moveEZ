@@ -8,6 +8,7 @@
 #' @param move whether to animate (TRUE) or facet (FALSE) samples, according to time.var
 #' @param hulls whether to display sample points or convex hulls
 #' @param scale.var scaling the vectors representing the variables
+#' @param shadow whether the animation will keep past states (only when hulls = FALSE)
 #'
 #' @returns
 #' \item{bp}{Returns the elements of the biplot object \code{bp} from \code{biplotEZ}.}
@@ -24,7 +25,7 @@
 #' if(interactive()) {
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}}
 moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
-                     scale.var = 5)
+                     scale.var = 5,shadow=FALSE)
 {
 
   if(!is.null(group.var)) bp$group.aes <- bp$raw.X[,which(colnames(bp$raw.X) == group.var)] else
@@ -44,22 +45,6 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   Z <- suppressMessages(dplyr::bind_cols(Z, bp$Xcat))
   colnames(Z)[1:2] <- c("V1","V2")
   Z_tbl <- dplyr::as_tibble(Z)
-
-  # Set limits
-  # xlim
-  minx <- min(Z_tbl$V1)
-  maxx <- max(Z_tbl$V1)
-  range_x <- maxx - minx
-
-  # ylim
-  miny <- min(Z_tbl$V2)
-  maxy <- max(Z_tbl$V2)
-  range_y <- maxy - miny
-
-  perc <- 20/100
-  xlim <- c(minx - perc*range_x,maxx + perc*range_x)
-  ylim <- c(miny - perc*range_y,maxy + perc*range_y)
-
 
   axes_info <- axes_moveEZ(bp)
   Vr <- bp$Vr
@@ -119,8 +104,7 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                                      state_length = 1) } else {
                                        facet_wrap(~.data[[time.var]]) }} +
       {if(move) { labs(title = '{time.var}: {closest_state}',x="",y="")}} +
-      #xlim(xlim) +
-      #ylim(ylim) +
+      {if(!hulls & shadow) { gganimate::shadow_mark(alpha=0.3) }} +
       ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.2)) +
       ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.2)) +
       theme_classic() +
