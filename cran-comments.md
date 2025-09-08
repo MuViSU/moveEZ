@@ -1,12 +1,15 @@
 ## Overview
 
 This is a minor change submission. In this version we have: 
-- added an evaluation function
+- fixed the labs error
 
-── R CMD check results ─────────────────────────────────────────────────────────────────────────────────────────── moveEZ 1.1.0 ────
-Duration: 58.1s
+── R CMD check results ─────────────────────────────────────────────────────────────────────── moveEZ 1.1.1 ────
+Duration: 1m 44.3s
 
-0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+❯ checking for future file timestamps ... NOTE
+  unable to verify current time
+
+0 errors ✔ | 0 warnings ✔ | 1 note ✖
 
 
 ## Test environment

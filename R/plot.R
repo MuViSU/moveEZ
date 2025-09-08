@@ -103,7 +103,7 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                                      transition_length = 2,
                                      state_length = 1) } else {
                                        facet_wrap(~.data[[time.var]]) }} +
-      {if(move) { labs(title = '{time.var}: {closest_state}',x="",y="")}} +
+      {if(move) { ggplot2::labs(title = '{time.var}: {closest_state}',x="",y="")}} +
       {if(!hulls & shadow) { gganimate::shadow_mark(alpha=0.3) }} +
       ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.2)) +
       ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.2)) +
@@ -116,7 +116,7 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
             plot.title = ggplot2::element_text(size=30,face ="bold") )
 
   if(move==TRUE)
-    print(gganimate::animate(bp$plot,duration = 15,fps=10)) else
+    print(gganimate::animate(bp$plot,duration = 15,fps=10,end_pause = 20)) else
       print(bp$plot)
   bp
 }
@@ -268,9 +268,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
       gganimate::transition_states(.data[[time.var]],
                         transition_length = 2,
                         state_length = 1) +
-      labs(title = '{time.var}: {closest_state}',x="",y="") +
-      #xlim(xlim) +
-      #ylim(ylim) +
+      ggplot2::labs(title = '{time.var}: {closest_state}',x="",y="") +
       ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.2)) +
       ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.2)) +
       theme_classic() +
@@ -520,9 +518,7 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
       gganimate::transition_states(.data[[time.var]],
                                    transition_length = 2,
                                    state_length = 1) +
-      labs(title = '{time.var}: {closest_state}',x="",y="") +
-      #xlim(xlim) +
-      #ylim(ylim) +
+      ggplot2::labs(title = '{time.var}: {closest_state}',x="",y="") +
       ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.2)) +
       ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.2)) +
       theme_classic() +
