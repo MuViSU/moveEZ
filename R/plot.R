@@ -170,21 +170,6 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
   colnames(Z)[1:2] <- c("V1","V2")
   Z_tbl <- dplyr::as_tibble(Z)
 
-  # Set limits
-  # xlim
-  minx <- min(Z_tbl$V1)
-  maxx <- max(Z_tbl$V1)
-  range_x <- maxx - minx
-
-  # ylim
-  miny <- min(Z_tbl$V2)
-  maxy <- max(Z_tbl$V2)
-  range_y <- maxy - miny
-
-  perc <- 20/100
-  xlim <- c(minx - perc*range_x,maxx + perc*range_x)
-  ylim <- c(miny - perc*range_y,maxy + perc*range_y)
-
 
   # Basis extraction
   bp_list <- vector("list", iterations)
@@ -200,9 +185,15 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
     temp <- bp$raw.X |> dplyr::filter(bp$raw.X[[tvi]] == iter_levels[i])
     bp_list[[i]] <- biplotEZ::biplot(temp,scaled=bp$scaled) |> biplotEZ::PCA(group.aes = temp[[gvi]])
 
-    # if(i == any(align_levels)) bp_list[[i]] <- bp_list[[i]] |> reflect_biplot(reflect.axis = reflect[i])
+    if (i %in% align_levels) {
+      reflect.mat <- diag(2)
+      if (reflect[which(align_levels == i)] == "x") reflect.mat[1, 1] <- -1
+      if (reflect[which(align_levels == i)] == "y") reflect.mat[2, 2] <- -1
+      if (reflect[which(align_levels == i)] == "xy") reflect.mat[1:2, 1:2] <- diag(-1, 2)
 
-    if (i %in% align_levels) bp_list[[i]] <- bp_list[[i]] |> biplotEZ::reflect(reflect.axis = reflect[which(align_levels == i)])
+      bp_list[[i]]$Z <- bp_list[[i]]$Z %*% reflect.mat
+      bp_list[[i]]$Vr <- bp_list[[i]]$Vr %*% reflect.mat
+    }
 
     colnames(bp_list[[i]]$Z) <- c("V1","V2")
     Z_list[[i]] <- dplyr::as_tibble(bp_list[[i]]$Z)
