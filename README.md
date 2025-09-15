@@ -64,6 +64,11 @@ observations and variables over time.
 
 Stay tuned for updates!
 
+# About the logo
+
+Logo concept developed with assistance from OpenAI’s ChatGPT
+<https://openai.com/chatgpt>; final design by Raeesa and Johané.
+
 # Report Bugs and Support
 
 If you encounter any issues or have questions, please open an issue on
