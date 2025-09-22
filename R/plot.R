@@ -74,6 +74,14 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   chull_reg <- do.call(rbind,chull_reg)
   chull_reg <- dplyr::as_tibble(chull_reg)
 
+  #identify time.var levels that cannot display hulls due unbalanced observations
+  #making this condition less than 4 will display the last hull with points
+  #this shows a better transition from hulls to points
+  #can be made less than 3 to start with a straight line that represents the hull
+  tvi_chull <- which(colnames(chull_reg) == time.var)
+  no_hulls <- as.numeric(names(which(table(chull_reg[[tvi_chull]])<4)))
+  #subset of samples for which hulls cannot be constructed
+  Z_tbl_sub <- Z_tbl |>  filter(Z_tbl[[tvi_chull]] %in% no_hulls)
 
   # Plotting
 
@@ -104,7 +112,13 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                                      state_length = 1) } else {
                                        facet_wrap(~.data[[time.var]]) }} +
       {if(move) { ggplot2::labs(title = '{time.var}: {closest_state}',x="",y="")}} +
-      {if(!hulls & shadow) { gganimate::shadow_mark(alpha=0.3) }} +
+    # add sample points for hulls that cannot be constructed
+      {if(hulls & (length(no_hulls) > 0)) {
+      geom_point(data = Z_tbl_sub, aes(x=V1, y=V2, group = .data[[group.var]],
+                                       fill =.data[[group.var]],
+                                       colour = .data[[group.var]]), size=2, alpha=0.8, show.legend = FALSE)
+      }} +
+     {if(!hulls & shadow) { gganimate::shadow_mark(alpha=0.3) }} +
       ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.2)) +
       ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.2)) +
       theme_classic() +
