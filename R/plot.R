@@ -45,8 +45,6 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   if(is.null(group.col)) group_palette <- setNames(hue_pal()(length(group_levels)), group_levels)
     else group_palette <- group.col
 
-  print(group_palette)
-
   # Samples
   Z <- bp$Z
   Z <- suppressMessages(dplyr::bind_cols(Z, bp$Xcat))
@@ -81,13 +79,9 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   chull_reg <- do.call(rbind,chull_reg)
   chull_reg <- dplyr::as_tibble(chull_reg)
 
-  #identify time.var levels that cannot display hulls due unbalanced observations
-  #making this condition less than 4 will display the last hull with points
-  #this shows a better transition from hulls to points
-  #can be made less than 3 to start with a straight line that represents the hull
+  # Subset of samples for which hulls cannot be constructed
   tvi_chull <- which(colnames(chull_reg) == time.var)
   no_hulls <- as.numeric(names(which(table(chull_reg[[tvi_chull]])<4)))
-  #subset of samples for which hulls cannot be constructed
   Z_tbl_sub <- Z_tbl |>  filter(Z_tbl[[tvi_chull]] %in% no_hulls)
 
   # Plotting
@@ -123,7 +117,7 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                                      state_length = 1) } else {
                                        facet_wrap(~.data[[time.var]]) }} +
       {if(move) { ggplot2::labs(title = '{time.var}: {closest_state}',x="",y="")}} +
-    # add sample points for hulls that cannot be constructed
+    # Sample points for hulls that cannot be constructed
       {if(hulls & (length(no_hulls) > 0)) {
         list(
         geom_point(data = Z_tbl_sub,
