@@ -25,7 +25,7 @@
 #' if(interactive()) {
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}}
 moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
-                     scale.var = 5,shadow=FALSE)
+                     scale.var = 5,shadow=FALSE,group.col=NULL)
 {
 
   if(!is.null(group.var)) bp$group.aes <- bp$raw.X[,which(colnames(bp$raw.X) == group.var)] else
@@ -39,6 +39,13 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 
   group_levels <- levels(bp$raw.X[[gvi]])
 
+
+  # Group colours
+
+  if(is.null(group.col)) group_palette <- setNames(hue_pal()(length(group_levels)), group_levels)
+    else group_palette <- group.col
+
+  print(group_palette)
 
   # Samples
   Z <- bp$Z
@@ -96,16 +103,20 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                                 hjust="outward", vjust="outward",group=var),colour="black",size=4) +
       # Sample polygons or points
       {if(hulls){
-        geom_polygon(data = chull_reg,
-                     aes(x=V1, y=V2,group = .data[[group.var]],
-                         fill = .data[[group.var]]), alpha=0.5)
-
+        list(
+          geom_polygon(data = chull_reg,
+                     aes(x=V1, y=V2,
+                         group = .data[[group.var]],
+                         fill = .data[[group.var]]), alpha=0.5),
+          ggplot2::scale_fill_manual(values = group_palette))
       } else {
+        list(
         geom_point(data = Z_tbl,
                    aes(x=V1, y=V2,
                        group = .data[[group.var]],
                        fill =.data[[group.var]],
-                       colour = .data[[group.var]]),size=2, alpha=0.8)
+                       colour = .data[[group.var]]),size=2, alpha=0.8),
+        ggplot2::scale_colour_manual(values = group_palette))
       }} +
       {if(move) { gganimate::transition_states(.data[[time.var]],
                                      transition_length = 2,
@@ -114,9 +125,14 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
       {if(move) { ggplot2::labs(title = '{time.var}: {closest_state}',x="",y="")}} +
     # add sample points for hulls that cannot be constructed
       {if(hulls & (length(no_hulls) > 0)) {
-      geom_point(data = Z_tbl_sub, aes(x=V1, y=V2, group = .data[[group.var]],
-                                       fill =.data[[group.var]],
-                                       colour = .data[[group.var]]), size=2, alpha=0.8, show.legend = FALSE)
+        list(
+        geom_point(data = Z_tbl_sub,
+                   aes(x=V1, y=V2,
+                       group = .data[[group.var]],
+                       fill =.data[[group.var]],
+                       colour = .data[[group.var]]),
+                   size=2, alpha=0.8, show.legend = FALSE),
+      ggplot2::scale_colour_manual(values=group_palette,drop=FALSE))
       }} +
      {if(!hulls & shadow) { gganimate::shadow_mark(alpha=0.3) }} +
       ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.2)) +
