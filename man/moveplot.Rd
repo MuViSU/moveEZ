@@ -8,6 +8,7 @@ moveplot(
   bp,
   time.var,
   group.var,
+  group.col = NULL,
   move = TRUE,
   hulls = TRUE,
   scale.var = 5,
@@ -20,6 +21,8 @@ moveplot(
 \item{time.var}{time variable}
 
 \item{group.var}{group variable}
+
+\item{group.col}{vector of the same length as the number of groups to specify the colours of the group levels}
 
 \item{move}{whether to animate (TRUE) or facet (FALSE) samples, according to time.var}
 
@@ -39,9 +42,29 @@ Create animated biplot on samples in a biplot
 \examples{
 data(Africa_climate)
 bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
+
+# Convex hulls facet plot
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+
+# Samples facet plot
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
+
+# Convex hulls facet plot by specifying group colours with colour palette
+bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE,
+group.col = RColorBrewer::brewer.pal(10, "RdYlGn"))
+
+# Convex hulls facet plot by specifying group colours
+bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE,
+group.col = c("firebrick4", "indianred3", "tomato", "sandybrown", "khaki1",
+"palegreen1", "darkseagreen2", "mediumaquamarine", "deepskyblue4", "mediumpurple4"))
+
+# Convex hulls move plot
 \donttest{
 if(interactive()) {
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}}
+
+# Convex hulls move plot with shadows
+\donttest{
+if(interactive()) {
+bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE, shadow = TRUE)}}
 }

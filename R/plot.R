@@ -5,6 +5,7 @@
 #' @param bp biplot object from biplotEZ
 #' @param time.var time variable
 #' @param group.var group variable
+#' @param group.col vector of the same length as the number of groups to specify the colours of the group levels
 #' @param move whether to animate (TRUE) or facet (FALSE) samples, according to time.var
 #' @param hulls whether to display sample points or convex hulls
 #' @param scale.var scaling the vectors representing the variables
@@ -19,15 +20,34 @@
 #' @examples
 #' data(Africa_climate)
 #' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
+#'
+#' # Convex hulls facet plot
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+#'
+#' # Samples facet plot
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
+#'
+#' # Convex hulls facet plot by specifying group colours with colour palette
+#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE,
+#' group.col = RColorBrewer::brewer.pal(10, "RdYlGn"))
+#'
+#' # Convex hulls facet plot by specifying group colours
+#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE,
+#' group.col = c("firebrick4", "indianred3", "tomato", "sandybrown", "khaki1",
+#' "palegreen1", "darkseagreen2", "mediumaquamarine", "deepskyblue4", "mediumpurple4"))
+#'
+#' # Convex hulls move plot
 #' \donttest{
 #' if(interactive()) {
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}}
-moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
-                     scale.var = 5,shadow=FALSE,group.col=NULL)
+#'
+#' # Convex hulls move plot with shadows
+#' \donttest{
+#' if(interactive()) {
+#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE, shadow = TRUE)}}
+moveplot <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
+                     hulls = TRUE, scale.var = 5, shadow = FALSE)
 {
-
   if(!is.null(group.var)) bp$group.aes <- bp$raw.X[,which(colnames(bp$raw.X) == group.var)] else
     bp$group.aes = NULL
 
@@ -39,11 +59,10 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 
   group_levels <- levels(bp$raw.X[[gvi]])
 
-
   # Group colours
 
-  if(is.null(group.col)) group_palette <- setNames(hue_pal()(length(group_levels)), group_levels)
-    else group_palette <- group.col
+  if(is.null(group.col)) group_palette <- setNames(scales::hue_pal()(length(group_levels)), group_levels)
+  else group_palette <- group.col
 
   # Samples
   Z <- bp$Z
@@ -153,6 +172,7 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 #' @param bp biplot object from biplotEZ
 #' @param time.var time variable
 #' @param group.var group variable
+#' @param group.col vector of the same length as the number of groups to specify the colours of the group levels
 #' @param move whether to animate (TRUE) or facet (FALSE) samples and variables, according to time.var
 #' @param hulls whether to display sample points or convex hulls
 #' @param scale.var scaling the vectors representing the variables
@@ -171,8 +191,8 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 #' \donttest{
 #' if(interactive()) {
 #' bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}}
-moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.var = 5,
-                      align.time = NA, reflect = NA)
+moveplot2 <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
+                      hulls = TRUE, scale.var = 5, align.time = NA, reflect = NA)
 {
 
   if(!is.null(group.var)) bp$group.aes <- bp$raw.X[,which(colnames(bp$raw.X) == group.var)] else
@@ -185,6 +205,11 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
   iter_levels <- levels(bp$raw.X[[tvi]])
 
   group_levels <- levels(bp$raw.X[[gvi]])
+
+  # Group colours
+
+  if(is.null(group.col)) group_palette <- setNames(scales::hue_pal()(length(group_levels)), group_levels)
+  else group_palette <- group.col
 
   align_levels <- which(iter_levels==align.time)
 
@@ -269,16 +294,16 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
                         state_length = 1) +
       # Sample polygons or points
       {if(hulls){
-        geom_polygon(data = chull_reg,
-                              aes(x=V1, y=V2,group = .data[[group.var]],
-                         fill = .data[[group.var]]), alpha=0.5)
-
+        list(
+        geom_polygon(data = chull_reg, aes(x=V1, y=V2,group = .data[[group.var]],
+                        fill = .data[[group.var]]), alpha=0.5),
+                        ggplot2::scale_fill_manual(values = group_palette))
       } else {
-        geom_point(data = Z_tbl,
-                            aes(x=V1, y=V2,
-                       group = .data[[group.var]],
-                       fill =.data[[group.var]],
-                       colour = .data[[group.var]]),size=2, alpha=0.8)
+        list(
+        geom_point(data = Z_tbl, aes(x=V1, y=V2, group = .data[[group.var]],
+                      fill =.data[[group.var]], colour = .data[[group.var]]),
+                      size=2, alpha=0.8),
+                      ggplot2::scale_colour_manual(values = group_palette))
       }} +
       gganimate::transition_states(.data[[time.var]],
                         transition_length = 2,
@@ -302,21 +327,24 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
                    arrow=arrow(length=unit(0.1,"inches"))) +
       geom_text(data=Vr_tbl,aes(x=V1*scale.var, y=V2*scale.var,
                                 label = var,
-                                hjust="outward", vjust="outward",group=var),colour="black",size=4) +
+                                hjust="outward", vjust="outward",group=var), colour="black",size=4) +
       # Sample polygons or points
       {if(hulls){
+        list(
         geom_polygon(data = chull_reg,
-                     aes(x=V1, y=V2,group = .data[[group.var]],
-                         fill = .data[[group.var]]), alpha=0.5)
-
+                    aes(x=V1, y=V2,group = .data[[group.var]],
+                    fill = .data[[group.var]]), alpha=0.5),
+                    ggplot2::scale_fill_manual(values = group_palette))
       } else {
+        list(
         geom_point(data = Z_tbl,
                    aes(x=V1, y=V2,
                        group = .data[[group.var]],
                        fill =.data[[group.var]],
-                       colour = .data[[group.var]]),size=2, alpha=0.8)
+                       colour = .data[[group.var]]),size=2, alpha=0.8),
+                      ggplot2::scale_colour_manual(values = group_palette))
       }} +
-      facet_wrap(vars(!!sym(time.var))) +
+      facet_wrap(dplyr::vars(!!rlang::sym(time.var))) +
       ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.2)) +
       ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.2)) +
       theme_classic() +
@@ -341,6 +369,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
 #' @param bp biplot object from biplotEZ
 #' @param time.var time variable
 #' @param group.var group variable
+#' @param group.col vector of the same length as the number of groups to specify the colours of the group levels
 #' @param move whether to animate (TRUE) or facet (FALSE) samples and variables, according to time.var
 #' @param hulls whether to display sample points or convex hulls
 #' @param scale.var scaling the vectors representing the variables
@@ -367,8 +396,8 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
 #' move = TRUE, target = NULL)}}
 #' bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 #' move = FALSE, target = Africa_climate_target)
-moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
-                      scale.var = 5, target = NULL)
+moveplot3 <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
+                      hulls = TRUE, scale.var = 5, target = NULL)
 {
   if(!is.null(group.var)) bp$group.aes <- bp$raw.X[,which(colnames(bp$raw.X) == group.var)] else
     bp$group.aes = NULL
@@ -383,6 +412,14 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   bp$iter_levels <- iter_levels
 
   group_levels <- levels(bp$raw.X[[gvi]])
+
+  # Group colours
+
+  if(is.null(group.col)) group_palette <- setNames(scales::hue_pal()(length(group_levels)), group_levels)
+  else group_palette <- group.col
+
+  # Stop if levels of time.var are unequal, GPA cannot be performed
+  if(dplyr::n_distinct(table(bp$raw.X[[tvi]])) != 1) stop("To apply GPA, the number of observations per time.var level should be equal.")
 
   # Samples
   Z <- bp$Z
@@ -518,16 +555,19 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                                    state_length = 1) +
       # Sample polygons or points
       {if(hulls){
+        list(
         geom_polygon(data = chull_reg_GPA,
                      aes(x=V1, y=V2,group = .data[[group.var]],
-                         fill = .data[[group.var]]), alpha=0.5)
-
+                         fill = .data[[group.var]]), alpha=0.5),
+        ggplot2::scale_fill_manual(values = group_palette))
       } else {
+        list(
         geom_point(data = Z_GPA_tbl,
                    aes(x=V1, y=V2,
                        group = .data[[group.var]],
                        fill =.data[[group.var]],
-                       colour = .data[[group.var]]),size=2, alpha=0.8)
+                       colour = .data[[group.var]]),size=2, alpha=0.8),
+        ggplot2::scale_colour_manual(values = group_palette))
       }} +
       gganimate::transition_states(.data[[time.var]],
                                    transition_length = 2,
@@ -554,16 +594,19 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                                     hjust="outward", vjust="outward",group=var),colour="black",size=4) +
       # Sample polygons or points
       {if(hulls){
+        list(
         geom_polygon(data = chull_reg_GPA,
                      aes(x=V1, y=V2,group = .data[[group.var]],
-                         fill = .data[[group.var]]), alpha=0.5)
-
+                         fill = .data[[group.var]]), alpha=0.5),
+        ggplot2::scale_fill_manual(values = group_palette))
       } else {
+        list(
         geom_point(data = Z_GPA_tbl,
                    aes(x=V1, y=V2,
                        group = .data[[group.var]],
                        fill =.data[[group.var]],
-                       colour = .data[[group.var]]),size=2, alpha=0.8)
+                       colour = .data[[group.var]]),size=2, alpha=0.8),
+        ggplot2::scale_colour_manual(values = group_palette))
       }} + facet_wrap(~.data[[time.var]]) +
       #xlim(xlim) +
       #ylim(ylim) +
