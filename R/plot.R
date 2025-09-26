@@ -291,9 +291,8 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE, scale.
                        group = .data[[group.var]],
                        fill =.data[[group.var]],
                        colour = .data[[group.var]]),size=2, alpha=0.8)
-      }} + facet_wrap(~.data[[time.var]]) +
-      #xlim(xlim) +
-      #ylim(ylim) +
+      }} +
+      facet_wrap(vars(!!sym(time.var))) +
       ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.2)) +
       ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.2)) +
       theme_classic() +
