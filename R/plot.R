@@ -41,10 +41,10 @@
 #' if(interactive()) {
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}}
 #'
-#' # Convex hulls move plot with shadows
+#' # Samples move plot with shadows
 #' \donttest{
 #' if(interactive()) {
-#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE, shadow = TRUE)}}
+#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = TRUE, shadow = TRUE)}}
 moveplot <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
                      hulls = TRUE, scale.var = 5, shadow = FALSE)
 {
