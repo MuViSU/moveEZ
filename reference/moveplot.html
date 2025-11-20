@@ -42,7 +42,6 @@
 <span>  <span class="va">bp</span>,</span>
 <span>  <span class="va">time.var</span>,</span>
 <span>  <span class="va">group.var</span>,</span>
-<span>  group.col <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  move <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  hulls <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  scale.var <span class="op">=</span> <span class="fl">5</span>,</span>
@@ -64,10 +63,6 @@
 
 <dt id="arg-group-var">group.var<a class="anchor" aria-label="anchor" href="#arg-group-var"></a></dt>
 <dd><p>group variable</p></dd>
-
-
-<dt id="arg-group-col">group.col<a class="anchor" aria-label="anchor" href="#arg-group-col"></a></dt>
-<dd><p>vector of the same length as the number of groups to specify the colours of the group levels</p></dd>
 
 
 <dt id="arg-move">move<a class="anchor" aria-label="anchor" href="#arg-move"></a></dt>
@@ -117,19 +112,29 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 numeric variables.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3 categorical variables.</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Convex hulls facet plot by specifying group colours with colour palette</span></span></span>
-<span class="r-in"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu">moveplot</span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
-<span class="r-in"><span>group.col <span class="op">=</span> <span class="fu">RColorBrewer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html" class="external-link">brewer.pal</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"RdYlGn"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Specifying colours with colour palette in biplotEZ</span></span></span>
+<span class="r-in"><span><span class="va">bp</span> <span class="op">&lt;-</span> <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/biplot.html" class="external-link">biplot</a></span><span class="op">(</span><span class="va">Africa_climate</span>, scaled <span class="op">=</span> <span class="cn">TRUE</span>, group.aes <span class="op">=</span> <span class="va">Africa_climate</span><span class="op">$</span><span class="va">Region</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span><span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/PCA.html" class="external-link">PCA</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/samples.html" class="external-link">samples</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fu">RColorBrewer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html" class="external-link">brewer.pal</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"Paired"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu">moveplot</span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="moveplot-3.png" alt="" width="700" height="433"></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Object of class biplot, based on 960 samples and 9 variables.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 numeric variables.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3 categorical variables.</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Convex hulls facet plot by specifying group colours</span></span></span>
-<span class="r-in"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu">moveplot</span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
-<span class="r-in"><span>group.col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"firebrick4"</span>, <span class="st">"indianred3"</span>, <span class="st">"tomato"</span>, <span class="st">"sandybrown"</span>, <span class="st">"khaki1"</span>,</span></span>
-<span class="r-in"><span><span class="st">"palegreen1"</span>, <span class="st">"darkseagreen2"</span>, <span class="st">"mediumaquamarine"</span>, <span class="st">"deepskyblue4"</span>, <span class="st">"mediumpurple4"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Specifying plotting characters for grouping variable in biplotEZ</span></span></span>
+<span class="r-in"><span><span class="va">bp</span> <span class="op">&lt;-</span> <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/biplot.html" class="external-link">biplot</a></span><span class="op">(</span><span class="va">Africa_climate</span>, scaled <span class="op">=</span> <span class="cn">TRUE</span>, group.aes <span class="op">=</span> <span class="va">Africa_climate</span><span class="op">$</span><span class="va">Region</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span><span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/PCA.html" class="external-link">PCA</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/samples.html" class="external-link">samples</a></span><span class="op">(</span>pch <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">19</span>,<span class="fl">21</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu">moveplot</span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="moveplot-4.png" alt="" width="700" height="433"></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Object of class biplot, based on 960 samples and 9 variables.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 numeric variables.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 categorical variables.</span>
+<span class="r-in"><span><span class="co"># Specifying colours manually in biplotEZ</span></span></span>
+<span class="r-in"><span><span class="va">bp</span> <span class="op">&lt;-</span> <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/biplot.html" class="external-link">biplot</a></span><span class="op">(</span><span class="va">Africa_climate</span>, scaled <span class="op">=</span> <span class="cn">TRUE</span>, group.aes <span class="op">=</span> <span class="va">Africa_climate</span><span class="op">$</span><span class="va">Region</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span><span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/PCA.html" class="external-link">PCA</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/samples.html" class="external-link">samples</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"firebrick4"</span>, <span class="st">"indianred3"</span>, <span class="st">"tomato"</span>, <span class="st">"sandybrown"</span>,</span></span>
+<span class="r-in"><span> <span class="st">"khaki1"</span>, <span class="st">"palegreen1"</span>, <span class="st">"darkseagreen2"</span>, <span class="st">"mediumaquamarine"</span>, <span class="st">"deepskyblue4"</span>, <span class="st">"mediumpurple4"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu">moveplot</span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="moveplot-5.png" alt="" width="700" height="433"></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Object of class biplot, based on 960 samples and 9 variables.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 numeric variables.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3 categorical variables.</span>
@@ -139,10 +144,10 @@
 <span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu">moveplot</span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Convex hulls move plot with shadows</span></span></span>
+<span class="r-in"><span><span class="co"># Samples move plot with shadows</span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu">moveplot</span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">TRUE</span>, shadow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span><span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu">moveplot</span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">FALSE</span>, move <span class="op">=</span> <span class="cn">TRUE</span>, shadow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -154,7 +159,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
