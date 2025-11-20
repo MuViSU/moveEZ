@@ -8,11 +8,9 @@ moveplot2(
   bp,
   time.var,
   group.var,
-  group.col = NULL,
   move = TRUE,
   hulls = TRUE,
   scale.var = 5,
-  shadow = FALSE,
   align.time = NA,
   reflect = NA
 )
@@ -23,8 +21,6 @@ moveplot2(
 \item{time.var}{time variable}
 
 \item{group.var}{group variable}
-
-\item{group.col}{vector of the same length as the number of groups to specify the colours of the group levels}
 
 \item{move}{whether to animate (TRUE) or facet (FALSE) samples and variables, according to time.var}
 

@@ -5,7 +5,6 @@
 #' @param bp biplot object from biplotEZ
 #' @param time.var time variable
 #' @param group.var group variable
-#' @param group.col vector of the same length as the number of groups to specify the colours of the group levels
 #' @param move whether to animate (TRUE) or facet (FALSE) samples, according to time.var
 #' @param hulls whether to display sample points or convex hulls
 #' @param scale.var scaling the vectors representing the variables
@@ -27,14 +26,21 @@
 #' # Samples facet plot
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
 #'
-#' # Convex hulls facet plot by specifying group colours with colour palette
-#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE,
-#' group.col = RColorBrewer::brewer.pal(10, "RdYlGn"))
+#' # Specifying colours with colour palette in biplotEZ
+#' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
+#' biplotEZ::PCA() |> biplotEZ::samples(col = RColorBrewer::brewer.pal(10, "Paired"))
+#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 #'
-#' # Convex hulls facet plot by specifying group colours
-#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE,
-#' group.col = c("firebrick4", "indianred3", "tomato", "sandybrown", "khaki1",
-#' "palegreen1", "darkseagreen2", "mediumaquamarine", "deepskyblue4", "mediumpurple4"))
+#' # Specifying plotting characters for grouping variable in biplotEZ
+#' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
+#' biplotEZ::PCA() |> biplotEZ::samples(pch = c(19,21,3))
+#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+
+#' # Specifying colours manually in biplotEZ
+#' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
+#' biplotEZ::PCA() |> biplotEZ::samples(col = c("firebrick4", "indianred3", "tomato", "sandybrown",
+#'  "khaki1", "palegreen1", "darkseagreen2", "mediumaquamarine", "deepskyblue4", "mediumpurple4"))
+#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 #'
 #' # Convex hulls move plot
 #' \donttest{
@@ -45,8 +51,8 @@
 #' \donttest{
 #' if(interactive()) {
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = TRUE, shadow = TRUE)}}
-moveplot <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
-                     hulls = TRUE, scale.var = 5, shadow = FALSE)
+moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
+                     scale.var = 5, shadow = FALSE)
 {
 
   if(!is.null(group.var)) bp$group.aes <- bp$raw.X[,which(colnames(bp$raw.X) == group.var)] else
@@ -62,14 +68,32 @@ moveplot <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
 
   # Group colours
 
-  if(is.null(group.col)) group_palette <- setNames(scales::hue_pal()(length(group_levels)), group_levels) else {
-    group_palette <- group.col }
+  #biplotEZ default colour palette
+  EZcols <- c("#0000FFFF", "#00FF00FF", "#FFD700FF", "#00FFFFFF", "#FF00FFFF",
+              "#000000FF", "#FF0000FF", "#BEBEBEFF", "#A020F0FF", "#FA8072FF")
+
+  if(length(bp$samples$col) == 1 | is.null(bp$samples$col) |
+     (sum(bp$samples$col == EZcols[1:length(group_levels)])==length(group_levels))) {
+    group_palette <- stats::setNames(scales::hue_pal()(length(group_levels)), group_levels)}
+  else group_palette <- bp$samples$col
 
   # Samples
+
+  if(is.null(bp$samples$pch)) samp_pch = c(rep(19,bp$n)) else {
+  samp_pch <- bp$samples$pch }
+  if(is.null(bp$samples$opacity)) samp_opac = 0.8 else {
+    samp_opac <- bp$samples$opacity }
+
   Z <- bp$Z
   Z <- suppressMessages(dplyr::bind_cols(Z, bp$Xcat))
   colnames(Z)[1:2] <- c("V1","V2")
   Z_tbl <- dplyr::as_tibble(Z)
+
+  # Variables
+
+  #conversion of 1:1.5 between cex base R and ggplot2 size
+  #to add later
+  #text_size <- bp$axes$label.cex*5
 
   axes_info <- axes_moveEZ(bp)
   Vr <- bp$Vr
@@ -102,7 +126,7 @@ moveplot <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
   # Subset of samples for which hulls cannot be constructed
   tvi_chull <- which(colnames(chull_reg) == time.var)
   no_hulls <- as.numeric(names(which(table(chull_reg[[tvi_chull]])<4)))
-  Z_tbl_sub <- Z_tbl |>  filter(Z_tbl[[tvi_chull]] %in% no_hulls)
+  Z_tbl_sub <- Z_tbl |>  dplyr::filter(Z_tbl[[tvi_chull]] %in% no_hulls)
 
   # Plotting
 
@@ -110,11 +134,12 @@ moveplot <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
   # move – FALSE  --- Facet on sliced Z
   bp$plot <- ggplot() +
       # Axes
-      geom_segment(data=Vr_tbl,aes(x=0,y=0,xend=V1*scale.var,yend=V2*scale.var,group=var),
+      geom_segment(data=Vr_tbl,aes(x=0,y=0,xend=V1*scale.var,yend=V2*scale.var, group=var),
                    arrow=arrow(length=unit(0.1,"inches"))) +
       geom_text(data=Vr_tbl,aes(x=V1*scale.var, y=V2*scale.var,
                                 label = var,
-                                hjust="outward", vjust="outward",group=var),colour="black",size=4) +
+                                hjust="outward", vjust="outward", group=var),
+                colour="black",size=4) +
       # Sample polygons or points
       {if(hulls){
         list(
@@ -129,8 +154,10 @@ moveplot <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
                    aes(x=V1, y=V2,
                        group = .data[[group.var]],
                        fill =.data[[group.var]],
-                       colour = .data[[group.var]]),size=2, alpha=0.8),
-        ggplot2::scale_colour_manual(values = group_palette))
+                       colour = .data[[group.var]], shape = .data[[group.var]]),
+                   size=2, alpha=samp_opac),
+        ggplot2::scale_colour_manual(values = group_palette),
+        ggplot2::scale_shape_manual(values = samp_pch))
       }} +
       {if(move) { gganimate::transition_states(.data[[time.var]],
                                      transition_length = 2,
@@ -144,9 +171,10 @@ moveplot <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
                    aes(x=V1, y=V2,
                        group = .data[[group.var]],
                        fill =.data[[group.var]],
-                       colour = .data[[group.var]]),
+                       colour = .data[[group.var]], shape = .data[[group.var]]),
                    size=2, alpha=0.8, show.legend = FALSE),
-      ggplot2::scale_colour_manual(values=group_palette,drop=FALSE))
+      ggplot2::scale_colour_manual(values = group_palette,drop = FALSE),
+      ggplot2::scale_shape_manual(values = samp_pch, drop = FALSE))
       }} +
      {if(!hulls & shadow) { gganimate::shadow_mark(alpha=0.3) }} +
       ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.2)) +
@@ -173,7 +201,6 @@ moveplot <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
 #' @param bp biplot object from biplotEZ
 #' @param time.var time variable
 #' @param group.var group variable
-#' @param group.col vector of the same length as the number of groups to specify the colours of the group levels
 #' @param move whether to animate (TRUE) or facet (FALSE) samples and variables, according to time.var
 #' @param hulls whether to display sample points or convex hulls
 #' @param scale.var scaling the vectors representing the variables
@@ -192,9 +219,8 @@ moveplot <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
 #' \donttest{
 #' if(interactive()) {
 #' bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}}
-moveplot2 <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
-                      hulls = TRUE, scale.var = 5,
-                      align.time = NA, reflect = NA)
+moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
+                      scale.var = 5, align.time = NA, reflect = NA)
 {
 
   if(!is.null(group.var)) bp$group.aes <- bp$raw.X[,which(colnames(bp$raw.X) == group.var)] else
@@ -212,12 +238,23 @@ moveplot2 <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
 
   # Group colours
 
-  if(is.null(group.col)) { group_palette <- setNames(scales::hue_pal()(length(group_levels)), group_levels) } else
-    { group_palette <- group.col }
+  #biplotEZ default colour palette
+  EZcols <- c("#0000FFFF", "#00FF00FF", "#FFD700FF", "#00FFFFFF", "#FF00FFFF",
+              "#000000FF", "#FF0000FF", "#BEBEBEFF", "#A020F0FF", "#FA8072FF")
+
+  if(length(bp$samples$col) == 1 | is.null(bp$samples$col) |
+     (sum(bp$samples$col == EZcols[1:length(group_levels)])==length(group_levels))) {
+    group_palette <- stats::setNames(scales::hue_pal()(length(group_levels)), group_levels)}
+  else group_palette <- bp$samples$col
 
   align_levels <- which(iter_levels==align.time)
 
   # Samples
+  if(is.null(bp$samples$pch)) samp_pch = c(rep(19,bp$n)) else {
+    samp_pch <- bp$samples$pch }
+  if(is.null(bp$samples$opacity)) samp_opac = 0.8 else {
+    samp_opac <- bp$samples$opacity }
+
   Z <- bp$Z
   Z <- suppressMessages(dplyr::bind_cols(Z, bp$Xcat))
   colnames(Z)[1:2] <- c("V1","V2")
@@ -251,6 +288,10 @@ moveplot2 <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
     colnames(bp_list[[i]]$Z) <- c("V1","V2")
     Z_list[[i]] <- dplyr::as_tibble(bp_list[[i]]$Z)
     Z_list[[i]] <- suppressMessages(dplyr::bind_cols(Z_list[[i]], bp_list[[i]]$Xcat))
+
+    # Variables
+
+    #text_size <- bp$axes$label.cex*5
 
     axes_info[[i]] <- axes_moveEZ(bp_list[[i]])
     colnames(bp_list[[i]]$Vr) <- c("V1","V2")
@@ -307,7 +348,7 @@ moveplot2 <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
         list(
         geom_point(data = Z_tbl, aes(x=V1, y=V2, group = .data[[group.var]],
                       fill =.data[[group.var]], colour = .data[[group.var]]),
-                      size=2, alpha=0.8),
+                      size=4, alpha=samp_opac),
         ggplot2::scale_colour_manual(values = group_palette)) #,
         #if(shadow) { gganimate::shadow_mark(alpha=0.3) })
       }} +
@@ -347,7 +388,7 @@ moveplot2 <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
                    aes(x=V1, y=V2,
                        group = .data[[group.var]],
                        fill =.data[[group.var]],
-                       colour = .data[[group.var]]),size=2, alpha=0.8),
+                       colour = .data[[group.var]]),size=2, alpha=samp_opac),
                       ggplot2::scale_colour_manual(values = group_palette))
       }} +
       facet_wrap(~.data[[time.var]]) +
@@ -375,7 +416,6 @@ moveplot2 <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
 #' @param bp biplot object from biplotEZ
 #' @param time.var time variable
 #' @param group.var group variable
-#' @param group.col vector of the same length as the number of groups to specify the colours of the group levels
 #' @param move whether to animate (TRUE) or facet (FALSE) samples and variables, according to time.var
 #' @param hulls whether to display sample points or convex hulls
 #' @param scale.var scaling the vectors representing the variables
@@ -402,8 +442,8 @@ moveplot2 <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
 #' move = TRUE, target = NULL)}}
 #' bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 #' move = FALSE, target = Africa_climate_target)
-moveplot3 <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
-                      hulls = TRUE, scale.var = 5, target = NULL)
+moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
+                      scale.var = 5, target = NULL)
 {
   if(!is.null(group.var)) bp$group.aes <- bp$raw.X[,which(colnames(bp$raw.X) == group.var)] else
     bp$group.aes = NULL
@@ -421,13 +461,24 @@ moveplot3 <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
 
   # Group colours
 
-  if(is.null(group.col)) group_palette <- setNames(scales::hue_pal()(length(group_levels)), group_levels)
-  else group_palette <- group.col
+  #biplotEZ default colour palette
+  EZcols <- c("#0000FFFF", "#00FF00FF", "#FFD700FF", "#00FFFFFF", "#FF00FFFF",
+              "#000000FF", "#FF0000FF", "#BEBEBEFF", "#A020F0FF", "#FA8072FF")
+
+  if(length(bp$samples$col) == 1 | is.null(bp$samples$col) |
+     (sum(bp$samples$col == EZcols[1:length(group_levels)])==length(group_levels))) {
+    group_palette <- stats::setNames(scales::hue_pal()(length(group_levels)), group_levels)}
+  else group_palette <- bp$samples$col
 
   # Stop if levels of time.var are unequal, GPA cannot be performed
   if(dplyr::n_distinct(table(bp$raw.X[[tvi]])) != 1) stop("To apply GPA, the number of observations per time.var level should be equal.")
 
   # Samples
+  if(is.null(bp$samples$pch)) samp_pch = c(rep(19,bp$n)) else {
+    samp_pch <- bp$samples$pch }
+  if(is.null(bp$samples$opacity)) samp_opac = 0.8 else {
+    samp_opac <- bp$samples$opacity }
+
   Z <- bp$Z
   Z <- suppressMessages(dplyr::bind_cols(Z, bp$Xcat))
   colnames(Z)[1:2] <- c("V1","V2")
@@ -543,6 +594,8 @@ moveplot3 <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
   Vr_GPA_tbl <- do.call(rbind,Vr_GPA_list)
   chull_reg_GPA <- do.call(rbind,chull_reg)
 
+  #text_size <- pch$axes$label.cex
+
   # Plotting
 
   # Move – TRUE Animated separate Z,V
@@ -572,7 +625,7 @@ moveplot3 <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
                    aes(x=V1, y=V2,
                        group = .data[[group.var]],
                        fill =.data[[group.var]],
-                       colour = .data[[group.var]]),size=2, alpha=0.8),
+                       colour = .data[[group.var]]),size=2, alpha=samp_opac),
         ggplot2::scale_colour_manual(values = group_palette))
       }} +
       gganimate::transition_states(.data[[time.var]],
@@ -611,7 +664,7 @@ moveplot3 <- function(bp, time.var, group.var, group.col = NULL, move = TRUE,
                    aes(x=V1, y=V2,
                        group = .data[[group.var]],
                        fill =.data[[group.var]],
-                       colour = .data[[group.var]]),size=2, alpha=0.8),
+                       colour = .data[[group.var]]),size=2, alpha=samp_opac),
         ggplot2::scale_colour_manual(values = group_palette))
       }} + facet_wrap(~.data[[time.var]]) +
       #xlim(xlim) +

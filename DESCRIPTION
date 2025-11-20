@@ -10,7 +10,7 @@ Description: Create animated biplots that enables dynamic visualisation of tempo
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 VignetteBuilder: knitr
 Depends: R (>= 4.1.0)
 Imports:
@@ -24,6 +24,7 @@ Suggests:
     rmarkdown,
     knitr,
     tibble,
-    scales
+    scales,
+    RColorBrewer
 Config/Needs/website: rmarkdown
 URL: https://muvisu.github.io/moveEZ/
