@@ -185,7 +185,8 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
             axis.text.y = element_blank(),
             axis.title.x = element_blank(),
             axis.title.y = element_blank(),
-            plot.title = ggplot2::element_text(size=30,face ="bold") )
+            plot.title = ggplot2::element_text(size=30, face ="bold"),
+            legend.position = if (length(group_levels) == 1) "none" else "right")
 
   if(move==TRUE)
     print(gganimate::animate(bp$plot,duration = 15,fps=10,end_pause = 20)) else
@@ -364,7 +365,8 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
             axis.text.y = element_blank(),
             axis.title.x = element_blank(),
             axis.title.y = element_blank(),
-            plot.title = ggplot2::element_text(size=30,face ="bold"))
+            plot.title = ggplot2::element_text(size=30,face ="bold"),
+            legend.position = if (length(group_levels) == 1) "none" else "right")
 
   } else {
 
@@ -399,7 +401,8 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
             axis.text.x = element_blank(),
             axis.text.y = element_blank(),
             axis.title.x = element_blank(),
-            axis.title.y = element_blank())
+            axis.title.y = element_blank(),
+            legend.position = if (length(group_levels) == 1) "none" else "right")
 
   }
 
@@ -640,7 +643,8 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
             axis.text.y = element_blank(),
             axis.title.x = element_blank(),
             axis.title.y = element_blank(),
-            plot.title = ggplot2::element_text(size=30,face ="bold"))
+            plot.title = ggplot2::element_text(size=30,face ="bold"),
+            legend.position = if (length(group_levels) == 1) "none" else "right")
 
   } else {
 
@@ -676,7 +680,8 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
             axis.text.x = element_blank(),
             axis.text.y = element_blank(),
             axis.title.x = element_blank(),
-            axis.title.y = element_blank())
+            axis.title.y = element_blank(),
+            legend.position = if (length(group_levels) == 1) "none" else "right")
   }
   class(bp) <- append(class(bp), "moveplot3")
   if(move==TRUE)
