@@ -255,12 +255,12 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
 
   if(is.null(bp$samples))
   { #biplotEZ::samples() not utilised
-    samp_pch <- c(rep(19,bp$n))
+    samp_pch <- c(rep(19, bp$n))
     samp_opac <- 0.8
     group_palette <- stats::setNames(scales::hue_pal()(length(group_levels)), group_levels)
   } else {
     samp_opac <- bp$samples$opacity
-    if(length(bp$samples$pch == 1)) {samp_pch <- c(rep(bp$samples$pch, length(group_levels)))} else {samp_pch <- bp$samples$pch}
+    samp_pch <- c(rep(bp$samples$pch, length(group_levels)))
     if(length(bp$samples$col) == 1 | (sum(bp$samples$col == grDevices::adjustcolor(EZcols[1:length(group_levels)], bp$samples$opacity)) == length(group_levels)))
     {
       group_palette <- stats::setNames(scales::hue_pal()(length(group_levels)), group_levels)
@@ -363,7 +363,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
       } else {
         list(
         geom_point(data = Z_tbl, aes(x=V1, y=V2, group = .data[[group.var]],
-                      fill = .data[[group.var]], colour = .data[[group.var]]), #shape = .data[[group.var]]),
+                      fill = .data[[group.var]], colour = .data[[group.var]], shape = .data[[group.var]]),
                       size = 2, alpha = samp_opac),
         ggplot2::scale_colour_manual(values = group_palette),
         ggplot2::scale_shape_manual(values = samp_pch),
@@ -407,7 +407,8 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
                    aes(x=V1, y=V2,
                       group = .data[[group.var]],
                       fill = .data[[group.var]],
-                      colour = .data[[group.var]]),#, shape = .data[[group.var]]),
+                      colour = .data[[group.var]],
+                      shape = .data[[group.var]]),
                       size = 2, alpha = samp_opac),
                       ggplot2::scale_colour_manual(values = group_palette),
                       ggplot2::scale_fill_manual(values = scales::alpha(group_palette, samp_opac)),
