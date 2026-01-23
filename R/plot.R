@@ -78,7 +78,7 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
               "#000000FF", "#FF0000FF", "#BEBEBEFF", "#A020F0FF", "#FA8072FF")
 
   if(length(bp$samples$col) == 1 | is.null(bp$samples$col) |
-     (sum(bp$samples$col == EZcols[1:length(group_levels)])==length(group_levels))) {
+     (sum(bp$samples$col == grDevices::adjustcolor(EZcols[1:length(group_levels)], bp$samples$opacity)) == length(group_levels))) {
     group_palette <- stats::setNames(scales::hue_pal()(length(group_levels)), group_levels)}
   else group_palette <- bp$samples$col
 
@@ -158,10 +158,11 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
         geom_point(data = Z_tbl,
                    aes(x=V1, y=V2,
                        group = .data[[group.var]],
-                       fill =.data[[group.var]],
+                       fill = .data[[group.var]],
                        colour = .data[[group.var]], shape = .data[[group.var]]),
-                   size = 2, alpha = samp_opac),
+                       size = 2, alpha = samp_opac),
         ggplot2::scale_colour_manual(values = group_palette),
+        ggplot2::scale_fill_manual(values = scales::alpha(group_palette, samp_opac)),
         ggplot2::scale_shape_manual(values = samp_pch))
       }} +
       {if(move) { gganimate::transition_states(.data[[time.var]],
@@ -175,10 +176,11 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
         geom_point(data = Z_tbl_sub,
                    aes(x=V1, y=V2,
                        group = .data[[group.var]],
-                       fill =.data[[group.var]],
+                       fill = .data[[group.var]],
                        colour = .data[[group.var]], shape = .data[[group.var]]),
-                   size = 2, alpha=0.8, show.legend = FALSE),
-      ggplot2::scale_colour_manual(values = group_palette,drop = FALSE),
+                   size = 2, alpha = 0.8, show.legend = FALSE),
+      ggplot2::scale_colour_manual(values = group_palette, drop = FALSE),
+      ggplot2::scale_fill_manual(values = scales::alpha(group_palette, samp_opac), drop = FALSE),
       ggplot2::scale_shape_manual(values = samp_pch, drop = FALSE))
       }} +
      {if(!hulls & shadow) { gganimate::shadow_mark(alpha=0.3) }} +
@@ -249,7 +251,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
               "#000000FF", "#FF0000FF", "#BEBEBEFF", "#A020F0FF", "#FA8072FF")
 
   if(length(bp$samples$col) == 1 | is.null(bp$samples$col) |
-     (sum(bp$samples$col == EZcols[1:length(group_levels)])==length(group_levels))) {
+     (sum(bp$samples$col == grDevices::adjustcolor(EZcols[1:length(group_levels)], bp$samples$opacity)) == length(group_levels))) {
     group_palette <- stats::setNames(scales::hue_pal()(length(group_levels)), group_levels)}
   else group_palette <- bp$samples$col
 
