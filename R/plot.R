@@ -35,7 +35,7 @@
 #' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
 #' biplotEZ::PCA() |> biplotEZ::samples(pch = c(19,21,3))
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
-
+#'
 #' # Specifying colours manually in biplotEZ
 #' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
 #' biplotEZ::PCA() |> biplotEZ::samples(col = c("firebrick4", "indianred3", "tomato", "sandybrown",
@@ -91,9 +91,9 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 
   # Variables
 
-  #conversion of 1:1.5 between cex base R and ggplot2 size
-  #to add later
-  #text_size <- bp$axes$label.cex*5
+  #conversion of 1:1.5 between cex of pch base R:ggplot2
+  #conversion of 1:2 between cex of text base R:ggplot2
+  text_size <- bp$axes$label.cex[1]*2
 
   axes_info <- axes_moveEZ(bp)
   Vr <- bp$Vr
@@ -134,19 +134,18 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   # move – FALSE  --- Facet on sliced Z
   bp$plot <- ggplot() +
       # Axes
-      geom_segment(data=Vr_tbl,aes(x=0,y=0,xend=V1*scale.var,yend=V2*scale.var, group=var),
-                   arrow=arrow(length=unit(0.1,"inches"))) +
-      geom_text(data=Vr_tbl,aes(x=V1*scale.var, y=V2*scale.var,
-                                label = var,
-                                hjust="outward", vjust="outward", group=var),
-                colour="black",size=4) +
+      geom_segment(data = Vr_tbl,aes(x=0, y=0, xend = V1*scale.var, yend = V2*scale.var, group = var),
+                   arrow = arrow(length = unit(0.1, "inches"))) +
+      geom_text(data = Vr_tbl, aes(x=V1*scale.var, y=V2*scale.var,
+                    label = var, hjust = "outward", vjust = "outward", group = var),
+                    colour = "black", size = text_size) +
       # Sample polygons or points
       {if(hulls){
         list(
           geom_polygon(data = chull_reg,
                      aes(x=V1, y=V2,
                          group = .data[[group.var]],
-                         fill = .data[[group.var]]), alpha=0.5),
+                         fill = .data[[group.var]]), alpha = 0.5),
           ggplot2::scale_fill_manual(values = group_palette))
       } else {
         list(

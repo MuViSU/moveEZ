@@ -54,7 +54,7 @@ bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FAL
 # Specifying plotting characters for grouping variable in biplotEZ
 bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
 biplotEZ::PCA() |> biplotEZ::samples(pch = c(19,21,3))
-bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
 # Specifying colours manually in biplotEZ
 bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
 biplotEZ::PCA() |> biplotEZ::samples(col = c("firebrick4", "indianred3", "tomato", "sandybrown",
