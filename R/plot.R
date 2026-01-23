@@ -98,7 +98,8 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 
   #conversion of 1:1.5 between cex of pch base R:ggplot2
   #conversion of 1:2 between cex of text base R:ggplot2
-  text_size <- bp$axes$label.cex[1]*2
+  if(is.null(bp$axes$label.cex)) text_size = 3.88 else {
+    text_size <- bp$axes$label.cex[1]*2 }
 
   axes_info <- axes_moveEZ(bp)
   Vr <- bp$Vr
@@ -295,7 +296,8 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
 
     # Variables
 
-    text_size <- bp$axes$label.cex[1]*2
+    if(is.null(bp$axes$label.cex)) text_size = 3.88 else {
+      text_size <- bp$axes$label.cex[1]*2 }
 
     axes_info[[i]] <- axes_moveEZ(bp_list[[i]])
     colnames(bp_list[[i]]$Vr) <- c("V1","V2")
