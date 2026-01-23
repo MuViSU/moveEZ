@@ -77,17 +77,20 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   EZcols <- c("#0000FFFF", "#00FF00FF", "#FFD700FF", "#00FFFFFF", "#FF00FFFF",
               "#000000FF", "#FF0000FF", "#BEBEBEFF", "#A020F0FF", "#FA8072FF")
 
-  if(length(bp$samples$col) == 1 | is.null(bp$samples$col) |
-     (sum(bp$samples$col == grDevices::adjustcolor(EZcols[1:length(group_levels)], bp$samples$opacity)) == length(group_levels))) {
-    group_palette <- stats::setNames(scales::hue_pal()(length(group_levels)), group_levels)}
-  else group_palette <- bp$samples$col
+  if(is.null(bp$samples))
+  { #biplotEZ::samples() not utilised
+    samp_pch <- c(rep(19,bp$n))
+    samp_opac <- 0.8
+    group_palette <- stats::setNames(scales::hue_pal()(length(group_levels)), group_levels)
+  } else {
+    samp_pch <- bp$samples$pch
+    samp_opac <- bp$samples$opacity
+    if(length(bp$samples$col) == 1 | (sum(bp$samples$col == grDevices::adjustcolor(EZcols[1:length(group_levels)], samp_opac)) == length(group_levels))) {
+      group_palette <- stats::setNames(scales::hue_pal()(length(group_levels)), group_levels)}
+    else  group_palette <- bp$samples$col
+  }
 
   # Samples
-
-  if(is.null(bp$samples$pch)) samp_pch = c(rep(19,bp$n)) else {
-  samp_pch <- bp$samples$pch }
-  if(is.null(bp$samples$opacity)) samp_opac = 0.8 else {
-    samp_opac <- bp$samples$opacity }
 
   Z <- bp$Z
   Z <- suppressMessages(dplyr::bind_cols(Z, bp$Xcat))
@@ -135,7 +138,6 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   Z_tbl_sub <- Z_tbl |>  dplyr::filter(Z_tbl[[tvi_chull]] %in% no_hulls)
 
   # Plotting
-
   # move – TRUE --- Animated sliced Z
   # move – FALSE  --- Facet on sliced Z
   bp$plot <- ggplot() +
@@ -159,7 +161,8 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                    aes(x=V1, y=V2,
                        group = .data[[group.var]],
                        fill = .data[[group.var]],
-                       colour = .data[[group.var]], shape = .data[[group.var]]),
+                       colour = .data[[group.var]]),
+                       #shape = .data[[group.var]]),
                        size = 2, alpha = samp_opac),
         ggplot2::scale_colour_manual(values = group_palette),
         ggplot2::scale_fill_manual(values = scales::alpha(group_palette, samp_opac)),
@@ -196,7 +199,7 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
             legend.position = if (length(group_levels) == 1) "none" else "right")
 
   if(move==TRUE)
-    print(gganimate::animate(bp$plot,duration = 15,fps=10,end_pause = 20)) else
+    print(gganimate::animate(bp$plot, duration = 15, fps = 10, end_pause = 20)) else
       print(bp$plot)
   bp
 }
@@ -250,18 +253,24 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
   EZcols <- c("#0000FFFF", "#00FF00FF", "#FFD700FF", "#00FFFFFF", "#FF00FFFF",
               "#000000FF", "#FF0000FF", "#BEBEBEFF", "#A020F0FF", "#FA8072FF")
 
-  if(length(bp$samples$col) == 1 | is.null(bp$samples$col) |
-     (sum(bp$samples$col == grDevices::adjustcolor(EZcols[1:length(group_levels)], bp$samples$opacity)) == length(group_levels))) {
-    group_palette <- stats::setNames(scales::hue_pal()(length(group_levels)), group_levels)}
-  else group_palette <- bp$samples$col
+  if(is.null(bp$samples))
+  { #biplotEZ::samples() not utilised
+    samp_pch <- c(rep(19,bp$n))
+    samp_opac <- 0.8
+    group_palette <- stats::setNames(scales::hue_pal()(length(group_levels)), group_levels)
+  } else {
+    samp_pch <- bp$samples$pch
+    samp_opac <- bp$samples$opacity
+    if(length(bp$samples$col) == 1 | (sum(bp$samples$col == grDevices::adjustcolor(EZcols[1:length(group_levels)], bp$samples$opacity)) == length(group_levels)))
+    {
+      group_palette <- stats::setNames(scales::hue_pal()(length(group_levels)), group_levels)
+    } else {
+      group_palette <- bp$samples$col}
+  }
 
   align_levels <- which(iter_levels==align.time)
 
   # Samples
-  if(is.null(bp$samples$pch)) samp_pch = c(rep(19,bp$n)) else {
-    samp_pch <- bp$samples$pch }
-  if(is.null(bp$samples$opacity)) samp_opac = 0.8 else {
-    samp_opac <- bp$samples$opacity }
 
   Z <- bp$Z
   Z <- suppressMessages(dplyr::bind_cols(Z, bp$Xcat))
@@ -354,10 +363,11 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
       } else {
         list(
         geom_point(data = Z_tbl, aes(x=V1, y=V2, group = .data[[group.var]],
-                      fill = .data[[group.var]], colour = .data[[group.var]],
-                      shape = .data[[group.var]]), size = 2, alpha = samp_opac),
+                      fill = .data[[group.var]], colour = .data[[group.var]]), #shape = .data[[group.var]]),
+                      size = 2, alpha = samp_opac),
         ggplot2::scale_colour_manual(values = group_palette),
-        ggplot2::scale_shape_manual(values = samp_pch)) #,
+        ggplot2::scale_shape_manual(values = samp_pch),
+        ggplot2::scale_fill_manual(values = scales::alpha(group_palette, samp_opac))) #,
         #if(shadow) { gganimate::shadow_mark(alpha=0.3) })
       }} +
       gganimate::transition_states(.data[[time.var]],
@@ -397,9 +407,10 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
                    aes(x=V1, y=V2,
                       group = .data[[group.var]],
                       fill = .data[[group.var]],
-                      colour = .data[[group.var]], shape = .data[[group.var]]),
+                      colour = .data[[group.var]]),#, shape = .data[[group.var]]),
                       size = 2, alpha = samp_opac),
                       ggplot2::scale_colour_manual(values = group_palette),
+                      ggplot2::scale_fill_manual(values = scales::alpha(group_palette, samp_opac)),
                       ggplot2::scale_shape_manual(values = samp_pch))
       }} +
       facet_wrap(~.data[[time.var]]) +
