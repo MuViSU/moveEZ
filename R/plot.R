@@ -259,8 +259,8 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
     samp_opac <- 0.8
     group_palette <- stats::setNames(scales::hue_pal()(length(group_levels)), group_levels)
   } else {
-    samp_pch <- c(rep(bp$samples$pch, length(group_levels)))
     samp_opac <- bp$samples$opacity
+    if(length(bp$samples$pch == 1)) {samp_pch <- c(rep(bp$samples$pch, length(group_levels)))} else {samp_pch <- bp$samples$pch}
     if(length(bp$samples$col) == 1 | (sum(bp$samples$col == grDevices::adjustcolor(EZcols[1:length(group_levels)], bp$samples$opacity)) == length(group_levels)))
     {
       group_palette <- stats::setNames(scales::hue_pal()(length(group_levels)), group_levels)
