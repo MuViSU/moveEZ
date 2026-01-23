@@ -65,6 +65,7 @@ bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
 
 # Convex hulls facet plot
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+#> Warning: Ignoring empty aesthetic: `size`.
 
 #> Object of class biplot, based on 960 samples and 9 variables.
 #> 6 numeric variables.
@@ -72,6 +73,7 @@ bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FAL
 
 # Samples facet plot
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
+#> Warning: Ignoring empty aesthetic: `size`.
 
 #> Object of class biplot, based on 960 samples and 9 variables.
 #> 6 numeric variables.
@@ -81,6 +83,7 @@ bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FA
 bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
 biplotEZ::PCA() |> biplotEZ::samples(col = RColorBrewer::brewer.pal(10, "Paired"))
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+#> Warning: Ignoring empty aesthetic: `size`.
 
 #> Object of class biplot, based on 960 samples and 9 variables.
 #> 6 numeric variables.
@@ -89,7 +92,8 @@ bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FAL
 # Specifying plotting characters for grouping variable in biplotEZ
 bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
 biplotEZ::PCA() |> biplotEZ::samples(pch = c(19,21,3))
-bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
+#> Warning: Ignoring empty aesthetic: `size`.
 
 #> Object of class biplot, based on 960 samples and 9 variables.
 #> 6 numeric variables.
@@ -99,6 +103,7 @@ bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate
 biplotEZ::PCA() |> biplotEZ::samples(col = c("firebrick4", "indianred3", "tomato", "sandybrown",
  "khaki1", "palegreen1", "darkseagreen2", "mediumaquamarine", "deepskyblue4", "mediumpurple4"))
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+#> Warning: Ignoring empty aesthetic: `size`.
 
 #> Object of class biplot, based on 960 samples and 9 variables.
 #> 6 numeric variables.

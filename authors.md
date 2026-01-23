@@ -10,13 +10,13 @@
 
 ## Citation
 
-Ganey R, Nienkemper-Swanepoel J (2025). *moveEZ: Animated Biplots*. R
+Ganey R, Nienkemper-Swanepoel J (2026). *moveEZ: Animated Biplots*. R
 package version 1.1.1, <https://muvisu.github.io/moveEZ/>.
 
     @Manual{,
       title = {moveEZ: Animated Biplots},
       author = {Raeesa Ganey and Johané Nienkemper-Swanepoel},
-      year = {2025},
+      year = {2026},
       note = {R package version 1.1.1},
       url = {https://muvisu.github.io/moveEZ/},
     }
