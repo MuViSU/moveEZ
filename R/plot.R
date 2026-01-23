@@ -33,7 +33,7 @@
 #'
 #' # Specifying plotting characters for grouping variable in biplotEZ
 #' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
-#' biplotEZ::PCA() |> biplotEZ::samples(pch = c(19,21,3))
+#' biplotEZ::PCA() |> biplotEZ::samples(pch = c(19, 21, 3))
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
 #'
 #' # Specifying opacity of plotting characters and size of variable lables
@@ -83,7 +83,7 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
     samp_opac <- 0.8
     group_palette <- stats::setNames(scales::hue_pal()(length(group_levels)), group_levels)
   } else {
-    samp_pch <- bp$samples$pch
+    samp_pch <- c(rep(bp$samples$pch, length(group_levels)))
     samp_opac <- bp$samples$opacity
     if(length(bp$samples$col) == 1 | (sum(bp$samples$col == grDevices::adjustcolor(EZcols[1:length(group_levels)], samp_opac)) == length(group_levels))) {
       group_palette <- stats::setNames(scales::hue_pal()(length(group_levels)), group_levels)}
@@ -161,8 +161,8 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                    aes(x=V1, y=V2,
                        group = .data[[group.var]],
                        fill = .data[[group.var]],
-                       colour = .data[[group.var]]),
-                       #shape = .data[[group.var]]),
+                       colour = .data[[group.var]],
+                       shape = .data[[group.var]]),
                        size = 2, alpha = samp_opac),
         ggplot2::scale_colour_manual(values = group_palette),
         ggplot2::scale_fill_manual(values = scales::alpha(group_palette, samp_opac)),
@@ -259,7 +259,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
     samp_opac <- 0.8
     group_palette <- stats::setNames(scales::hue_pal()(length(group_levels)), group_levels)
   } else {
-    samp_pch <- bp$samples$pch
+    samp_pch <- c(rep(bp$samples$pch, length(group_levels)))
     samp_opac <- bp$samples$opacity
     if(length(bp$samples$col) == 1 | (sum(bp$samples$col == grDevices::adjustcolor(EZcols[1:length(group_levels)], bp$samples$opacity)) == length(group_levels)))
     {
