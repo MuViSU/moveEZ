@@ -65,17 +65,11 @@ bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
 
 # Convex hulls facet plot
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
-
-#> Object of class biplot, based on 960 samples and 9 variables.
-#> 6 numeric variables.
-#> 3 categorical variables.
+#> Error in grDevices::adjustcolor(EZcols[1:length(group_levels)], bp$samples$opacity): d == c(4L, 4L) are not all TRUE
 
 # Samples facet plot
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
-
-#> Object of class biplot, based on 960 samples and 9 variables.
-#> 6 numeric variables.
-#> 3 categorical variables.
+#> Error in grDevices::adjustcolor(EZcols[1:length(group_levels)], bp$samples$opacity): d == c(4L, 4L) are not all TRUE
 
 # Specifying colours with colour palette in biplotEZ
 bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
