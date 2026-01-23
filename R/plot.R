@@ -36,6 +36,11 @@
 #' biplotEZ::PCA() |> biplotEZ::samples(pch = c(19,21,3))
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
 #'
+#' # Specifying opacity of plotting characters and size of variable lables
+#' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
+#' biplotEZ::PCA() |> biplotEZ::samples(opacity = 0.4) |> biplotEZ::axes(label.cex = 1.2)
+#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
+#'
 #' # Specifying colours manually in biplotEZ
 #' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
 #' biplotEZ::PCA() |> biplotEZ::samples(col = c("firebrick4", "indianred3", "tomato", "sandybrown",
@@ -154,7 +159,7 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                        group = .data[[group.var]],
                        fill =.data[[group.var]],
                        colour = .data[[group.var]], shape = .data[[group.var]]),
-                   size=2, alpha=samp_opac),
+                   size = 2, alpha = samp_opac),
         ggplot2::scale_colour_manual(values = group_palette),
         ggplot2::scale_shape_manual(values = samp_pch))
       }} +
@@ -171,7 +176,7 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                        group = .data[[group.var]],
                        fill =.data[[group.var]],
                        colour = .data[[group.var]], shape = .data[[group.var]]),
-                   size=2, alpha=0.8, show.legend = FALSE),
+                   size = 2, alpha=0.8, show.legend = FALSE),
       ggplot2::scale_colour_manual(values = group_palette,drop = FALSE),
       ggplot2::scale_shape_manual(values = samp_pch, drop = FALSE))
       }} +
@@ -260,7 +265,6 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
   colnames(Z)[1:2] <- c("V1","V2")
   Z_tbl <- dplyr::as_tibble(Z)
 
-
   # Basis extraction
   bp_list <- vector("list", iterations)
   axes_info <- vector("list", iterations)
@@ -291,7 +295,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
 
     # Variables
 
-    #text_size <- bp$axes$label.cex*5
+    text_size <- bp$axes$label.cex[1]*2
 
     axes_info[[i]] <- axes_moveEZ(bp_list[[i]])
     colnames(bp_list[[i]]$Vr) <- c("V1","V2")
@@ -330,26 +334,26 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
   {
     bp$plot <- ggplot() +
       # Axes
-      geom_segment(data=Vr_tbl,aes(x=0,y=0,xend=V1*scale.var,yend=V2*scale.var,group=var),
-                   arrow=arrow(length=unit(0.1,"inches"))) +
-      geom_text(data=Vr_tbl,aes(x=V1*scale.var, y=V2*scale.var,
-                                label = var,
-                                hjust="outward", vjust="outward",group=var),colour="black",size=4) +
+      geom_segment(data = Vr_tbl, aes(x=0, y=0, xend = V1*scale.var, yend = V2*scale.var, group = var),
+                  arrow = arrow(length = unit(0.1, "inches"))) +
+      geom_text(data = Vr_tbl, aes(x=V1*scale.var, y=V2*scale.var,
+                  label = var, hjust = "outward", vjust = "outward", group = var),
+                  colour = "black", size = text_size) +
       gganimate::transition_states(.data[[time.var]],
-                        transition_length = 2,
-                        state_length = 1) +
+                        transition_length = 2, state_length = 1) +
       # Sample polygons or points
       {if(hulls){
         list(
         geom_polygon(data = chull_reg, aes(x=V1, y=V2,group = .data[[group.var]],
-                        fill = .data[[group.var]]), alpha=0.5),
+                        fill = .data[[group.var]]), alpha = 0.5),
                         ggplot2::scale_fill_manual(values = group_palette))
       } else {
         list(
         geom_point(data = Z_tbl, aes(x=V1, y=V2, group = .data[[group.var]],
-                      fill =.data[[group.var]], colour = .data[[group.var]]),
-                      size=4, alpha=samp_opac),
-        ggplot2::scale_colour_manual(values = group_palette)) #,
+                      fill = .data[[group.var]], colour = .data[[group.var]],
+                      shape = .data[[group.var]]), size = 2, alpha = samp_opac),
+        ggplot2::scale_colour_manual(values = group_palette),
+        ggplot2::scale_shape_manual(values = samp_pch)) #,
         #if(shadow) { gganimate::shadow_mark(alpha=0.3) })
       }} +
       gganimate::transition_states(.data[[time.var]],
@@ -371,26 +375,28 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
 
     bp$plot <- ggplot() +
       # Axes
-      geom_segment(data=Vr_tbl,aes(x=0,y=0,xend=V1*scale.var,yend=V2*scale.var,group=var),
-                   arrow=arrow(length=unit(0.1,"inches"))) +
-      geom_text(data=Vr_tbl,aes(x=V1*scale.var, y=V2*scale.var,
-                                label = var,
-                                hjust="outward", vjust="outward",group=var), colour="black",size=4) +
+      geom_segment(data = Vr_tbl, aes(x=0, y=0, xend = V1*scale.var, yend = V2*scale.var, group = var),
+                   arrow = arrow(length = unit(0.1, "inches"))) +
+      geom_text(data = Vr_tbl, aes(x=V1*scale.var, y=V2*scale.var,
+                  label = var, hjust = "outward", vjust = "outward", group = var),
+                  colour = "black", size = text_size) +
       # Sample polygons or points
       {if(hulls){
         list(
         geom_polygon(data = chull_reg,
-                    aes(x=V1, y=V2,group = .data[[group.var]],
-                    fill = .data[[group.var]]), alpha=0.5),
+                    aes(x=V1, y=V2, group = .data[[group.var]],
+                    fill = .data[[group.var]]), alpha = 0.5),
                     ggplot2::scale_fill_manual(values = group_palette))
       } else {
         list(
         geom_point(data = Z_tbl,
                    aes(x=V1, y=V2,
-                       group = .data[[group.var]],
-                       fill =.data[[group.var]],
-                       colour = .data[[group.var]]),size=2, alpha=samp_opac),
-                      ggplot2::scale_colour_manual(values = group_palette))
+                      group = .data[[group.var]],
+                      fill = .data[[group.var]],
+                      colour = .data[[group.var]], shape = .data[[group.var]]),
+                      size = 2, alpha = samp_opac),
+                      ggplot2::scale_colour_manual(values = group_palette),
+                      ggplot2::scale_shape_manual(values = samp_pch))
       }} +
       facet_wrap(~.data[[time.var]]) +
       ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.2)) +
