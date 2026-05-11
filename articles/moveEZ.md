@@ -130,7 +130,7 @@ bp |> moveplot(time.var = "Year", group.var = "Region",
 
 ### Animated display
 
-![](articles/anim1_moveplot.gif)
+![](anim1_moveplot.gif)
 
 The animation reveals how the regional climate configurations shift
 relative to the fixed variable vectors across decades. Regions that move
@@ -196,7 +196,7 @@ continuity across the sequence of biplots.
 
 ### Animated display
 
-![](articles/anim2_moveplot.gif)
+![](anim2_moveplot.gif)
 
 ## Automated Alignment: `moveplot3()`
 
@@ -242,7 +242,7 @@ intervention.
 
 #### Animated display
 
-![](articles/anim3_moveplot.gif)
+![](anim3_moveplot.gif)
 
 ### User-supplied target (`target = Africa_climate_target`)
 
@@ -312,7 +312,7 @@ bp_1989 |> moveplot(time.var = "Target", group.var = "Region",
 
 #### Animated display
 
-![](articles/anim4_moveplot.gif)
+![](anim4_moveplot.gif)
 
 ## Evaluation
 
