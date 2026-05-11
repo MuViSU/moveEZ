@@ -25,7 +25,6 @@ library(biplotEZ)
 library(tibble)
 library(scales)
 library(gganimate)
-library(gifski)
 library(RColorBrewer)
 ```
 
