@@ -2,11 +2,6 @@
 
 # moveEZ <img src="man/figures/logo.png" align="right" width="150"/>
 
-<!-- badges: start -->
-[![CRAN status](https://www.r-pkg.org/badges/version/moveEZ)](https://CRAN.R-project.org/package=moveEZ)
-[![R-CMD-check](https://github.com/MuViSU/moveEZ/workflows/R-CMD-check/badge.svg)](https://github.com/MuViSU/moveEZ/actions)
-<!-- badges: end -->
-
 `moveEZ` (pronounced *move easy*) extends the
 [biplotEZ](https://CRAN.R-project.org/package=biplotEZ) package to
 animate PCA biplots across the ordered levels of a categorical variable.
