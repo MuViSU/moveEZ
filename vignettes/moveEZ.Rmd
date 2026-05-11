@@ -127,7 +127,7 @@ bp |> moveplot(time.var = "Year", group.var = "Region",
 
 ## Animated display
 
-![](vignettes/anim1_moveplot.gif)
+![](anim1_moveplot.gif)
 
 ```{r, echo=FALSE, eval=FALSE, warning=FALSE, message=FALSE}
 anim1 <- bp |> moveplot(time.var = "Year", group.var = "Region",
@@ -184,7 +184,7 @@ across the sequence of biplots.
 
 ## Animated display
 
-![](vignettes/anim2_moveplot.gif)
+![](anim2_moveplot.gif)
 
 ```{r, echo=FALSE, eval=FALSE, warning=FALSE, message=FALSE}
 anim2 <- bp |> moveplot2(time.var = "Year", group.var = "Region",
@@ -231,7 +231,7 @@ intervention.
 
 ### Animated display
 
-![](vignettes/anim3_moveplot.gif)
+![](anim3_moveplot.gif)
 
 ```{r, echo=FALSE, eval=FALSE, warning=FALSE, message=FALSE}
 anim3 <- bp |> moveplot3(time.var = "Year", group.var = "Region",
@@ -279,7 +279,7 @@ bp_1989 |> moveplot(time.var = "Target", group.var = "Region",
 
 ### Animated display
 
-![](vignettes/anim4_moveplot.gif)
+![](anim4_moveplot.gif)
 
 ```{r, echo=FALSE, eval=FALSE, warning=FALSE, message=FALSE}
 anim4 <- bp |> moveplot3(time.var = "Year", group.var = "Region",
