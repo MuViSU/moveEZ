@@ -1,47 +1,58 @@
 # moveEZ
 
-Consider a dataset $\mathbf{X}$ comprising $n$ observations and $p$
-continuous variables, along with an additional variable representing
-“time”. This time variable need not correspond to chronological time; it
-could just as well represent another form of ordered index, such as
-algorithmic iterations or experimental stages.
+## Overview
 
-A natural approach is to construct separate biplots for each level of
-the time variable, enabling the user to explore how samples and variable
-relationships evolve across time. However, when the time variable
-includes many levels, this quickly results in an overwhelming number of
-biplots.
+`moveEZ` extends the `biplotEZ` package (Lubbe et al. 2024) to animate
+PCA biplots across the ordered levels of a categorical variable,
+referred to throughout as the **time variable**. Rather than producing a
+separate static biplot per level — which fragments sequential
+information and makes gradual structural change difficult to perceive —
+`moveEZ` renders transitions between levels as a continuous animation.
 
-This package addresses that challenge by animating a single biplot
-across the levels of the time variable, allowing for dynamic
-visualisation of temporal or sequential changes in the data.
+The package provides three animation functions of increasing
+methodological complexity:
 
-The animation of the biplots—currently limited to PCA biplots—is based
-on two conceptual frameworks:
+- [`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md):
+  animates sample positions against fixed variable vectors, computed
+  once on the full dataset.
+- [`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md):
+  animates both sample positions and variable vectors, computed
+  separately per time slice, with optional manual alignment.
+- [`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md):
+  extends
+  [`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
+  with automated alignment via Generalised Procrustes Analysis (GPA)
+  (Gower and Dijksterhuis 2004).
 
-1.  Fixed Variable Frame
-    [`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md):
-    A biplot is first constructed using the full dataset $\mathbf{X}$,
-    and the animation is achieved by slicing the observations according
-    to the “time” variable. In this approach, the variable axes remain
-    fixed, and only the sample points are animated over time.
+All three functions support both animated output (`move = TRUE`) and
+static faceted output (`move = FALSE`), the latter being useful for
+publication figures or detailed inspection of individual time slices.
 
-2.  Dynamic Frame
-    [`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
-    and
-    [`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md):
-    Separate biplots are constructed for each time slice of the data.
-    Both the sample points and variable axes evolve over time, resulting
-    in a fully dynamic animation that reflects temporal changes in the
-    underlying data structure. The differences between these functions
-    are highlighted in the subsequent sections.
+For a full methodological treatment, including the theoretical
+motivation for each framework and a discussion of sign indeterminacy in
+sequential PCA, refer to the accompanying paper.
 
-To illustrate the animated biplots, we use a climate dataset included in
-the package. This dataset, Africa_climate, contains climate measurements
-from 10 African regions over time:
+## Data
+
+Throughout this vignette we use the `Africa_climate` dataset included in
+`moveEZ`. This dataset contains climate measurements for ten African
+regions derived from the ERA5 reanalysis (Hersbach et al. 2023), with
+IPCC-defined reference regions (Iturbide et al. 2020) as the grouping
+variable. Measurements span from 1950 to 2020 in ten-year increments,
+with twelve monthly observations per region per year. The six continuous
+variables are described below:
+
+| Variable | Unit | Description |
+|----|----|----|
+| Accumulated Precipitation (AP) | m/day | Total daily precipitation |
+| Daily Evaporation (DE) | m/day | Net daily evaporation |
+| Temperature (Temp) | °C | Mean daily surface temperature |
+| Soil Moisture (SM) | m³/m³ | Volumetric water content of upper soil layer |
+| Standardised Precipitation Index (SPI6) | Dimensionless | 6-month precipitation anomaly index |
+| Wind Speed (Wind) | m/s | Mean daily wind speed at 10m |
 
 ``` r
-library(moveEZ) 
+
 data("Africa_climate")
 tibble::tibble(Africa_climate)
 #> # A tibble: 960 × 9
@@ -60,50 +71,55 @@ tibble::tibble(Africa_climate)
 #> # ℹ 950 more rows
 ```
 
-We begin by constructing a standard PCA biplot using the `biplotEZ`
-package (Lubbe et al. (2024)). This biplot aggregates all samples across
-time and colours them according to their associated region:
+All examples in this vignette use a PCA biplot constructed on the full
+`Africa_climate` dataset as the base object, passed to each `moveplot`
+function via the pipe operator:
 
 ``` r
-library(biplotEZ)
-bp <- biplot(Africa_climate, scaled = TRUE) |> 
-  PCA(group.aes = Africa_climate$Region) |> 
+
+bp <- biplot(Africa_climate, scaled = TRUE) |>
+  PCA(group.aes = Africa_climate$Region) |>
   samples(opacity = 0.8, col = scales::hue_pal()(10)) |>
   plot()
 ```
 
 ![](moveEZ_files/figure-html/unnamed-chunk-3-1.png)
 
-## Fixed Variable Frame with `moveplot()`
+## Fixed Variable Frame: `moveplot()`
 
-Using the previously created PCA biplot object `bp`, the
 [`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md)
-function enables animation of the sample points over time. This function
-is piped with several key arguments:
+computes a single PCA decomposition on the full dataset. The variable
+vectors remain fixed throughout the animation, providing a stable
+reference frame. Only the sample positions — sliced according to the
+levels of the time variable — are animated sequentially. This approach
+is most appropriate when the underlying variance–covariance structure
+can be assumed stable across time, and is the only viable option when
+there is a single observation per group per time level.
 
-- `time.var`: Specifies the name of the variable in the dataset that
-  represents the temporal or sequential dimension. In this case, the
-  variable “Year” relates to the time variable.
+The key arguments are:
 
-- `group.var`: Indicates a grouping variable used for colour-coding. In
-  this case, the variable “Region” relates to the group variable.
+- `time.var`: the name of the ordered categorical variable defining the
+  sequential structure (e.g. `"Year"`).
+- `group.var`: the name of the grouping variable, used for colour-coding
+  (e.g. `"Region"`).
+- `hulls`: logical; when `TRUE` convex hulls summarise group spread at
+  each time level; when `FALSE` individual sample points are displayed.
+  Hulls require at least three observations per group per time level —
+  if fewer exist, points are plotted automatically.
+- `move`: logical; `TRUE` produces an animation, `FALSE` produces a
+  static faceted display.
+- `shadow`: logical; available only when `hulls = FALSE`. When `TRUE`,
+  faded traces of previous sample positions are retained in the
+  animation, conveying the direction and speed of movement across time.
+- `scale.var`: numeric multiplier applied to variable vectors to improve
+  visibility.
 
-- `hulls`: A logical flag that determines whether to display individual
-  sample points or to draw convex hulls around each group.
-
-`move`: A critical argument that controls whether the biplot is
-animated. If set to `TRUE`, the sample points are animated across time.
-If set to `FALSE`, the function returns a faceted plot showing a static
-biplot for each time level.
-
-This design provides flexibility in exploring temporal dynamics in
-multivariate data, with options for both animated and comparative static
-visualisations.
-
-### Facet: `move = FALSE`
+### Static faceted display
 
 ``` r
-bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+
+bp |> moveplot(time.var = "Year", group.var = "Region",
+               hulls = TRUE, move = FALSE)
 ```
 
 ![](moveEZ_files/figure-html/unnamed-chunk-4-1.png)
@@ -112,30 +128,42 @@ bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FAL
     #> 6 numeric variables.
     #> 3 categorical variables.
 
-### Animation: `move = TRUE`
+### Animated display
 
-![](anim1.gif)
+![](articles/anim1_moveplot.gif)
 
-## Dynamic Frame `moveplot2()`
+The animation reveals how the regional climate configurations shift
+relative to the fixed variable vectors across decades. Regions that move
+in the direction of a variable vector are increasing on that variable
+over time; regions moving against the vector are decreasing.
 
-The
+## Dynamic Frame: `moveplot2()`
+
 [`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
-function extends the animation to both the sample points and the
-variable axes. Unlike
-[`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md),
-which keeps the variable axes fixed,
-[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
-constructs a separate biplot for each time slice, allowing both
-components to evolve over time. The function shares the same arguments
-as
-[`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md),
-with the `move` argument determining whether the animation is shown or
-presented as static facets for samples and variables.
+computes a separate PCA decomposition for each time slice, allowing both
+sample positions and variable vectors to evolve across levels. This
+provides a more faithful depiction of time-varying variance–covariance
+structures but introduces a practical complication: eigenvectors are
+determined only up to a sign change, meaning that consecutive time
+slices may produce biplots that are reflections of one another. This
+sign indeterminacy is mathematically inconsequential but visually
+disruptive.
 
-### Facet: `move = FALSE`
+Two additional arguments address this:
+
+- `align.time`: a vector of time levels at which alignment should be
+  applied.
+- `reflect`: specifies the axis of reflection — `"x"`, `"y"`, or `"xy"`
+  — with each entry corresponding to a level in `align.time`. Both
+  arguments accept vectors when alignment is needed at multiple time
+  levels.
+
+### Static faceted display (unaligned)
 
 ``` r
-bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+
+bp |> moveplot2(time.var = "Year", group.var = "Region",
+                hulls = TRUE, move = FALSE)
 ```
 
 ![](moveEZ_files/figure-html/unnamed-chunk-6-1.png)
@@ -144,68 +172,82 @@ bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = FA
     #> 6 numeric variables.
     #> 3 categorical variables.
 
-When `move` is `FALSE`, a faceted plot is returned, showing the biplot
-at each time point. Here, both the sample coordinates and variable axes
-differ across facets, reflecting temporal changes in the data structure.
+Note the discontinuity between 1950 and 1960 — the variable vectors and
+sample configuration are reflected about the x-axis. This is a sign
+indeterminacy artefact, not a genuine structural change.
 
-There is a noticeable discontinuity in the transition from the year 1950
-to 1960. From 1960 onwards, however, the biplots appear well-aligned. To
-address such inconsistencies, the
-[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
-function provides two additional arguments — `align.time` and `reflect`
-— which enable alignment and optional axis reflections of the biplots at
-specified time points, resulting in smoother and more coherent
-animations.
-
-### Animated: `move = TRUE`
-
-![](anim2.gif)
-
-Setting `move` to TRUE produces an animated biplot in which both the
-samples and variables transition across time, offering a dynamic view of
-structural shifts in the multivariate space.
-
-In the example above, we align the biplot at the 1950 time point and
-apply a reflection about the x-axis. Available options include:
-
-- “x” – Reflect about the x-axis
-
-- “y” – Reflect about the y-axis
-
-- “xy” – Reflect about both axes
-
-And of course, both `align.time` and `reflect` can be vectors when
-alignment is needed at multiple time points. Each entry in `reflect`
-corresponds to a time point in `align.time`, allowing fine-grained
-control over the alignment and orientation of biplots across the
-animation sequence.
-
-## Dynamic frame with alignment to a `target` with `moveplot3()`
-
-This function shares the same arguments as
-[`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md)
-and
-[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md),
-with the addition of the `target` argument.
-[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md)
-utilises Generalised Orthogonal Procrustes Analysis (GPA) (Gower and
-Dijksterhuis (2004)) to align sample points and variable axes to either
-a specified target (for example: same measurements at a different time
-point) or to a centroid coordinate matrix representing all sample points
-and axes across time slices (`target = NULL`). GPA is applied by using
-the `GPAbin` package and makes use of admissible transformations
-(translation, scaling, rotation and reflection) to optimally align
-configurations, while preserving the distances between coordinates. As
-with
-[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
-the `move` argument determines whether the animations of changing sample
-points and variables axes are shown or presented as static facets.
-
-To illustrate the use of a fixed target, we use the year 1989 from the
-`Africa_climate` data set, which consists of the same variables and
-number of observations:
+### Static faceted display (aligned)
 
 ``` r
+
+bp |> moveplot2(time.var = "Year", group.var = "Region",
+                hulls = TRUE, move = FALSE,
+                align.time = "1950", reflect = "x")
+```
+
+![](moveEZ_files/figure-html/unnamed-chunk-7-1.png)
+
+    #> Object of class biplot, based on 960 samples and 9 variables.
+    #> 6 numeric variables.
+    #> 3 categorical variables.
+
+Applying a reflection about the x-axis at 1950 restores visual
+continuity across the sequence of biplots.
+
+### Animated display
+
+![](articles/anim2_moveplot.gif)
+
+## Automated Alignment: `moveplot3()`
+
+[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md)
+automates the alignment of sequential biplots using GPA (Gower and
+Dijksterhuis 2004), implemented via the `GPAbin` package
+(Nienkemper-Swanepoel et al. 2023). GPA iteratively applies admissible
+transformations — translation, reflection, rotation, and scaling — to
+minimise the sum of squared distances between each time slice and a
+target configuration, without requiring the user to manually identify
+discontinuities.
+
+The `target` argument controls what the time slices are aligned to:
+
+- `target = NULL`: aligns all time slices to their average (consensus)
+  configuration.
+- `target = <dataset>`: aligns all time slices to a user-supplied
+  reference dataset containing measurements on the same variables.
+
+The `Africa_climate_target` dataset included in `moveEZ` provides 1989
+measurements on the same variables as `Africa_climate`, and is used here
+as an external reference.
+
+### Consensus target (`target = NULL`)
+
+#### Static faceted display
+
+``` r
+
+bp |> moveplot3(time.var = "Year", group.var = "Region",
+                hulls = TRUE, move = FALSE, target = NULL)
+```
+
+![](moveEZ_files/figure-html/unnamed-chunk-9-1.png)
+
+    #> Object of class biplot, based on 960 samples and 9 variables.
+    #> 6 numeric variables.
+    #> 3 categorical variables.
+
+All time slices are aligned to the average configuration across years,
+producing a consistently oriented sequence of biplots without manual
+intervention.
+
+#### Animated display
+
+![](articles/anim3_moveplot.gif)
+
+### User-supplied target (`target = Africa_climate_target`)
+
+``` r
+
 data("Africa_climate_target")
 tibble::tibble(Africa_climate_target)
 #> # A tibble: 120 × 9
@@ -224,86 +266,91 @@ tibble::tibble(Africa_climate_target)
 #> # ℹ 110 more rows
 ```
 
-### Facet: `move = FALSE` and `target = NULL`
+#### Static faceted display
 
 ``` r
-bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE,
-                target = NULL)
-```
 
-![](moveEZ_files/figure-html/unnamed-chunk-9-1.png)
-
-    #> Object of class biplot, based on 960 samples and 9 variables.
-    #> 6 numeric variables.
-    #> 3 categorical variables.
-
-The separate biplots per `time.var` are transformed and aligned to the
-centroid coordinate matrix of all observed sample points and axes
-variables.
-
-### Facet: `move = FALSE` and `target = Africa_climate_target`
-
-``` r
-bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE, 
+bp |> moveplot3(time.var = "Year", group.var = "Region",
+                hulls = TRUE, move = FALSE,
                 target = Africa_climate_target)
 ```
 
-![](moveEZ_files/figure-html/unnamed-chunk-10-1.png)
+![](moveEZ_files/figure-html/unnamed-chunk-12-1.png)
 
     #> Object of class biplot, based on 960 samples and 9 variables.
     #> 6 numeric variables.
     #> 3 categorical variables.
 
-Now, the separate biplots per `time.var` are transformed and aligned to
-the sample points and axes variables of the 1989 `Africa_climate`
-dataset. **Take note**: the target biplot is not shown. This example
-showcases the difference between each the observations and variables for
-each year in `Africa_climate` compared to 1989.
-
-### Animated: `move = TRUE` and `target = NULL`
-
-![](anim3.gif)
-
-Here the animated view of the biplots over time are illustrated after
-aligning the visualisation to the centroid configuration.
-
-### Animated: `move = TRUE` and `target = Africa_climate_target`
-
-![](anim4.gif)
-
-Finally, the animated biplots illustrate the transformations towards a
-specified target dataset. Again, the focus is on the movement that
-changes between the variables and sample representation as the target is
-set to a specific year compared to the movement observed in the previous
-example where `target = NULL`. Therefore, these animations expose the
-*jumps* that occur from 1989 to each of the years in `Africa_climate`
-from 1950 to 2020 (in increments of 10 years).
-
-## Evaluation
-
-This function can only be used in conjunction with
-[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md).
-Five measures of comparison are calculated to establish the differences
-between each individual biplot and the chosen `target` configuration as
-specified in
-[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md).
-The measures are based on Orthogonal Procrustes analysis between the
-target and the specific individual biplot. There are three bias related
-measures: Absolute Mean Bias (AMB), Mean Bias (MB) and the Root Mean
-Squared Bias (RMSB). There are two fit measures: Procrustes Statistic
-(PS) and Congruence Coefficient (CC). For more information on these
-metrics refer to Nienkemper-Swanepoel, Roux, and Gardner-Lubbe (2023).
-
-The evaluation measures can be extracted as follows:
+Each time slice is aligned to the 1989 reference configuration, exposing
+the structural differences between 1989 and each decade from 1950 to
+2020. Note that the target biplot itself is not shown in this display —
+it serves only as the alignment reference. To visualise the target
+configuration separately, pass it to
+[`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md)
+directly:
 
 ``` r
-results <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE, 
-                           move = FALSE, target = NULL) |> evaluation()
+
+viz_1989 <- Africa_climate_target |>
+  dplyr::mutate(
+    Target = as.factor(rep("1989", nrow(Africa_climate_target))),
+    Region = as.factor(Region)
+  )
+
+bp_1989 <- biplot(viz_1989, scaled = TRUE) |>
+  PCA(group.aes = viz_1989$Region)
+
+bp_1989 |> moveplot(time.var = "Target", group.var = "Region",
+                    hulls = TRUE, move = FALSE)
 ```
 
 ![](moveEZ_files/figure-html/unnamed-chunk-13-1.png)
 
+    #> Object of class biplot, based on 120 samples and 10 variables.
+    #> 6 numeric variables.
+    #> 4 categorical variables.
+
+#### Animated display
+
+![](articles/anim4_moveplot.gif)
+
+## Evaluation
+
+The
+[`evaluation()`](https://muvisu.github.io/moveEZ/reference/evaluation.md)
+function quantifies the magnitude of structural change between each time
+slice and the target configuration specified in
+[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md).
+It provides five measures based on orthogonal Procrustes analysis, in
+two categories:
+
+**Fit measures** (values closer to their optimal indicate better
+similarity):
+
+- **PS** (Procrustes Statistic): optimal value is 0.
+- **CC** (Congruence Coefficient): optimal value is 1.
+
+**Bias measures** (lower values indicate less systematic distortion):
+
+- **AMB** (Absolute Mean Bias)
+- **MB** (Mean Bias): a value near zero indicates no systematic
+  directional shift.
+- **RMSB** (Root Mean Squared Bias)
+
 ``` r
+
+results <- bp |>
+  moveplot3(time.var = "Year", group.var = "Region",
+            hulls = TRUE, move = FALSE, target = NULL) |>
+  evaluation()
+```
+
+![](moveEZ_files/figure-html/unnamed-chunk-15-1.png)
+
+### Numerical measures
+
+``` r
+
 results$eval.list
 #> [[1]]
 #>      Target vs. 1950
@@ -370,63 +417,133 @@ results$eval.list
 #> RMSB          0.5069
 ```
 
-To ease interpretation, especially when there is a large number of time
-points, separate line plots are available for the fit and bias measures.
-
-### The fit measures
-
-The Procrustes Statistics(PS) and Congruence Coefficient (CC) is bounded
-by zero and one. A small PS value (close to zero) and a large CC value
-(close to one) indicate good fit. These measures express the magnitude
-of changes that has to be made for a particular biplot to match the
-target visualisation. Therefore, they measure how *close* the
-coordinates of the two configurations are.
+### Fit measures over time
 
 ``` r
+
 results$fit.plot
 ```
 
-![](moveEZ_files/figure-html/unnamed-chunk-15-1.png)
+![](moveEZ_files/figure-html/unnamed-chunk-17-1.png)
 
-The line plot shows that the biplot of 2000 results in a lower CC and
-larger PS value compared to the other years. This means that there is a
-noticeable difference between the year 2000 and the average across years
-and the measurements of 2000 should be investigated in more detail to
-understand the cause of this difference.
+The biplot for 2000 shows a notably lower CC and higher PS relative to
+other years, indicating a structural departure from the consensus
+configuration that warrants closer investigation.
 
-### The bias measures
-
-Low values for the Absolute Mean Bias (AMB), Mean Bias (MB) and the Root
-Mean Squared Bias (RMSB) reflect unbiased representation between a
-biplot and the target it is being matched to.
+### Bias measures over time
 
 ``` r
+
 results$bias.plot
 ```
 
-![](moveEZ_files/figure-html/unnamed-chunk-16-1.png)
+![](moveEZ_files/figure-html/unnamed-chunk-18-1.png)
 
-The line plot shows that the initial bias is high, but decreases and
-stabilises from 1960 with an increase in both the AMB and RMSB occurring
-for 2000. This is in agreement with the fit measures. The MB stays
-constant and close to zero for all comparisons.
+The initial bias at 1950 is high but decreases and stabilises from 1960,
+with an increase in AMB and RMSB at 2000 consistent with the fit
+measures. The MB remains close to zero throughout, confirming no
+systematic directional bias in the alignment.
 
-## Still to Come!
+## Additional Examples
 
-We are actively working to develop and enhance the dynamic plotting
-capabilities of these functions to expose and detect changes in
-observations and variables over time.
+### Alternative use of `time.var`
 
-Stay tuned for updates!
+The group variable can be specified as the time variable to produce a
+faceted display in which each panel shows a single group rather than a
+single time level. This can be useful when group-level patterns are
+difficult to distinguish in the standard faceted display, where all
+groups appear together in each panel.
+
+``` r
+
+bp |> moveplot(time.var = "Region", group.var = "Region",
+               hulls = FALSE, move = FALSE)
+```
+
+![](moveEZ_files/figure-html/unnamed-chunk-19-1.png)
+
+    #> Object of class biplot, based on 960 samples and 9 variables.
+    #> 6 numeric variables.
+    #> 3 categorical variables.
+
+### Customising aesthetics
+
+`moveEZ` inherits its core biplot construction from `biplotEZ`, and
+aesthetic customisation — such as point colours, plotting characters,
+and axis label sizes — should be specified in the `biplotEZ` biplot
+object before passing it to any `moveplot` function. If no aesthetic
+changes are made to
+[`biplotEZ::samples()`](https://rdrr.io/pkg/biplotEZ/man/samples.html)
+or [`biplotEZ::axes()`](https://rdrr.io/pkg/biplotEZ/man/axes.html), the
+default `moveEZ` aesthetics are applied automatically.
+
+One important conversion to be aware of: `biplotEZ` uses R base graphics
+sizing, while `moveEZ` renders using `ggplot2`. Text size is therefore
+automatically rescaled — for example, `biplotEZ::axes(label.cex = 1)`
+produces a `ggplot2` text size of 2 (i.e. `geom_text(size = 2)`). Adjust
+`label.cex` accordingly to achieve the desired label size in the final
+animation.
+
+#### Custom colour palette and axis label size
+
+``` r
+
+bp_custom <- biplotEZ::biplot(Africa_climate, scaled = TRUE,
+                               group.aes = Africa_climate$Region) |>
+  biplotEZ::PCA() |>
+  biplotEZ::samples(col = RColorBrewer::brewer.pal(10, "Paired")) |>
+  biplotEZ::axes(label.cex = 1.2)
+
+bp_custom |> moveplot(time.var = "Year", group.var = "Region",
+                      hulls = TRUE, move = FALSE)
+```
+
+![](moveEZ_files/figure-html/unnamed-chunk-20-1.png)
+
+    #> Object of class biplot, based on 960 samples and 9 variables.
+    #> 6 numeric variables.
+    #> 3 categorical variables.
+
+#### Custom plotting characters and opacity
+
+``` r
+
+bp_pch <- biplotEZ::biplot(Africa_climate, scaled = TRUE,
+                            group.aes = Africa_climate$Region) |>
+  biplotEZ::PCA() |>
+  biplotEZ::samples(pch = c(22, 21, 24, 23), opacity = 0.4)
+
+bp_pch |> moveplot(time.var = "Year", group.var = "Region",
+                   hulls = FALSE, move = FALSE)
+```
+
+![](moveEZ_files/figure-html/unnamed-chunk-21-1.png)
+
+    #> Object of class biplot, based on 960 samples and 9 variables.
+    #> 6 numeric variables.
+    #> 3 categorical variables.
+
+Note that `pch` values cycle across the ten region groups — specify ten
+values to assign a unique character to each region.
 
 ## References
 
 Gower, J. C., and G. B. Dijksterhuis. 2004. *Procrustes Problems*. Book.
-Oxford: Oxford University Press.
+Oxford University Press.
 
-Lubbe, Sugnet, Niël le Roux, Johané Nienkemper-Swanepoel, Raeesa Ganey,
-Ruan Buys, Zoë-Mae Adams, and Peter Manefeldt. 2024. *biplotEZ:
-EZ-to-Use Biplots*. <https://doi.org/10.32614/CRAN.package.biplotEZ>.
+Hersbach, Hans, Bill Bell, Paul Berrisford, et al. 2023. *ERA5 hourly
+data on single levels from 1940 to present*. Copernicus Climate Change
+Service (C3S) Climate Data Store (CDS).
+<https://doi.org/10.24381/cds.adbb2d47>.
+
+Iturbide, M., J. M. Gutiérrez, L. M. Alves, et al. 2020. “An Update of
+IPCC Climate Reference Regions for Subcontinental Analysis of Climate
+Model Data: Definition and Aggregated Datasets.” *Earth System Science
+Data* 12 (4): 2959–70. <https://doi.org/10.5194/essd-12-2959-2020>.
+
+Lubbe, Sugnet, Niël le Roux, Johané Nienkemper-Swanepoel, et al. 2024.
+*biplotEZ: EZ-to-Use Biplots*.
+<https://doi.org/10.32614/CRAN.package.biplotEZ>.
 
 Nienkemper-Swanepoel, J., N. J. le Roux, and S. Gardner-Lubbe. 2023.
 “GPAbin: Unifying Visualizations of Multiple Imputations for Missing

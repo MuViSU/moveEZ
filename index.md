@@ -8,17 +8,18 @@ You can install the development version of moveEZ from
 [GitHub](https://github.com/) with:
 
 ``` r
+
 library(devtools)
 install_github("MuViSU/moveEZ")
 ```
 
 # Background
 
-Consider a dataset $\mathbf{X}$ comprising $n$ observations and $p$
-continuous variables, along with an additional variable representing
-“time.” This time variable need not correspond to chronological time; it
-could just as well represent another form of ordered index, such as
-algorithmic iterations or experimental stages.
+Consider a dataset $`{\mathbf{X}}`$ comprising $`n`$ observations and
+$`p`$ continuous variables, along with an additional variable
+representing “time.” This time variable need not correspond to
+chronological time; it could just as well represent another form of
+ordered index, such as algorithmic iterations or experimental stages.
 
 A natural approach is to construct separate biplots for each level of
 the time variable, enabling the user to explore how samples and variable
