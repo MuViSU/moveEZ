@@ -22,5 +22,8 @@ Useful links:
 
 Authors:
 
+- Raeesa Ganey <raeesa.ganey@wits.ac.za>
+  ([ORCID](https://orcid.org/0009-0008-6973-0999)) \[copyright holder\]
+
 - Johané Nienkemper-Swanepoel <nienkemperj@sun.ac.za>
   ([ORCID](https://orcid.org/0000-0001-6086-8272)) \[copyright holder\]
