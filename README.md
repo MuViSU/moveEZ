@@ -1,75 +1,89 @@
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # moveEZ <img src="man/figures/logo.png" align="right" width="150"/>
 
-<!-- badges: start -->
+`moveEZ` (pronounced *move easy*) extends the
+[biplotEZ](https://CRAN.R-project.org/package=biplotEZ) package to
+animate PCA biplots across the ordered levels of a categorical variable.
+Rather than producing a separate static biplot per level — which
+fragments sequential information and makes gradual structural change
+difficult to perceive — `moveEZ` renders transitions between levels as a
+continuous animation.
 
-<!-- badges: end -->
+## Installation
 
-The goal of `moveEZ` is to create animated biplots.
+Install the released version from CRAN:
 
-# Installation
-
-You can install the development version of moveEZ from
-[GitHub](https://github.com/) with:
-
-``` r
-library(devtools)
-install_github("MuViSU/moveEZ")
+```r
+install.packages("moveEZ")
 ```
 
-# Background
+Or install the development version from GitHub:
 
-Consider a dataset ${\mathbf{X}}$ comprising $n$ observations and $p$
-continuous variables, along with an additional variable representing
-“time.” This time variable need not correspond to chronological time; it
-could just as well represent another form of ordered index, such as
-algorithmic iterations or experimental stages.
+```r
+# install.packages("devtools")
+devtools::install_github("MuViSU/moveEZ")
+```
 
-A natural approach is to construct separate biplots for each level of
-the time variable, enabling the user to explore how samples and variable
-relationships evolve across time. However, when the time variable
-includes many levels, this quickly results in an overwhelming number of
-biplots.
+## Overview
 
-This package addresses that challenge by animating a single biplot
-across the levels of the time variable, allowing for dynamic
-visualisation of temporal or sequential changes in the data.
+`moveEZ` animates PCA biplots across the ordered levels of a categorical
+variable — referred to as the **time variable**. This variable need not
+represent chronological time; it may be any ordered index such as
+experimental stages, algorithmic iterations, or measurement occasions.
+Each distinct level of the time variable defines a **time slice**: the
+subset of observations corresponding to that level.
 
-The animation of the biplots—currently limited to PCA biplots—is based
-on two conceptual frameworks:
+The package provides three animation functions of increasing
+methodological complexity:
 
-1.  Fixed Variable Frame `moveplot()`: A biplot is first constructed
-    using the full dataset ${\bf{X}}$, and the animation is achieved by
-    slicing the observations according to the “time” variable. In this
-    approach, the variable axes remain fixed, and only the sample points
-    are animated over time.
+| Function | PCA computed | Variable vectors | Alignment |
+|---|---|---|---|
+| `moveplot()` | Once, on full dataset | Fixed | Not required |
+| `moveplot2()` | Per time slice | Dynamic | Manual (`align.time`, `reflect`) |
+| `moveplot3()` | Per time slice | Dynamic | Automated (GPA) |
 
-2.  Dynamic Frame `moveplot2()` and `moveplot3()`: Separate biplots are
-    constructed for each time slice of the data. Both the sample points
-    and variable axes evolve over time, resulting in a fully dynamic
-    animation that reflects temporal changes in the underlying data
-    structure. The differences between these functions are highlighted
-    in the subsequent sections.
+All three functions support animated output (`move = TRUE`) and static
+faceted output (`move = FALSE`).
 
-Please have a look at the vignettes for a full illustration of how these
-functions work.
+## Basic usage
 
-# Still to Come!
+```r
+library(moveEZ)
+library(biplotEZ)
 
-We are actively working to develop and enhance the dynamic plotting
-capabilities of these functions to expose and detect changes in
-observations and variables over time.
+data("Africa_climate")
 
-Stay tuned for updates!
+bp <- biplot(Africa_climate, scaled = TRUE) |>
+  PCA(group.aes = Africa_climate$Region) |>
+  samples(opacity = 0.8) |>
+  plot()
 
-# About the logo
+# Static faceted display
+bp |> moveplot(time.var = "Year", group.var = "Region",
+               hulls = TRUE, move = FALSE)
 
-Logo concept developed with assistance from OpenAI’s ChatGPT
-<https://openai.com/chatgpt>; final design by Raeesa and Johané.
+# Animated display
+bp |> moveplot(time.var = "Year", group.var = "Region",
+               hulls = TRUE, move = TRUE)
+```
 
-# Report Bugs and Support
+## Learn more
+
+- **Vignette**: a full applied demonstration of all three functions,
+  including animated outputs, evaluation measures, and aesthetic
+  customisation — `vignette("moveEZ")`
+- **Paper**: the accompanying R Journal article provides the full
+  methodological treatment, including the theoretical motivation for
+  each framework and a discussion of sign indeterminacy in sequential
+  PCA biplots.
+
+## Report bugs and get support
 
 If you encounter any issues or have questions, please open an issue on
-the GitHub repository.
+the [GitHub repository](https://github.com/MuViSU/moveEZ/issues).
+
+## About the logo
+
+Logo concept developed with assistance from OpenAI's ChatGPT
+(<https://openai.com/chatgpt>); final design by Raeesa and Johané.
