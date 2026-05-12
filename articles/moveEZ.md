@@ -5,9 +5,9 @@
 `moveEZ` extends the `biplotEZ` package (Lubbe et al. 2024) to animate
 PCA biplots across the ordered levels of a categorical variable,
 referred to throughout as the **time variable**. Rather than producing a
-separate static biplot per level — which fragments sequential
-information and makes gradual structural change difficult to perceive —
-`moveEZ` renders transitions between levels as a continuous animation.
+separate static biplot per level, which fragments sequential information
+and makes gradual structural change difficult to perceive, `moveEZ`
+renders transitions between levels as a continuous animation.
 
 The package provides three animation functions of increasing
 methodological complexity:
@@ -90,11 +90,11 @@ bp <- biplot(Africa_climate, scaled = TRUE) |>
 [`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md)
 computes a single PCA decomposition on the full dataset. The variable
 vectors remain fixed throughout the animation, providing a stable
-reference frame. Only the sample positions — sliced according to the
-levels of the time variable — are animated sequentially. This approach
-is most appropriate when the underlying variance–covariance structure
-can be assumed stable across time, and is the only viable option when
-there is a single observation per group per time level.
+reference frame. Only the sample positions, sliced according to the
+levels of the time variable, are animated sequentially. This approach is
+most appropriate when the underlying variance–covariance structure can
+be assumed stable across time, and is the only viable option when there
+is a single observation per group per time level.
 
 The key arguments are:
 
@@ -172,7 +172,7 @@ bp |> moveplot2(time.var = "Year", group.var = "Region",
     #> 6 numeric variables.
     #> 3 categorical variables.
 
-Note the discontinuity between 1950 and 1960 — the variable vectors and
+Note the discontinuity between 1950 and 1960 - the variable vectors and
 sample configuration are reflected about the x-axis. This is a sign
 indeterminacy artefact, not a genuine structural change.
 
@@ -204,7 +204,7 @@ continuity across the sequence of biplots.
 automates the alignment of sequential biplots using GPA (Gower and
 Dijksterhuis 2004), implemented via the `GPAbin` package
 (Nienkemper-Swanepoel et al. 2023). GPA iteratively applies admissible
-transformations — translation, reflection, rotation, and scaling — to
+transformations: translation, reflection, rotation, and scaling, to
 minimise the sum of squared distances between each time slice and a
 target configuration, without requiring the user to manually identify
 discontinuities.
@@ -283,7 +283,7 @@ bp |> moveplot3(time.var = "Year", group.var = "Region",
 
 Each time slice is aligned to the 1989 reference configuration, exposing
 the structural differences between 1989 and each decade from 1950 to
-2020. Note that the target biplot itself is not shown in this display —
+2020. Note that the target biplot itself is not shown in this display,
 it serves only as the alignment reference. To visualise the target
 configuration separately, pass it to
 [`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md)
@@ -469,10 +469,10 @@ bp |> moveplot(time.var = "Region", group.var = "Region",
 ### Customising aesthetics
 
 `moveEZ` inherits its core biplot construction from `biplotEZ`, and
-aesthetic customisation — such as point colours, plotting characters,
-and axis label sizes — should be specified in the `biplotEZ` biplot
-object before passing it to any `moveplot` function. If no aesthetic
-changes are made to
+aesthetic customisation, such as point colours, plotting characters, and
+axis label sizes — should be specified in the `biplotEZ` biplot object
+before passing it to any `moveplot` function. If no aesthetic changes
+are made to
 [`biplotEZ::samples()`](https://rdrr.io/pkg/biplotEZ/man/samples.html)
 or [`biplotEZ::axes()`](https://rdrr.io/pkg/biplotEZ/man/axes.html), the
 default `moveEZ` aesthetics are applied automatically.
@@ -523,7 +523,7 @@ bp_pch |> moveplot(time.var = "Year", group.var = "Region",
     #> 6 numeric variables.
     #> 3 categorical variables.
 
-Note that `pch` values cycle across the ten region groups — specify ten
+Note that `pch` values cycle across the ten region groups - specify ten
 values to assign a unique character to each region.
 
 ## References
