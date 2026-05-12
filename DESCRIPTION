@@ -1,6 +1,6 @@
 Package: moveEZ
 Title: Animated Biplots
-Version: 1.1.1
+Version: 1.2.0
 Authors@R: 
     c(person("Raeesa", "Ganey", , "raeesa.ganey@wits.ac.za", role = c("aut", "cre","cph"),
            comment = c(ORCID = "0009-0008-6973-0999")),
@@ -10,7 +10,6 @@ Description: Create animated biplots that enables dynamic visualisation of tempo
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 VignetteBuilder: knitr
 Depends: R (>= 4.1.0)
 Imports:
@@ -28,3 +27,4 @@ Suggests:
     RColorBrewer
 Config/Needs/website: rmarkdown
 URL: https://muvisu.github.io/moveEZ/
+Config/roxygen2/version: 8.0.0

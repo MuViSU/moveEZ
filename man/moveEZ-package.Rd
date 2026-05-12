@@ -22,6 +22,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Raeesa Ganey \email{raeesa.ganey@wits.ac.za} (\href{https://orcid.org/0009-0008-6973-0999}{ORCID}) [copyright holder]
   \item Johané Nienkemper-Swanepoel \email{nienkemperj@sun.ac.za} (\href{https://orcid.org/0000-0001-6086-8272}{ORCID}) [copyright holder]
 }
 
