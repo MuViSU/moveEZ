@@ -52,48 +52,103 @@
 <img src="logo.png" class="logo" alt=""><h1 id="moveez-">moveEZ <a class="anchor" aria-label="anchor" href="#moveez-"></a>
 </h1>
 </div>
-<!-- badges: start -->
-<!-- badges: end -->
-<p>The goal of <code>moveEZ</code> is to create animated biplots.</p>
-</div>
-<div class="section level1">
-<h1 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h1>
-<p>You can install the development version of moveEZ from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<p><code>moveEZ</code> (pronounced <em>move easy</em>) extends the <a href="https://CRAN.R-project.org/package=biplotEZ" class="external-link">biplotEZ</a> package to animate PCA biplots across the ordered levels of a categorical variable. Rather than producing a separate static biplot per level — which fragments sequential information and makes gradual structural change difficult to perceive — <code>moveEZ</code> renders transitions between levels as a continuous animation.</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>Install the released version from CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
-<span><span class="fu">install_github</span><span class="op">(</span><span class="st">"MuViSU/moveEZ"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"moveEZ"</span><span class="op">)</span></span></code></pre></div>
+<p>Or install the development version from GitHub:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"MuViSU/moveEZ"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level1">
-<h1 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
-</h1>
-<p>Consider a dataset <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐗</mi><annotation encoding="application/x-tex">{\mathbf{X}}</annotation></semantics></math> comprising <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math> observations and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math> continuous variables, along with an additional variable representing “time.” This time variable need not correspond to chronological time; it could just as well represent another form of ordered index, such as algorithmic iterations or experimental stages.</p>
-<p>A natural approach is to construct separate biplots for each level of the time variable, enabling the user to explore how samples and variable relationships evolve across time. However, when the time variable includes many levels, this quickly results in an overwhelming number of biplots.</p>
-<p>This package addresses that challenge by animating a single biplot across the levels of the time variable, allowing for dynamic visualisation of temporal or sequential changes in the data.</p>
-<p>The animation of the biplots—currently limited to PCA biplots—is based on two conceptual frameworks:</p>
-<ol style="list-style-type: decimal">
-<li><p>Fixed Variable Frame <code><a href="reference/moveplot.html">moveplot()</a></code>: A biplot is first constructed using the full dataset <span class="math inline">${\bf{X}}$</span>, and the animation is achieved by slicing the observations according to the “time” variable. In this approach, the variable axes remain fixed, and only the sample points are animated over time.</p></li>
-<li><p>Dynamic Frame <code><a href="reference/moveplot2.html">moveplot2()</a></code> and <code><a href="reference/moveplot3.html">moveplot3()</a></code>: Separate biplots are constructed for each time slice of the data. Both the sample points and variable axes evolve over time, resulting in a fully dynamic animation that reflects temporal changes in the underlying data structure. The differences between these functions are highlighted in the subsequent sections.</p></li>
-</ol>
-<p>Please have a look at the vignettes for a full illustration of how these functions work.</p>
+<div class="section level2">
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h2>
+<p><code>moveEZ</code> animates PCA biplots across the ordered levels of a categorical variable — referred to as the <strong>time variable</strong>. This variable need not represent chronological time; it may be any ordered index such as experimental stages, algorithmic iterations, or measurement occasions. Each distinct level of the time variable defines a <strong>time slice</strong>: the subset of observations corresponding to that level.</p>
+<p>The package provides three animation functions of increasing methodological complexity:</p>
+<table class="table">
+<colgroup>
+<col width="25%">
+<col width="25%">
+<col width="25%">
+<col width="25%">
+</colgroup>
+<thead><tr>
+<th>Function</th>
+<th>PCA computed</th>
+<th>Variable vectors</th>
+<th>Alignment</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code><a href="reference/moveplot.html">moveplot()</a></code></td>
+<td>Once, on full dataset</td>
+<td>Fixed</td>
+<td>Not required</td>
+</tr>
+<tr>
+<td><code><a href="reference/moveplot2.html">moveplot2()</a></code></td>
+<td>Per time slice</td>
+<td>Dynamic</td>
+<td>Manual (<code>align.time</code>, <code>reflect</code>)</td>
+</tr>
+<tr>
+<td><code><a href="reference/moveplot3.html">moveplot3()</a></code></td>
+<td>Per time slice</td>
+<td>Dynamic</td>
+<td>Automated (GPA)</td>
+</tr>
+</tbody>
+</table>
+<p>All three functions support animated output (<code>move = TRUE</code>) and static faceted output (<code>move = FALSE</code>).</p>
 </div>
-<div class="section level1">
-<h1 id="still-to-come">Still to Come!<a class="anchor" aria-label="anchor" href="#still-to-come"></a>
-</h1>
-<p>We are actively working to develop and enhance the dynamic plotting capabilities of these functions to expose and detect changes in observations and variables over time.</p>
-<p>Stay tuned for updates!</p>
+<div class="section level2">
+<h2 id="basic-usage">Basic usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
+</h2>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://muvisu.github.io/moveEZ/">moveEZ</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">biplotEZ</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"Africa_climate"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">bp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/biplot.html" class="external-link">biplot</a></span><span class="op">(</span><span class="va">Africa_climate</span>, scaled <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/PCA.html" class="external-link">PCA</a></span><span class="op">(</span>group.aes <span class="op">=</span> <span class="va">Africa_climate</span><span class="op">$</span><span class="va">Region</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/samples.html" class="external-link">samples</a></span><span class="op">(</span>opacity <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Static faceted display</span></span>
+<span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/moveplot.html">moveplot</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
+<span>               hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Animated display</span></span>
+<span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/moveplot.html">moveplot</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
+<span>               hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level1">
-<h1 id="about-the-logo">About the logo<a class="anchor" aria-label="anchor" href="#about-the-logo"></a>
-</h1>
-<p>Logo concept developed with assistance from OpenAI’s ChatGPT <a href="https://openai.com/chatgpt" class="external-link uri">https://openai.com/chatgpt</a>; final design by Raeesa and Johané.</p>
+<div class="section level2">
+<h2 id="learn-more">Learn more<a class="anchor" aria-label="anchor" href="#learn-more"></a>
+</h2>
+<ul>
+<li>
+<strong>Vignette</strong>: a full applied demonstration of all three functions, including animated outputs, evaluation measures, and aesthetic customisation — <code><a href="articles/moveEZ.html">vignette("moveEZ")</a></code>
+</li>
+<li>
+<strong>Paper</strong>: the accompanying R Journal article provides the full methodological treatment, including the theoretical motivation for each framework and a discussion of sign indeterminacy in sequential PCA biplots.</li>
+</ul>
 </div>
-<div class="section level1">
-<h1 id="report-bugs-and-support">Report Bugs and Support<a class="anchor" aria-label="anchor" href="#report-bugs-and-support"></a>
-</h1>
-<p>If you encounter any issues or have questions, please open an issue on the GitHub repository.</p>
+<div class="section level2">
+<h2 id="report-bugs-and-get-support">Report bugs and get support<a class="anchor" aria-label="anchor" href="#report-bugs-and-get-support"></a>
+</h2>
+<p>If you encounter any issues or have questions, please open an issue on the <a href="https://github.com/MuViSU/moveEZ/issues" class="external-link">GitHub repository</a>.</p>
 </div>
-
+<div class="section level2">
+<h2 id="about-the-logo">About the logo<a class="anchor" aria-label="anchor" href="#about-the-logo"></a>
+</h2>
+<p>Logo concept developed with assistance from OpenAI’s ChatGPT (<a href="https://openai.com/chatgpt" class="external-link uri">https://openai.com/chatgpt</a>); final design by Raeesa and Johané.</p>
+</div>
+</div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
