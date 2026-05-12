@@ -5,9 +5,9 @@
 `moveEZ` (pronounced *move easy*) extends the
 [biplotEZ](https://CRAN.R-project.org/package=biplotEZ) package to
 animate PCA biplots across the ordered levels of a categorical variable.
-Rather than producing a separate static biplot per level — which
+Rather than producing a separate static biplot per level, which
 fragments sequential information and makes gradual structural change
-difficult to perceive — `moveEZ` renders transitions between levels as a
+difficult to perceive, `moveEZ` renders transitions between levels as a
 continuous animation.
 
 ## Installation
@@ -72,7 +72,7 @@ bp |> moveplot(time.var = "Year", group.var = "Region",
 
 - **Vignette**: a full applied demonstration of all three functions,
   including animated outputs, evaluation measures, and aesthetic
-  customisation — `vignette("moveEZ")`
+  customisation - `vignette("moveEZ")`
 - **Paper**: the accompanying R Journal article provides the full
   methodological treatment, including the theoretical motivation for
   each framework and a discussion of sign indeterminacy in sequential
