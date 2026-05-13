@@ -1,3 +1,19 @@
+#' @importFrom biplotEZ biplot
+#' @export
+biplotEZ::biplot
+
+#' @importFrom biplotEZ PCA
+#' @export
+biplotEZ::PCA
+
+#' @importFrom biplotEZ samples
+#' @export
+biplotEZ::samples
+
+#' @importFrom biplotEZ axes
+#' @export
+biplotEZ::axes
+
 #' Move plot
 #'
 #' Create animated biplot on samples in a biplot
@@ -18,7 +34,7 @@
 #'
 #' @examples
 #' data(Africa_climate)
-#' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
+#' bp <- biplot(Africa_climate, scaled = TRUE) |> PCA()
 #'
 #' # Convex hulls facet plot
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
@@ -27,23 +43,23 @@
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
 #'
 #' # Specifying colours with colour palette in biplotEZ
-#' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
-#' biplotEZ::PCA() |> biplotEZ::samples(col = RColorBrewer::brewer.pal(10, "Paired"))
+#' bp <- biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
+#' PCA() |> samples(col = RColorBrewer::brewer.pal(10, "Paired"))
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 #'
 #' # Specifying plotting characters for grouping variable in biplotEZ
-#' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
-#' biplotEZ::PCA() |> biplotEZ::samples(pch = c(19, 21, 3))
+#' bp <- biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
+#' PCA() |> samples(pch = c(19, 21, 3))
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
 #'
 #' # Specifying opacity of plotting characters and size of variable lables
-#' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
-#' biplotEZ::PCA() |> biplotEZ::samples(opacity = 0.4) |> biplotEZ::axes(label.cex = 1.2)
+#' bp <- biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
+#' PCA() |> samples(opacity = 0.4) |> axes(label.cex = 1.2)
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
 #'
 #' # Specifying colours manually in biplotEZ
-#' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
-#' biplotEZ::PCA() |> biplotEZ::samples(col = c("firebrick4", "indianred3", "tomato", "sandybrown",
+#' bp <- biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
+#' PCA() |> samples(col = c("firebrick4", "indianred3", "tomato", "sandybrown",
 #'  "khaki1", "palegreen1", "darkseagreen2", "mediumaquamarine", "deepskyblue4", "mediumpurple4"))
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 #'
@@ -101,8 +117,11 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 
   #conversion of 1:1.5 between cex of pch base R:ggplot2
   #conversion of 1:2 between cex of text base R:ggplot2
-  if(is.null(bp$axes$label.cex)) text_size = 3.88 else {
-    text_size <- bp$axes$label.cex[1]*2 }
+  if(is.null(bp$axes$label.cex) || bp$axes$label.cex[1] == formals(biplotEZ::axes)$label.cex[1]) {
+    text_size = 4
+  } else {
+    text_size <- bp$axes$label.cex[1] * 2
+  }
 
   axes_info <- axes_moveEZ(bp)
   Vr <- bp$Vr
@@ -226,7 +245,7 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 #'
 #' @examples
 #' data(Africa_climate)
-#' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
+#' bp <- biplot(Africa_climate, scaled = TRUE) |> PCA()
 #' \donttest{
 #' if(interactive()) {
 #' bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}}
@@ -307,8 +326,11 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
 
     # Variables
 
-    if(is.null(bp$axes$label.cex)) text_size = 3.88 else {
-      text_size <- bp$axes$label.cex[1]*2 }
+    if(is.null(bp$axes$label.cex) || bp$axes$label.cex[1] == formals(biplotEZ::axes)$label.cex[1]) {
+      text_size = 4
+    } else {
+      text_size <- bp$axes$label.cex[1] * 2
+    }
 
     axes_info[[i]] <- axes_moveEZ(bp_list[[i]])
     colnames(bp_list[[i]]$Vr) <- c("V1","V2")
@@ -457,7 +479,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
 #' @examples
 #' data(Africa_climate)
 #' data(Africa_climate_target)
-#' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
+#' bp <- biplot(Africa_climate, scaled = TRUE) |> PCA()
 #' bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 #' move = FALSE, target = NULL)
 #' \donttest{
@@ -618,7 +640,11 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   Vr_GPA_tbl <- do.call(rbind,Vr_GPA_list)
   chull_reg_GPA <- do.call(rbind,chull_reg)
 
-  #text_size <- pch$axes$label.cex
+  if(is.null(bp$axes$label.cex) || bp$axes$label.cex[1] == formals(biplotEZ::axes)$label.cex[1]) {
+    text_size = 4
+  } else {
+    text_size <- bp$axes$label.cex[1] * 2
+  }
 
   # Plotting
 
@@ -632,7 +658,7 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                    arrow=arrow(length=unit(0.1,"inches"))) +
       geom_text(data=Vr_GPA_tbl, aes(x=V1*scale.var, y=V2*scale.var,
                                      label = var,
-                                     hjust="outward", vjust="outward",group=var),colour="black",size=4) +
+                                     hjust="outward", vjust="outward",group=var),colour="black",size=text_size) +
       gganimate::transition_states(.data[[time.var]],
                                    transition_length = 2,
                                    state_length = 1) +
@@ -675,7 +701,7 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                    arrow=arrow(length=unit(0.1,"inches"))) +
       geom_text(data=Vr_GPA_tbl,aes(x=V1*scale.var, y=V2*scale.var,
                                     label = var,
-                                    hjust="outward", vjust="outward",group=var),colour="black",size=4) +
+                                    hjust="outward", vjust="outward",group=var),colour="black",size=text_size) +
       # Sample polygons or points
       {if(hulls){
         list(

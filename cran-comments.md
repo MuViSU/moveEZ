@@ -1,10 +1,10 @@
 ## Overview
 
-This is a minor change submission. In this version we have: 
-- fixed the labs error
+This is an updated submission. In this version we have: 
+- added aesthetic features
 
-── R CMD check results ─────────────────────────────────────────────────────────────────────── moveEZ 1.1.1 ────
-Duration: 1m 44.3s
+── R CMD check results ───────────────────────────────────────────────────────────────────────────────────────── moveEZ 1.2.0 ────
+Duration: 1m 54.9s
 
 ❯ checking for future file timestamps ... NOTE
   unable to verify current time
@@ -14,5 +14,5 @@ Duration: 1m 44.3s
 
 ## Test environment
 
-* local R installation: R version 4.5.0 (2025-04-11) -- "How About a Twenty-Six"
+* local R installation: R version 4.5.1 (2025-06-13) -- "Great Square Root"
 * other platforms checked using `check_rhub()`: linux, macos, windows

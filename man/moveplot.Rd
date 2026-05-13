@@ -38,7 +38,7 @@ Create animated biplot on samples in a biplot
 }
 \examples{
 data(Africa_climate)
-bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
+bp <- biplot(Africa_climate, scaled = TRUE) |> PCA()
 
 # Convex hulls facet plot
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
@@ -47,23 +47,23 @@ bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FAL
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
 
 # Specifying colours with colour palette in biplotEZ
-bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
-biplotEZ::PCA() |> biplotEZ::samples(col = RColorBrewer::brewer.pal(10, "Paired"))
+bp <- biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
+PCA() |> samples(col = RColorBrewer::brewer.pal(10, "Paired"))
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 
 # Specifying plotting characters for grouping variable in biplotEZ
-bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
-biplotEZ::PCA() |> biplotEZ::samples(pch = c(19, 21, 3))
+bp <- biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
+PCA() |> samples(pch = c(19, 21, 3))
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
 
 # Specifying opacity of plotting characters and size of variable lables
-bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
-biplotEZ::PCA() |> biplotEZ::samples(opacity = 0.4) |> biplotEZ::axes(label.cex = 1.2)
+bp <- biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
+PCA() |> samples(opacity = 0.4) |> axes(label.cex = 1.2)
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
 
 # Specifying colours manually in biplotEZ
-bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
-biplotEZ::PCA() |> biplotEZ::samples(col = c("firebrick4", "indianred3", "tomato", "sandybrown",
+bp <- biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
+PCA() |> samples(col = c("firebrick4", "indianred3", "tomato", "sandybrown",
  "khaki1", "palegreen1", "darkseagreen2", "mediumaquamarine", "deepskyblue4", "mediumpurple4"))
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 
