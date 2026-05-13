@@ -38,7 +38,7 @@ evaluation(bp, centring = TRUE)
 
 - bias.plot:
 
-  Returns a line plot with bias measures taht are unbounded: AMB, MB and
+  Returns a line plot with bias measures that are unbounded: AMB, MB and
   RMSB. Small values indicate low bias.
 
 ## Examples
