@@ -12,7 +12,7 @@
 #' @returns
 #' \item{eval.list}{Returns a list containing the measures of comparison for each level of the time variable.}
 #' \item{fit.plot}{Returns a line plot with the fit measures that are bounded between zero and one: PS and CC. A small PS value and large CC value indicate good fit.}
-#' \item{bias.plot}{Returns a line plot with bias measures taht are unbounded: AMB, MB and RMSB. Small values indicate low bias.}
+#' \item{bias.plot}{Returns a line plot with bias measures that are unbounded: AMB, MB and RMSB. Small values indicate low bias.}
 #'
 #' @export
 #'

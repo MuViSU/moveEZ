@@ -169,7 +169,7 @@ bp |> moveplot2(time.var = "Year", group.var = "Region",
 
 Note the discontinuity between 1950 and 1960 - the variable vectors and
 sample configuration are reflected about the x-axis. This is a sign
-indeterminacy artefact, not a genuine structural change.
+indeterminacy artifact, not a genuine structural change.
 
 ## Static faceted display (aligned)
 
