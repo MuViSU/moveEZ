@@ -194,10 +194,6 @@ bp |> moveplot2(time.var = "Year", group.var = "Region",
 Applying a reflection about the x-axis at 1950 restores visual
 continuity across the sequence of biplots.
 
-### Animated display
-
-![](anim2_moveplot.gif)
-
 ## Automated Alignment: `moveplot3()`
 
 [`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md)
@@ -239,10 +235,6 @@ bp |> moveplot3(time.var = "Year", group.var = "Region",
 All time slices are aligned to the average configuration across years,
 producing a consistently oriented sequence of biplots without manual
 intervention.
-
-#### Animated display
-
-![](anim3_moveplot.gif)
 
 ### User-supplied target (`target = Africa_climate_target`)
 
@@ -309,10 +301,6 @@ bp_1989 |> moveplot(time.var = "Target", group.var = "Region",
     #> Object of class biplot, based on 120 samples and 10 variables.
     #> 6 numeric variables.
     #> 4 categorical variables.
-
-#### Animated display
-
-![](anim4_moveplot.gif)
 
 ## Evaluation
 
