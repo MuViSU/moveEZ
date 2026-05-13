@@ -182,9 +182,6 @@ bp |> moveplot2(time.var = "Year", group.var = "Region",
 Applying a reflection about the x-axis at 1950 restores visual continuity
 across the sequence of biplots.
 
-## Animated display
-
-![](anim2_moveplot.gif)
 
 ```{r, echo=FALSE, eval=FALSE, warning=FALSE, message=FALSE}
 anim2 <- bp |> moveplot2(time.var = "Year", group.var = "Region",
@@ -229,9 +226,6 @@ All time slices are aligned to the average configuration across years,
 producing a consistently oriented sequence of biplots without manual
 intervention.
 
-### Animated display
-
-![](anim3_moveplot.gif)
 
 ```{r, echo=FALSE, eval=FALSE, warning=FALSE, message=FALSE}
 anim3 <- bp |> moveplot3(time.var = "Year", group.var = "Region",
@@ -277,9 +271,6 @@ bp_1989 |> moveplot(time.var = "Target", group.var = "Region",
                     hulls = TRUE, move = FALSE)
 ```
 
-### Animated display
-
-![](anim4_moveplot.gif)
 
 ```{r, echo=FALSE, eval=FALSE, warning=FALSE, message=FALSE}
 anim4 <- bp |> moveplot3(time.var = "Year", group.var = "Region",
