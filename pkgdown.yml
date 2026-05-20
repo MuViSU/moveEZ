@@ -3,7 +3,7 @@ pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   moveEZ: moveEZ.html
-last_built: 2026-05-20T07:29Z
+last_built: 2026-05-20T09:14Z
 urls:
   reference: https://muvisu.github.io/moveEZ/reference
   article: https://muvisu.github.io/moveEZ/articles
