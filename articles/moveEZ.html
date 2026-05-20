@@ -257,12 +257,9 @@ levels.</li>
 <h3 id="static-faceted-display-unaligned">Static faceted display (unaligned)<a class="anchor" aria-label="anchor" href="#static-faceted-display-unaligned"></a>
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot2.html">moveplot2</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
+<code class="sourceCode R"><span><span class="va">bp1</span> <span class="op">&lt;-</span> <span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot2.html">moveplot2</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>                hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="672"></p>
-<pre><code><span><span class="co">#&gt; Object of class biplot, based on 960 samples and 9 variables.</span></span>
-<span><span class="co">#&gt; 6 numeric variables.</span></span>
-<span><span class="co">#&gt; 3 categorical variables.</span></span></code></pre>
 <p>Note the discontinuity between 1950 and 1960 - the variable vectors
 and sample configuration are reflected about the x-axis. This is a sign
 indeterminacy artifact, not a genuine structural change.</p>
@@ -270,14 +267,11 @@ indeterminacy artifact, not a genuine structural change.</p>
 <div class="section level3">
 <h3 id="static-faceted-display-aligned">Static faceted display (aligned)<a class="anchor" aria-label="anchor" href="#static-faceted-display-aligned"></a>
 </h3>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot2.html">moveplot2</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">bp2</span> <span class="op">&lt;-</span> <span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot2.html">moveplot2</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>                hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                align.time <span class="op">=</span> <span class="st">"1950"</span>, reflect <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="672"></p>
-<pre><code><span><span class="co">#&gt; Object of class biplot, based on 960 samples and 9 variables.</span></span>
-<span><span class="co">#&gt; 6 numeric variables.</span></span>
-<span><span class="co">#&gt; 3 categorical variables.</span></span></code></pre>
 <p>Applying a reflection about the x-axis at 1950 restores visual
 continuity across the sequence of biplots.</p>
 </div>
@@ -313,7 +307,7 @@ reference.</p>
 <div class="section level4">
 <h4 id="static-faceted-display-1">Static faceted display<a class="anchor" aria-label="anchor" href="#static-faceted-display-1"></a>
 </h4>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot3.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>                hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>, target <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="672"></p>
@@ -329,7 +323,7 @@ manual intervention.</p>
 <h3 id="user-supplied-target-target-africa_climate_target">User-supplied target
 (<code>target = Africa_climate_target</code>)<a class="anchor" aria-label="anchor" href="#user-supplied-target-target-africa_climate_target"></a>
 </h3>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"Africa_climate_target"</span><span class="op">)</span></span>
 <span><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span><span class="va">Africa_climate_target</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 120 × 9</span></span></span>
@@ -349,7 +343,7 @@ manual intervention.</p>
 <div class="section level4">
 <h4 id="static-faceted-display-2">Static faceted display<a class="anchor" aria-label="anchor" href="#static-faceted-display-2"></a>
 </h4>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot3.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>                hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                target <span class="op">=</span> <span class="va">Africa_climate_target</span><span class="op">)</span></span></code></pre></div>
@@ -363,7 +357,7 @@ exposing the structural differences between 1989 and each decade from
 display, it serves only as the alignment reference. To visualise the
 target configuration separately, pass it to <code><a href="../reference/moveplot.html">moveplot()</a></code>
 directly:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">viz_1989</span> <span class="op">&lt;-</span> <span class="va">Africa_climate_target</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    Target <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"1989"</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">Africa_climate_target</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -409,7 +403,7 @@ systematic directional shift.</li>
 <li>
 <strong>RMSB</strong> (Root Mean Squared Bias)</li>
 </ul>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="va">bp</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/moveplot3.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>            hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>, target <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -418,7 +412,7 @@ systematic directional shift.</li>
 <div class="section level3">
 <h3 id="numerical-measures">Numerical measures<a class="anchor" aria-label="anchor" href="#numerical-measures"></a>
 </h3>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span><span class="op">$</span><span class="va">eval.list</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt;      Target vs. 1950</span></span>
@@ -487,7 +481,7 @@ systematic directional shift.</li>
 <div class="section level3">
 <h3 id="fit-measures-over-time">Fit measures over time<a class="anchor" aria-label="anchor" href="#fit-measures-over-time"></a>
 </h3>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span><span class="op">$</span><span class="va">fit.plot</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-17-1.png" class="r-plt" alt="" width="672"></p>
 <p>The biplot for 2000 shows a notably lower CC and higher PS relative
@@ -497,7 +491,7 @@ configuration that warrants closer investigation.</p>
 <div class="section level3">
 <h3 id="bias-measures-over-time">Bias measures over time<a class="anchor" aria-label="anchor" href="#bias-measures-over-time"></a>
 </h3>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span><span class="op">$</span><span class="va">bias.plot</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-18-1.png" class="r-plt" alt="" width="672"></p>
 <p>The initial bias at 1950 is high but decreases and stabilises from
@@ -517,7 +511,7 @@ faceted display in which each panel shows a single group rather than a
 single time level. This can be useful when group-level patterns are
 difficult to distinguish in the standard faceted display, where all
 groups appear together in each panel.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot.html">moveplot</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Region"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>               hulls <span class="op">=</span> <span class="cn">FALSE</span>, move <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-19-1.png" class="r-plt" alt="" width="672"></p>
@@ -546,7 +540,7 @@ animation.</p>
 <div class="section level4">
 <h4 id="custom-colour-palette-and-axis-label-size">Custom colour palette and axis label size<a class="anchor" aria-label="anchor" href="#custom-colour-palette-and-axis-label-size"></a>
 </h4>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp_custom</span> <span class="op">&lt;-</span> <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/biplot.html" class="external-link">biplot</a></span><span class="op">(</span><span class="va">Africa_climate</span>, scaled <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                               group.aes <span class="op">=</span> <span class="va">Africa_climate</span><span class="op">$</span><span class="va">Region</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/PCA.html" class="external-link">PCA</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -563,7 +557,7 @@ animation.</p>
 <div class="section level4">
 <h4 id="custom-plotting-characters-and-opacity">Custom plotting characters and opacity<a class="anchor" aria-label="anchor" href="#custom-plotting-characters-and-opacity"></a>
 </h4>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp_pch</span> <span class="op">&lt;-</span> <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/biplot.html" class="external-link">biplot</a></span><span class="op">(</span><span class="va">Africa_climate</span>, scaled <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                            group.aes <span class="op">=</span> <span class="va">Africa_climate</span><span class="op">$</span><span class="va">Region</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/PCA.html" class="external-link">PCA</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>

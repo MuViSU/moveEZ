@@ -2,9 +2,22 @@
 
 Create animated biplot on samples and variables in a biplot
 
+Create animated biplot on samples and variables in a biplot
+
 ## Usage
 
 ``` r
+moveplot2(
+  bp,
+  time.var,
+  group.var,
+  move = TRUE,
+  hulls = TRUE,
+  scale.var = 5,
+  align.time = NA,
+  reflect = NA
+)
+
 moveplot2(
   bp,
   time.var,
@@ -67,9 +80,22 @@ moveplot2(
 
   An animated or a facet of biplots based on the dynamic frame.
 
+- bp:
+
+  Returns the elements of the biplot object `bp` from `biplotEZ`.
+
+- plot:
+
+  An animated or a facet of biplots based on the dynamic frame.
+
 ## Examples
 
 ``` r
+data(Africa_climate)
+bp <- biplot(Africa_climate, scaled = TRUE) |> PCA()
+# \donttest{
+if(interactive()) {
+bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}# }
 data(Africa_climate)
 bp <- biplot(Africa_climate, scaled = TRUE) |> PCA()
 # \donttest{

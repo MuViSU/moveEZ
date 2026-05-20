@@ -162,15 +162,11 @@ Two additional arguments address this:
 
 ``` r
 
-bp |> moveplot2(time.var = "Year", group.var = "Region",
+bp1 <- bp |> moveplot2(time.var = "Year", group.var = "Region",
                 hulls = TRUE, move = FALSE)
 ```
 
 ![](moveEZ_files/figure-html/unnamed-chunk-6-1.png)
-
-    #> Object of class biplot, based on 960 samples and 9 variables.
-    #> 6 numeric variables.
-    #> 3 categorical variables.
 
 Note the discontinuity between 1950 and 1960 - the variable vectors and
 sample configuration are reflected about the x-axis. This is a sign
@@ -180,16 +176,12 @@ indeterminacy artifact, not a genuine structural change.
 
 ``` r
 
-bp |> moveplot2(time.var = "Year", group.var = "Region",
+bp2 <- bp |> moveplot2(time.var = "Year", group.var = "Region",
                 hulls = TRUE, move = FALSE,
                 align.time = "1950", reflect = "x")
 ```
 
 ![](moveEZ_files/figure-html/unnamed-chunk-7-1.png)
-
-    #> Object of class biplot, based on 960 samples and 9 variables.
-    #> 6 numeric variables.
-    #> 3 categorical variables.
 
 Applying a reflection about the x-axis at 1950 restores visual
 continuity across the sequence of biplots.
