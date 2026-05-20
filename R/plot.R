@@ -72,8 +72,8 @@ biplotEZ::axes
 #' \donttest{
 #' if(interactive()) {
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = TRUE, shadow = TRUE)}}
-moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
-                     scale.var = 5, shadow = FALSE)
+moveplot<- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
+                    scale.var = 5, shadow = FALSE)
 {
 
   if(!is.null(group.var)) bp$group.aes <- bp$raw.X[,which(colnames(bp$raw.X) == group.var)] else
@@ -107,11 +107,19 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   }
 
   # Samples
-
   Z <- bp$Z
   Z <- suppressMessages(dplyr::bind_cols(Z, bp$Xcat))
   colnames(Z)[1:2] <- c("V1","V2")
   Z_tbl <- dplyr::as_tibble(Z)
+
+  # Group means for CVA | per time slice
+  Zmeans_tbl <- Z_tbl |>
+    dplyr::group_by(dplyr::across(dplyr::all_of(c(time.var, group.var)))) |>
+    dplyr::summarise(
+      V1_mean = mean(V1, na.rm = TRUE),
+      V2_mean = mean(V2, na.rm = TRUE),
+      .groups = "drop"
+    )
 
   # Variables
 
@@ -124,7 +132,10 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   }
 
   axes_info <- axes_moveEZ(bp)
-  Vr <- bp$Vr
+
+  if(class(bp)[2] == "PCA") Vr <- bp$Vr
+  if(class(bp)[2] == "CVA") Vr <- bp$Mr
+
   colnames(Vr) <- c("V1","V2")
   Vr <- dplyr::as_tibble(Vr)
   Vr_tbl <- Vr |> dplyr::mutate(var = colnames(bp$X)) |>
@@ -160,68 +171,75 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   # move – TRUE --- Animated sliced Z
   # move – FALSE  --- Facet on sliced Z
   bp$plot <- ggplot() +
-      # Axes
-      geom_segment(data = Vr_tbl,aes(x=0, y=0, xend = V1*scale.var, yend = V2*scale.var, group = var),
-                   arrow = arrow(length = unit(0.1, "inches"))) +
-      geom_text(data = Vr_tbl, aes(x=V1*scale.var, y=V2*scale.var,
-                    label = var, hjust = "outward", vjust = "outward", group = var),
-                    colour = "black", size = text_size) +
-      # Sample polygons or points
-      {if(hulls){
-        list(
-          geom_polygon(data = chull_reg,
+    # Axes
+    geom_segment(data = Vr_tbl,aes(x=0, y=0, xend = V1*scale.var, yend = V2*scale.var, group = var),
+                 arrow = arrow(length = unit(0.1, "inches"))) +
+    geom_text(data = Vr_tbl, aes(x=V1*scale.var, y=V2*scale.var,
+                                 label = var, hjust = "outward", vjust = "outward", group = var),
+              colour = "black", size = text_size) +
+    # Sample polygons or points
+    {if(hulls){
+      list(
+        geom_polygon(data = chull_reg,
                      aes(x=V1, y=V2,
                          group = .data[[group.var]],
                          fill = .data[[group.var]]), alpha = 0.5),
-          ggplot2::scale_fill_manual(values = group_palette))
-      } else {
-        list(
+        ggplot2::scale_fill_manual(values = group_palette))
+    } else {
+      list(
         geom_point(data = Z_tbl,
                    aes(x=V1, y=V2,
                        group = .data[[group.var]],
                        fill = .data[[group.var]],
                        colour = .data[[group.var]],
                        shape = .data[[group.var]]),
-                       size = 2, alpha = samp_opac),
+                   size = 2, alpha = samp_opac),
         ggplot2::scale_colour_manual(values = group_palette),
         ggplot2::scale_fill_manual(values = scales::alpha(group_palette, samp_opac)),
         ggplot2::scale_shape_manual(values = samp_pch))
-      }} +
-      {if(move) { gganimate::transition_states(.data[[time.var]],
-                                     transition_length = 2,
-                                     state_length = 1) } else {
-                                       facet_wrap(~.data[[time.var]]) }} +
-      {if(move) { ggplot2::labs(title = '{time.var}: {closest_state}',x="",y="")}} +
+    }} +
+    {if(class(bp)[2] == "CVA"){
+      geom_point(data = Zmeans_tbl,
+                 aes(x = V1_mean, y = V2_mean,
+                     colour = .data[[group.var]]),
+                 size = 3,shape = 15,alpha = 1,show.legend = FALSE)
+    }} +
+    {if(move) { gganimate::transition_states(.data[[time.var]],
+                                             transition_length = 2,
+                                             state_length = 1, wrap = FALSE) } else {
+                                               facet_wrap(~.data[[time.var]]) }} +
+    {if(move) { ggplot2::labs(title = '{time.var}: {closest_state}',x="",y="")}} +
     # Sample points for hulls that cannot be constructed
-      {if(hulls & (length(no_hulls) > 0)) {
-        list(
+    {if(hulls & (length(no_hulls) > 0)) {
+      list(
         geom_point(data = Z_tbl_sub,
                    aes(x=V1, y=V2,
                        group = .data[[group.var]],
                        fill = .data[[group.var]],
                        colour = .data[[group.var]], shape = .data[[group.var]]),
                    size = 2, alpha = 0.8, show.legend = FALSE),
-      ggplot2::scale_colour_manual(values = group_palette, drop = FALSE),
-      ggplot2::scale_fill_manual(values = scales::alpha(group_palette, samp_opac), drop = FALSE),
-      ggplot2::scale_shape_manual(values = samp_pch, drop = FALSE))
-      }} +
-     {if(!hulls & shadow) { gganimate::shadow_mark(alpha=0.3) }} +
-      ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.2)) +
-      ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.2)) +
-      theme_classic() +
-      theme(axis.ticks = element_blank(),
-            axis.text.x = element_blank(),
-            axis.text.y = element_blank(),
-            axis.title.x = element_blank(),
-            axis.title.y = element_blank(),
-            plot.title = ggplot2::element_text(size=30, face ="bold"),
-            legend.position = if (length(group_levels) == 1) "none" else "right")
+        ggplot2::scale_colour_manual(values = group_palette, drop = FALSE),
+        ggplot2::scale_fill_manual(values = scales::alpha(group_palette, samp_opac), drop = FALSE),
+        ggplot2::scale_shape_manual(values = samp_pch, drop = FALSE))
+    }} +
+    {if(!hulls & shadow) { gganimate::shadow_mark(alpha=0.3) }} +
+    ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.2)) +
+    ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.2)) +
+    theme_classic() +
+    theme(axis.ticks = element_blank(),
+          axis.text.x = element_blank(),
+          axis.text.y = element_blank(),
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          plot.title = ggplot2::element_text(size=30, face ="bold"),
+          legend.position = if (length(group_levels) == 1) "none" else "right")
 
   if(move==TRUE)
     print(gganimate::animate(bp$plot, duration = 15, fps = 10, end_pause = 20)) else
       print(bp$plot)
   bp
 }
+
 
 
 #' Move plot 2
@@ -305,6 +323,9 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
   temp_qual <- vector("list", iterations)
   temp_predix <- vector("list", iterations)
 
+  if(class(bp)[2] == "CVA")
+    Zm_list <- vector("list", iterations)
+
   for (i in 1:iterations)
   {
     # Filter data by custom years
@@ -317,6 +338,16 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
     temp_qual[[i]] <- bp_list[[i]]$quality
     temp_predix[[i]] <- bp_list[[i]]$axis.predictivity
 
+    if(class(bp)[2] == "PCA") {
+      bp_list[[i]] <- biplotEZ::biplot(temp,scaled=bp$scaled) |> biplotEZ::PCA(group.aes = temp[[gvi]])
+      bp_list[[i]]$Vr <- bp_list[[i]]$Vr
+    }
+
+    if(class(bp)[2] == "CVA") {
+      bp_list[[i]] <- biplotEZ::biplot(temp,scaled=bp$scaled) |> biplotEZ::CVA(classes = temp[[gvi]])
+      bp_list[[i]]$Vr <- bp_list[[i]]$Mr
+    }
+
     if (i %in% align_levels) {
       reflect.mat <- diag(2)
       if (reflect[which(align_levels == i)] == "x") reflect.mat[1, 1] <- -1
@@ -325,6 +356,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
 
       bp_list[[i]]$Z <- bp_list[[i]]$Z %*% reflect.mat
       bp_list[[i]]$Vr <- bp_list[[i]]$Vr %*% reflect.mat
+      bp_list[[i]]$Zmeans <- bp_list[[i]]$Zmeans %*% reflect.mat
     }
 
     # Fit measures
@@ -344,6 +376,11 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
     colnames(bp_list[[i]]$Z) <- c("V1","V2")
     Z_list[[i]] <- dplyr::as_tibble(bp_list[[i]]$Z)
     Z_list[[i]] <- suppressMessages(dplyr::bind_cols(Z_list[[i]], bp_list[[i]]$Xcat))
+
+    colnames(bp_list[[i]]$Zmeans) <- c("V1","V2")
+    Zm_list[[i]] <- dplyr::as_tibble(bp_list[[i]]$Zmeans)
+    Zm_list[[i]] <- suppressMessages(dplyr::bind_cols(Zm_list[[i]],time.var = iter_levels[i],group_levels))
+
 
     # Variables
 
@@ -376,11 +413,15 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
 
   }
 
-    Z_tbl <- do.call(rbind,Z_list)
-    Vr_tbl <- do.call(rbind,Vr_list)
-    names(Vr_tbl)[7] <- time.var
-    chull_reg <- do.call(rbind,chull_reg)
-    chull_reg <- dplyr::as_tibble(chull_reg)
+  Z_tbl <- do.call(rbind,Z_list)
+  Vr_tbl <- do.call(rbind,Vr_list)
+  names(Vr_tbl)[7] <- time.var
+  Zm_tbl <- do.call(rbind,Zm_list)
+  names(Zm_tbl)[3] <- time.var
+  names(Zm_tbl)[4] <- group.var
+
+  chull_reg <- do.call(rbind,chull_reg)
+  chull_reg <- dplyr::as_tibble(chull_reg)
 
   # Plotting
 
@@ -391,31 +432,40 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
     bp$plot <- ggplot() +
       # Axes
       geom_segment(data = Vr_tbl, aes(x=0, y=0, xend = V1*scale.var, yend = V2*scale.var, group = var),
-                  arrow = arrow(length = unit(0.1, "inches"))) +
+                   arrow = arrow(length = unit(0.1, "inches"))) +
       geom_text(data = Vr_tbl, aes(x=V1*scale.var, y=V2*scale.var,
-                  label = var, hjust = "outward", vjust = "outward", group = var),
-                  colour = "black", size = text_size) +
+                                   label = var, hjust = "outward", vjust = "outward", group = var),
+                colour = "black", size = text_size) +
       gganimate::transition_states(.data[[time.var]],
-                        transition_length = 2, state_length = 1) +
+                                   transition_length = 2, state_length = 1, wrap = FALSE) +
       # Sample polygons or points
       {if(hulls){
         list(
-        geom_polygon(data = chull_reg, aes(x=V1, y=V2,group = .data[[group.var]],
-                        fill = .data[[group.var]]), alpha = 0.5),
-                        ggplot2::scale_fill_manual(values = group_palette))
+          geom_polygon(data = chull_reg, aes(x=V1, y=V2,group = .data[[group.var]],
+                                             fill = .data[[group.var]]), alpha = 0.5),
+          ggplot2::scale_fill_manual(values = group_palette))
       } else {
         list(
-        geom_point(data = Z_tbl, aes(x=V1, y=V2, group = .data[[group.var]],
-                      fill = .data[[group.var]], colour = .data[[group.var]], shape = .data[[group.var]]),
-                      size = 2, alpha = samp_opac),
-        ggplot2::scale_colour_manual(values = group_palette),
-        ggplot2::scale_shape_manual(values = samp_pch),
-        ggplot2::scale_fill_manual(values = scales::alpha(group_palette, samp_opac))) #,
+          geom_point(data = Z_tbl, aes(x=V1, y=V2, group = .data[[group.var]],
+                                       fill = .data[[group.var]], colour = .data[[group.var]], shape = .data[[group.var]]),
+                     size = 2, alpha = samp_opac),
+          ggplot2::scale_colour_manual(values = group_palette),
+          ggplot2::scale_shape_manual(values = samp_pch),
+          ggplot2::scale_fill_manual(values = scales::alpha(group_palette, samp_opac))) #,
         #if(shadow) { gganimate::shadow_mark(alpha=0.3) })
       }} +
       gganimate::transition_states(.data[[time.var]],
-                        transition_length = 2,
-                        state_length = 1) +
+                                   transition_length = 2,
+                                   state_length = 1, wrap = FALSE) +
+      {if(class(bp)[2] == "CVA"){
+        geom_point(data = Zm_tbl,
+                   aes(x = V1, y = V2, group = .data[[group.var]],
+                       colour = .data[[group.var]],fill = .data[[group.var]]),
+                   size = 3,shape = 15,alpha = 1,show.legend = FALSE)
+      }} +
+      gganimate::transition_states(.data[[time.var]],
+                                   transition_length = 2,
+                                   state_length = 1, wrap = FALSE) +
       ggplot2::labs(title = '{time.var}: {closest_state}',x="",y="") +
       ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.2)) +
       ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.2)) +
@@ -435,27 +485,33 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
       geom_segment(data = Vr_tbl, aes(x=0, y=0, xend = V1*scale.var, yend = V2*scale.var, group = var),
                    arrow = arrow(length = unit(0.1, "inches"))) +
       geom_text(data = Vr_tbl, aes(x=V1*scale.var, y=V2*scale.var,
-                  label = var, hjust = "outward", vjust = "outward", group = var),
-                  colour = "black", size = text_size) +
+                                   label = var, hjust = "outward", vjust = "outward", group = var),
+                colour = "black", size = text_size) +
       # Sample polygons or points
       {if(hulls){
         list(
-        geom_polygon(data = chull_reg,
-                    aes(x=V1, y=V2, group = .data[[group.var]],
-                    fill = .data[[group.var]]), alpha = 0.5),
-                    ggplot2::scale_fill_manual(values = group_palette))
+          geom_polygon(data = chull_reg,
+                       aes(x=V1, y=V2, group = .data[[group.var]],
+                           fill = .data[[group.var]]), alpha = 0.5),
+          ggplot2::scale_fill_manual(values = group_palette))
       } else {
         list(
-        geom_point(data = Z_tbl,
-                   aes(x=V1, y=V2,
-                      group = .data[[group.var]],
-                      fill = .data[[group.var]],
-                      colour = .data[[group.var]],
-                      shape = .data[[group.var]]),
-                      size = 2, alpha = samp_opac),
-                      ggplot2::scale_colour_manual(values = group_palette),
-                      ggplot2::scale_fill_manual(values = scales::alpha(group_palette, samp_opac)),
-                      ggplot2::scale_shape_manual(values = samp_pch))
+          geom_point(data = Z_tbl,
+                     aes(x=V1, y=V2,
+                         group = .data[[group.var]],
+                         fill = .data[[group.var]],
+                         colour = .data[[group.var]],
+                         shape = .data[[group.var]]),
+                     size = 2, alpha = samp_opac),
+          ggplot2::scale_colour_manual(values = group_palette),
+          ggplot2::scale_fill_manual(values = scales::alpha(group_palette, samp_opac)),
+          ggplot2::scale_shape_manual(values = samp_pch))
+      }} +
+      {if(class(bp)[2] == "CVA"){
+        geom_point(data = Zm_tbl,
+                   aes(x = V1, y = V2, group = .data[[group.var]],
+                       colour = .data[[group.var]],fill = .data[[group.var]]),
+                   size = 3,shape = 15,alpha = 1,show.legend = FALSE)
       }} +
       facet_wrap(~.data[[time.var]]) +
       ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.2)) +
@@ -475,6 +531,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
       print(bp$plot)
   bp
 }
+
 
 #' Move plot 3
 #'
@@ -682,7 +739,7 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                                      hjust="outward", vjust="outward",group=var),colour="black",size=text_size) +
       gganimate::transition_states(.data[[time.var]],
                                    transition_length = 2,
-                                   state_length = 1) +
+                                   state_length = 1, wrap = FALSE) +
       # Sample polygons or points
       {if(hulls){
         list(
@@ -701,7 +758,7 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
       }} +
       gganimate::transition_states(.data[[time.var]],
                                    transition_length = 2,
-                                   state_length = 1) +
+                                   state_length = 1, wrap = FALSE) +
       ggplot2::labs(title = '{time.var}: {closest_state}',x="",y="") +
       ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.2)) +
       ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.2)) +
