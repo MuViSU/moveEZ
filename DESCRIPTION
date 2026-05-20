@@ -24,7 +24,8 @@ Suggests:
     knitr,
     tibble,
     scales,
-    RColorBrewer
+    RColorBrewer,
+    purrr
 Config/Needs/website: rmarkdown
 URL: https://muvisu.github.io/moveEZ/
 Config/roxygen2/version: 8.0.0

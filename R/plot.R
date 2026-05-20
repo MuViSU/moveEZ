@@ -431,7 +431,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
   Z_tbl <- do.call(rbind,Z_list)
   Vr_tbl <- do.call(rbind,Vr_list)
   names(Vr_tbl)[7] <- time.var
-  Zm_tbl <- do.call(rbind,Zm_list)
+  if(class(bp)[2] == "CVA") Zm_tbl <- do.call(rbind,Zm_list)
   names(Zm_tbl)[3] <- time.var
   names(Zm_tbl)[4] <- group.var
 
