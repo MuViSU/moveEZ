@@ -197,6 +197,16 @@ bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FAL
 #> 6 numeric variables.
 #> 3 categorical variables.
 
+# Extracting measures of fit
+bp <- biplot(Africa_climate, scaled = TRUE) |> PCA() |> fit.measures()
+bp <- bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+
+bp$quality
+#> [1] 0.6521806
+bp$axis.predictivity
+#>    AccPrec   DailyEva       Temp   SoilMois       SPI6       wind 
+#> 0.80052267 0.74091999 0.67032024 0.90091529 0.06221102 0.73819448 
+
 # Convex hulls move plot
 # \donttest{
 if(interactive()) {

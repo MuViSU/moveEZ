@@ -130,7 +130,42 @@ Create animated biplot on samples and variables in a biplot"><meta property="og:
 <span class="r-in"><span><span class="va">bp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/biplot.html" class="external-link">biplot</a></span><span class="op">(</span><span class="va">Africa_climate</span>, scaled <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/PCA.html" class="external-link">PCA</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu">moveplot2</span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span><span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="va">bp</span> <span class="op">&lt;-</span> <span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu">moveplot2</span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Extracting measures of fit</span></span></span>
+<span class="r-in"><span><span class="va">bp</span> <span class="op">&lt;-</span> <span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu">moveplot2</span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>, hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="moveplot2-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="va">bp</span><span class="op">$</span><span class="va">quality</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Table: Biplot qualities per time slice</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> | Time slice | Quality |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |:----------:|:-------:|</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |    1950    |  0.657  |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |    1960    |  0.691  |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |    1970    |  0.690  |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |    1980    |  0.689  |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |    1990    |  0.674  |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |    2000    |  0.685  |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |    2010    |  0.677  |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |    2020    |  0.652  |</span>
+<span class="r-in"><span><span class="va">bp</span><span class="op">$</span><span class="va">axis.predictivity</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Table: Axis predictivities per time slice</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> | Time slice | AccPrec | DailyEva | Temp  | SoilMois | SPI6  | wind  |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |:----------:|:-------:|:--------:|:-----:|:--------:|:-----:|:-----:|</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |    1950    |  0.754  |  0.757   | 0.527 |  0.887   | 0.420 | 0.596 |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |    1960    |  0.789  |  0.718   | 0.683 |  0.919   | 0.305 | 0.735 |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |    1970    |  0.777  |  0.638   | 0.726 |  0.896   | 0.389 | 0.715 |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |    1980    |  0.801  |  0.781   | 0.607 |  0.887   | 0.296 | 0.760 |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |    1990    |  0.824  |  0.783   | 0.583 |  0.909   | 0.221 | 0.723 |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |    2000    |  0.760  |  0.617   | 0.727 |  0.905   | 0.535 | 0.571 |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |    2010    |  0.763  |  0.772   | 0.632 |  0.873   | 0.293 | 0.727 |</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |    2020    |  0.784  |  0.794   | 0.547 |  0.895   | 0.149 | 0.743 |</span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
