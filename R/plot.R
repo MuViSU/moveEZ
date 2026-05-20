@@ -114,7 +114,7 @@ moveplot<- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 
   # Group means for CVA | per time slice
   Zmeans_tbl <- Z_tbl |>
-    dplyr::group_by(Year, Region) |>
+    dplyr::group_by(dplyr::across(dplyr::all_of(c(time.var, group.var)))) |>
     dplyr::summarise(
       V1_mean = mean(V1, na.rm = TRUE),
       V2_mean = mean(V2, na.rm = TRUE),
