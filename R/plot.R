@@ -266,7 +266,7 @@ moveplot<- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 #' bp <- biplot(Africa_climate, scaled = TRUE) |> PCA()
 #' \donttest{
 #' if(interactive()) {
-#' bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}}
+#' bp <- bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}}
 moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
                       scale.var = 5, align.time = NA, reflect = NA)
 {

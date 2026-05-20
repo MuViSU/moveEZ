@@ -163,7 +163,7 @@ Two additional arguments address this:
 ## Static faceted display (unaligned)
 
 ```{r, warning=FALSE}
-bp |> moveplot2(time.var = "Year", group.var = "Region",
+bp1 <- bp |> moveplot2(time.var = "Year", group.var = "Region",
                 hulls = TRUE, move = FALSE)
 ```
 
@@ -174,7 +174,7 @@ indeterminacy artifact, not a genuine structural change.
 ## Static faceted display (aligned)
 
 ```{r, warning=FALSE}
-bp |> moveplot2(time.var = "Year", group.var = "Region",
+bp2 <- bp |> moveplot2(time.var = "Year", group.var = "Region",
                 hulls = TRUE, move = FALSE,
                 align.time = "1950", reflect = "x")
 ```
