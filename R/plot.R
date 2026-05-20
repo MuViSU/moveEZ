@@ -323,14 +323,21 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
   if(class(bp)[2] == "CVA")
     Zm_list <- vector("list", iterations)
 
+  temp_qual <- vector("list", iterations)
+  temp_predix <- vector("list", iterations)
+
   for (i in 1:iterations)
   {
     # Filter data by custom years
 
     temp <- bp$raw.X |> dplyr::filter(bp$raw.X[[tvi]] == iter_levels[i])
     if(class(bp)[2] == "PCA") {
-      bp_list[[i]] <- biplotEZ::biplot(temp,scaled=bp$scaled) |> biplotEZ::PCA(group.aes = temp[[gvi]])
+      bp_list[[i]] <- biplotEZ::biplot(temp,scaled=bp$scaled) |> biplotEZ::PCA(group.aes = temp[[gvi]]) |>
+        biplotEZ::fit.measures()
+
       bp_list[[i]]$Vr <- bp_list[[i]]$Vr
+      temp_qual[[i]] <- bp_list[[i]]$quality
+      temp_predix[[i]] <- bp_list[[i]]$axis.predictivity
     }
 
     if(class(bp)[2] == "CVA") {
@@ -346,17 +353,19 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
 
       bp_list[[i]]$Z <- bp_list[[i]]$Z %*% reflect.mat
       bp_list[[i]]$Vr <- bp_list[[i]]$Vr %*% reflect.mat
-      bp_list[[i]]$Zmeans <- bp_list[[i]]$Zmeans %*% reflect.mat
+      if(class(bp)[2] == "CVA") bp_list[[i]]$Zmeans <- bp_list[[i]]$Zmeans %*% reflect.mat
     }
 
     colnames(bp_list[[i]]$Z) <- c("V1","V2")
     Z_list[[i]] <- dplyr::as_tibble(bp_list[[i]]$Z)
     Z_list[[i]] <- suppressMessages(dplyr::bind_cols(Z_list[[i]], bp_list[[i]]$Xcat))
 
-    colnames(bp_list[[i]]$Zmeans) <- c("V1","V2")
-    Zm_list[[i]] <- dplyr::as_tibble(bp_list[[i]]$Zmeans)
-    Zm_list[[i]] <- suppressMessages(dplyr::bind_cols(Zm_list[[i]],time.var = iter_levels[i],group_levels))
-
+    if(class(bp)[2] == "CVA")
+    {
+      colnames(bp_list[[i]]$Zmeans) <- c("V1","V2")
+      Zm_list[[i]] <- dplyr::as_tibble(bp_list[[i]]$Zmeans)
+      Zm_list[[i]] <- suppressMessages(dplyr::bind_cols(Zm_list[[i]], time.var = iter_levels[i], group_levels))
+    }
 
     # Variables
 
@@ -388,6 +397,20 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
     chull_reg[[i]] <- do.call(rbind,chull_reg_iter)
 
   }
+
+  # Fit measures
+  names(temp_qual) <- levels(bp$raw.X[[tvi]])
+  names(temp_predix) <- levels(bp$raw.X[[tvi]])
+
+  bp$axis.predictivity <-  temp_predix |> purrr::compact() |>
+    purrr::map_dfr(~ as.data.frame(t(.x)), .id = "Time slice") |>
+    dplyr::mutate(across(where(is.numeric), ~ round(.x, 3))) |>
+    knitr::kable(align = "c", caption = "Axis predictivities per time slice")
+
+  bp$quality <-  temp_qual |> purrr::compact() |>
+    purrr::map_dfr(~ data.frame(Quality =.x), .id = "Time slice") |>
+    dplyr::mutate(across(where(is.numeric), ~ round(.x, 3))) |>
+    knitr::kable(align = "c", caption = "Biplot qualities per time slice")
 
   Z_tbl <- do.call(rbind,Z_list)
   Vr_tbl <- do.call(rbind,Vr_list)
