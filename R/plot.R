@@ -334,12 +334,8 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
     # Filter data by custom years
 
     temp <- bp$raw.X |> dplyr::filter(bp$raw.X[[tvi]] == iter_levels[i])
-    bp_list[[i]] <- biplotEZ::biplot(temp,scaled=bp$scaled) |> biplotEZ::PCA(group.aes = temp[[gvi]]) |>
-      biplotEZ::fit.measures()
 
-    # Fit measures
-    temp_qual[[i]] <- bp_list[[i]]$quality
-    temp_predix[[i]] <- bp_list[[i]]$axis.predictivity
+
 
     if(class(bp)[2] == "PCA") {
       bp_list[[i]] <- biplotEZ::biplot(temp,scaled=bp$scaled) |> biplotEZ::PCA(group.aes = temp[[gvi]]) |>
