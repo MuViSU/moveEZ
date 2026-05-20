@@ -370,15 +370,21 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
     names(temp_qual) <- levels(bp$raw.X[[tvi]])
     names(temp_predix) <- levels(bp$raw.X[[tvi]])
 
-    bp$axis.predictivity <-  temp_predix |> compact() |>
+    if(class(bp)[2]=="PCA")
+    {
+      names(temp_qual) <- levels(bp$raw.X[[tvi]])
+      names(temp_predix) <- levels(bp$raw.X[[tvi]])
+
+      bp$axis.predictivity <-  temp_predix |> purrr::compact() |>
       purrr::map_dfr(~ as.data.frame(t(.x)), .id = "Time slice") |>
       dplyr::mutate(across(where(is.numeric), ~ round(.x, 3))) |>
       knitr::kable(align = "c", caption = "Axis predictivities per time slice")
 
-    bp$quality <-  temp_qual |> compact() |>
+    bp$quality <-  temp_qual |> purrr::compact() |>
       purrr::map_dfr(~ data.frame(Quality =.x), .id = "Time slice") |>
       dplyr::mutate(across(where(is.numeric), ~ round(.x, 3))) |>
       knitr::kable(align = "c", caption = "Biplot qualities per time slice")
+    }
 
     colnames(bp_list[[i]]$Z) <- c("V1","V2")
     Z_list[[i]] <- dplyr::as_tibble(bp_list[[i]]$Z)
@@ -421,20 +427,6 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
     chull_reg[[i]] <- do.call(rbind,chull_reg_iter)
 
   }
-
-  # Fit measures
-  names(temp_qual) <- levels(bp$raw.X[[tvi]])
-  names(temp_predix) <- levels(bp$raw.X[[tvi]])
-
-  bp$axis.predictivity <-  temp_predix |> purrr::compact() |>
-    purrr::map_dfr(~ as.data.frame(t(.x)), .id = "Time slice") |>
-    dplyr::mutate(across(where(is.numeric), ~ round(.x, 3))) |>
-    knitr::kable(align = "c", caption = "Axis predictivities per time slice")
-
-  bp$quality <-  temp_qual |> purrr::compact() |>
-    purrr::map_dfr(~ data.frame(Quality =.x), .id = "Time slice") |>
-    dplyr::mutate(across(where(is.numeric), ~ round(.x, 3))) |>
-    knitr::kable(align = "c", caption = "Biplot qualities per time slice")
 
   Z_tbl <- do.call(rbind,Z_list)
   Vr_tbl <- do.call(rbind,Vr_list)
