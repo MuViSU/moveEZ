@@ -14,6 +14,10 @@ biplotEZ::samples
 #' @export
 biplotEZ::axes
 
+#' @importFrom biplotEZ fit.measures
+#' @export
+biplotEZ::fit.measures
+
 #' Move plot
 #'
 #' Create animated biplot on samples in a biplot
@@ -62,6 +66,12 @@ biplotEZ::axes
 #' PCA() |> samples(col = c("firebrick4", "indianred3", "tomato", "sandybrown",
 #'  "khaki1", "palegreen1", "darkseagreen2", "mediumaquamarine", "deepskyblue4", "mediumpurple4"))
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+#'
+#' # Extracting measures of fit
+#' bp <- biplot(Africa_climate, scaled = TRUE) |> PCA() |> fit.measures()
+#' bp <- bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+#' bp$quality
+#' bp$axis.predictivity
 #'
 #' # Convex hulls move plot
 #' \donttest{
@@ -267,6 +277,12 @@ moveplot<- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 #' \donttest{
 #' if(interactive()) {
 #' bp <- bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}}
+#'
+#' # Extracting measures of fit
+#' bp <- bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+#' bp$quality
+#' bp$axis.predictivity
+#'
 moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
                       scale.var = 5, align.time = NA, reflect = NA)
 {

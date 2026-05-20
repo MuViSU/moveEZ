@@ -121,6 +121,12 @@ PCA() |> samples(col = c("firebrick4", "indianred3", "tomato", "sandybrown",
  "khaki1", "palegreen1", "darkseagreen2", "mediumaquamarine", "deepskyblue4", "mediumpurple4"))
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 
+# Extracting measures of fit
+bp <- biplot(Africa_climate, scaled = TRUE) |> PCA() |> fit.measures()
+bp <- bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+bp$quality
+bp$axis.predictivity
+
 # Convex hulls move plot
 \donttest{
 if(interactive()) {

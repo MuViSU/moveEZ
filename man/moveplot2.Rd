@@ -65,5 +65,11 @@ data(Africa_climate)
 bp <- biplot(Africa_climate, scaled = TRUE) |> PCA()
 \donttest{
 if(interactive()) {
-bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}}
+bp <- bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}}
+
+# Extracting measures of fit
+bp <- bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+bp$quality
+bp$axis.predictivity
+
 }
