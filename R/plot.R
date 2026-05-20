@@ -189,7 +189,7 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
       }} +
       {if(move) { gganimate::transition_states(.data[[time.var]],
                                      transition_length = 2,
-                                     state_length = 1) } else {
+                                     state_length = 1, wrap = FALSE) } else {
                                        facet_wrap(~.data[[time.var]]) }} +
       {if(move) { ggplot2::labs(title = '{time.var}: {closest_state}',x="",y="")}} +
     # Sample points for hulls that cannot be constructed
@@ -375,7 +375,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
                   label = var, hjust = "outward", vjust = "outward", group = var),
                   colour = "black", size = text_size) +
       gganimate::transition_states(.data[[time.var]],
-                        transition_length = 2, state_length = 1) +
+                        transition_length = 2, state_length = 1, wrap = FALSE) +
       # Sample polygons or points
       {if(hulls){
         list(
@@ -394,7 +394,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
       }} +
       gganimate::transition_states(.data[[time.var]],
                         transition_length = 2,
-                        state_length = 1) +
+                        state_length = 1, wrap = FALSE) +
       ggplot2::labs(title = '{time.var}: {closest_state}',x="",y="") +
       ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.2)) +
       ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.2)) +
@@ -661,7 +661,7 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                                      hjust="outward", vjust="outward",group=var),colour="black",size=text_size) +
       gganimate::transition_states(.data[[time.var]],
                                    transition_length = 2,
-                                   state_length = 1) +
+                                   state_length = 1, wrap = FALSE) +
       # Sample polygons or points
       {if(hulls){
         list(
@@ -680,7 +680,7 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
       }} +
       gganimate::transition_states(.data[[time.var]],
                                    transition_length = 2,
-                                   state_length = 1) +
+                                   state_length = 1, wrap = FALSE) +
       ggplot2::labs(title = '{time.var}: {closest_state}',x="",y="") +
       ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.2)) +
       ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.2)) +
