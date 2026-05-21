@@ -12,3 +12,4 @@
 ^pkgdown$
 ^\.positai$
 ^\.claude$
+^Meta$

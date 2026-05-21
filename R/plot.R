@@ -411,8 +411,6 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
     # Fit measures
     names(temp_qual) <- levels(bp$raw.X[[tvi]])
     names(temp_predix) <- levels(bp$raw.X[[tvi]])
-    names(temp_Wpredix) <- levels(bp$raw.X[[tvi]])
-    names(temp_Zpredix) <- levels(bp$raw.X[[tvi]])
 
       bp$axis.predictivity <-  temp_predix |> purrr::compact() |>
         purrr::map_dfr(~ as.data.frame(t(.x)), .id = "Time slice") |>
@@ -425,6 +423,9 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
         knitr::kable(align = "c", caption = "Biplot qualities per time slice")
 
       if(class(bp)[2]=="CVA"){
+        names(temp_Wpredix) <- levels(bp$raw.X[[tvi]])
+        names(temp_Zpredix) <- levels(bp$raw.X[[tvi]])
+
         bp$within.class.axis.predictivity <- temp_Wpredix |> purrr::compact() |>
           purrr::map_dfr(~ as.data.frame(t(.x)), .id = "Time slice") |>
           dplyr::mutate(across(where(is.numeric), ~ round(.x, 3))) |>
