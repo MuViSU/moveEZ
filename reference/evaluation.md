@@ -25,10 +25,10 @@ evaluation(bp, centring = TRUE)
 
 ## Value
 
-- eval.list:
+- eval.tab:
 
-  Returns a list containing the measures of comparison for each level of
-  the time variable.
+  Returns a table of the measures of comparison for each level of the
+  time variable compared to the target.
 
 - fit.plot:
 
@@ -50,71 +50,21 @@ bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
 results <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 move = FALSE, target = NULL) |> evaluation()
 
-results$eval.list
-#> [[1]]
-#>      Target vs. 1950
-#> PS            0.1323
-#> CC            0.9697
-#> AMB           1.2717
-#> MB            0.0000
-#> RMSB          1.8506
+results$eval.tab
 #> 
-#> [[2]]
-#>      Target vs. 1960
-#> PS            0.0982
-#> CC            0.9763
-#> AMB           0.4414
-#> MB            0.0000
-#> RMSB          0.5779
 #> 
-#> [[3]]
-#>      Target vs. 1970
-#> PS            0.0925
-#> CC            0.9798
-#> AMB           0.4373
-#> MB            0.0000
-#> RMSB          0.5701
+#> Table: Measures of comparison
 #> 
-#> [[4]]
-#>      Target vs. 1980
-#> PS            0.0771
-#> CC            0.9813
-#> AMB           0.3903
-#> MB            0.0000
-#> RMSB          0.5501
-#> 
-#> [[5]]
-#>      Target vs. 1990
-#> PS            0.0812
-#> CC            0.9793
-#> AMB           0.4177
-#> MB            0.0000
-#> RMSB          0.5446
-#> 
-#> [[6]]
-#>      Target vs. 2000
-#> PS            0.1604
-#> CC            0.9636
-#> AMB           0.5263
-#> MB            0.0000
-#> RMSB          0.6564
-#> 
-#> [[7]]
-#>      Target vs. 2010
-#> PS            0.0797
-#> CC            0.9813
-#> AMB           0.4337
-#> MB            0.0000
-#> RMSB          0.5428
-#> 
-#> [[8]]
-#>      Target vs. 2020
-#> PS            0.0695
-#> CC            0.9814
-#> AMB           0.3914
-#> MB            0.0000
-#> RMSB          0.5069
-#> 
+#> |                |  PS   |  CC   |  AMB  | MB | RMSB  |
+#> |:---------------|:-----:|:-----:|:-----:|:--:|:-----:|
+#> |Target vs. 1950 | 0.132 | 0.970 | 1.272 | 0  | 1.851 |
+#> |Target vs. 1960 | 0.098 | 0.976 | 0.441 | 0  | 0.578 |
+#> |Target vs. 1970 | 0.092 | 0.980 | 0.437 | 0  | 0.570 |
+#> |Target vs. 1980 | 0.077 | 0.981 | 0.390 | 0  | 0.550 |
+#> |Target vs. 1990 | 0.081 | 0.979 | 0.418 | 0  | 0.545 |
+#> |Target vs. 2000 | 0.160 | 0.964 | 0.526 | 0  | 0.656 |
+#> |Target vs. 2010 | 0.080 | 0.981 | 0.434 | 0  | 0.543 |
+#> |Target vs. 2020 | 0.069 | 0.981 | 0.391 | 0  | 0.507 |
 results$fit.plot
 
 results$bias.plot
@@ -126,71 +76,21 @@ bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
 results <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 move = FALSE, target = Africa_climate_target) |> evaluation()
 
-results$eval.list
-#> [[1]]
-#>      Target vs. 1950
-#> PS            0.2112
-#> CC            0.9556
-#> AMB           0.4976
-#> MB            0.0000
-#> RMSB          0.6549
+results$eval.tab
 #> 
-#> [[2]]
-#>      Target vs. 1960
-#> PS            0.1738
-#> CC            0.9559
-#> AMB           1.6285
-#> MB            0.0000
-#> RMSB          2.3374
 #> 
-#> [[3]]
-#>      Target vs. 1970
-#> PS            0.2047
-#> CC            0.9521
-#> AMB           1.6469
-#> MB            0.0000
-#> RMSB          2.3450
+#> Table: Measures of comparison
 #> 
-#> [[4]]
-#>      Target vs. 1980
-#> PS            0.1570
-#> CC            0.9604
-#> AMB           1.5816
-#> MB            0.0000
-#> RMSB          2.3185
-#> 
-#> [[5]]
-#>      Target vs. 1990
-#> PS            0.1698
-#> CC            0.9603
-#> AMB           1.6250
-#> MB            0.0000
-#> RMSB          2.3322
-#> 
-#> [[6]]
-#>      Target vs. 2000
-#> PS            0.2472
-#> CC            0.9451
-#> AMB           1.6976
-#> MB            0.0000
-#> RMSB          2.3489
-#> 
-#> [[7]]
-#>      Target vs. 2010
-#> PS            0.1618
-#> CC            0.9635
-#> AMB           1.6034
-#> MB            0.0000
-#> RMSB          2.3178
-#> 
-#> [[8]]
-#>      Target vs. 2020
-#> PS            0.1277
-#> CC            0.9712
-#> AMB           1.5778
-#> MB            0.0000
-#> RMSB          2.2826
-#> 
+#> |                |  PS   |  CC   |  AMB  | MB | RMSB  |
+#> |:---------------|:-----:|:-----:|:-----:|:--:|:-----:|
+#> |Target vs. 1950 | 0.211 | 0.956 | 0.498 | 0  | 0.655 |
+#> |Target vs. 1960 | 0.174 | 0.956 | 1.629 | 0  | 2.337 |
+#> |Target vs. 1970 | 0.205 | 0.952 | 1.647 | 0  | 2.345 |
+#> |Target vs. 1980 | 0.157 | 0.960 | 1.582 | 0  | 2.319 |
+#> |Target vs. 1990 | 0.170 | 0.960 | 1.625 | 0  | 2.332 |
+#> |Target vs. 2000 | 0.247 | 0.945 | 1.698 | 0  | 2.349 |
+#> |Target vs. 2010 | 0.162 | 0.964 | 1.603 | 0  | 2.318 |
+#> |Target vs. 2020 | 0.128 | 0.971 | 1.578 | 0  | 2.283 |
 results$fit.plot
 
 results$bias.plot
