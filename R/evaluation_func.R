@@ -10,7 +10,7 @@
 #' @param centring logical argument to apply centring or not (default is \code{TRUE})
 #'
 #' @returns
-#' \item{eval.list}{Returns a list containing the measures of comparison for each level of the time variable.}
+#' \item{eval.tab}{Returns a table of the measures of comparison for each level of the time variable compared to the target.}
 #' \item{fit.plot}{Returns a line plot with the fit measures that are bounded between zero and one: PS and CC. A small PS value and large CC value indicate good fit.}
 #' \item{bias.plot}{Returns a line plot with bias measures that are unbounded: AMB, MB and RMSB. Small values indicate low bias.}
 #'
@@ -22,7 +22,7 @@
 #' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
 #' results <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 #' move = FALSE, target = NULL) |> evaluation()
-#' results$eval.list
+#' results$eval.tab
 #' results$fit.plot
 #' results$bias.plot
 #'
@@ -31,14 +31,14 @@
 #' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
 #' results <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 #' move = FALSE, target = Africa_climate_target) |> evaluation()
-#' results$eval.list
+#' results$eval.tab
 #' results$fit.plot
 #' results$bias.plot
 #'
 evaluation <- function(bp, centring = TRUE)
 {
   if (inherits(bp, "moveplot3")){
-    eval.list <- vector("list", length(bp$coord_set))
+    eval.tab <- vector("list", length(bp$coord_set))
 
     target <- bp$G.target
 
@@ -62,7 +62,8 @@ evaluation <- function(bp, centring = TRUE)
       else
       {
         testee <- scale(testee, TRUE, FALSE)
-        #centre=T, scale=F results are similar to Cox and Cox, Gower and #Dijkersthuis, Borg and Groenen
+        #centre=T, scale=F results are similar to Cox and Cox, Gower and
+        #Dijkersthuis, Borg and Groenen
         target <- scale(target, TRUE, FALSE)
       }
 
@@ -85,17 +86,17 @@ evaluation <- function(bp, centring = TRUE)
       AMB <- (sum(sum(abs(target-testee))))/length(testee)
 
       REStable <- data.frame(c(PS, CC, AMB, MB, RMSB))
-      colnames(REStable)<- paste("Target vs. ",bp$iter_levels[i], sep="")
+      colnames(REStable) <- paste("Target vs. ",bp$iter_levels[i], sep="")
       rownames(REStable)<- c("PS", "CC", "AMB", "MB", "RMSB")
 
-      eval.list[[i]] <- REStable
+      eval.tab[[i]] <- REStable
 
     }
 
     bias_meas <- c("AMB", "MB", "RMSB")
     fit_meas <- c("PS", "CC")
 
-    eval_df <- do.call(rbind, lapply(eval.list, function(x) {
+    eval_df <- do.call(rbind, lapply(eval.tab, function(x) {
       year <- as.numeric(gsub("Target vs. ", "", colnames(x)))
       data.frame(
         Year = year,
@@ -104,6 +105,11 @@ evaluation <- function(bp, centring = TRUE)
         row.names = NULL
       )
     }))
+
+    eval.tab <- eval.tab |> purrr::compact() |>
+      purrr::map_dfr(~ as.data.frame(t(.x)), .id = NULL) |>
+      dplyr::mutate(across(where(is.numeric), ~ round(.x, 3))) |>
+      knitr::kable(align = "c", caption = "Measures of comparison")
 
     fit.plot <- ggplot() +
       ggplot2::geom_line(data = eval_df |> dplyr::filter(Measure  %in% fit_meas),
@@ -119,7 +125,7 @@ evaluation <- function(bp, centring = TRUE)
 
     bp$bias.plot <- bias.plot
     bp$fit.plot <- fit.plot
-    bp$eval.list <- lapply(eval.list, round,4)
+    bp$eval.tab <- eval.tab
     bp
 
   } else

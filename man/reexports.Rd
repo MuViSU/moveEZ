@@ -8,6 +8,7 @@
 \alias{samples}
 \alias{axes}
 \alias{fit.measures}
+\alias{CVA}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -15,6 +16,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{biplotEZ}{\code{\link[biplotEZ:axes]{axes()}}, \code{\link[biplotEZ:axes]{axes()}}, \code{\link[biplotEZ:biplot]{biplot()}}, \code{\link[biplotEZ:biplot]{biplot()}}, \code{\link[biplotEZ:fit.measures]{fit.measures()}}, \code{\link[biplotEZ:PCA]{PCA()}}, \code{\link[biplotEZ:PCA]{PCA()}}, \code{\link[biplotEZ:samples]{samples()}}, \code{\link[biplotEZ:samples]{samples()}}}
+  \item{biplotEZ}{\code{\link[biplotEZ:axes]{axes()}}, \code{\link[biplotEZ:axes]{axes()}}, \code{\link[biplotEZ:biplot]{biplot()}}, \code{\link[biplotEZ:biplot]{biplot()}}, \code{\link[biplotEZ:CVA]{CVA()}}, \code{\link[biplotEZ:fit.measures]{fit.measures()}}, \code{\link[biplotEZ:PCA]{PCA()}}, \code{\link[biplotEZ:PCA]{PCA()}}, \code{\link[biplotEZ:samples]{samples()}}, \code{\link[biplotEZ:samples]{samples()}}}
 }}
 

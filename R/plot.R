@@ -18,9 +18,13 @@ biplotEZ::axes
 #' @export
 biplotEZ::fit.measures
 
+#' @importFrom biplotEZ CVA
+#' @export
+biplotEZ::CVA
+
 #' Move plot
 #'
-#' Create animated biplot on samples in a biplot
+#' @description Create animated biplot on samples in a biplot
 #'
 #' @param bp biplot object from biplotEZ
 #' @param time.var time variable
@@ -67,7 +71,7 @@ biplotEZ::fit.measures
 #'  "khaki1", "palegreen1", "darkseagreen2", "mediumaquamarine", "deepskyblue4", "mediumpurple4"))
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 #'
-#' # Extracting measures of fit
+#' # Extracting measures of fit of PCA
 #' bp <- biplot(Africa_climate, scaled = TRUE) |> PCA() |> fit.measures()
 #' bp <- bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 #' bp$quality
@@ -82,7 +86,19 @@ biplotEZ::fit.measures
 #' \donttest{
 #' if(interactive()) {
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = TRUE, shadow = TRUE)}}
-moveplot<- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
+#'
+#' # CVA biplot
+#' bp <- biplot(Africa_climate, scaled = TRUE) |> CVA(class = Africa_climate$Region)
+#' bp |> moveplot2(group.var = "Region", time.var = "Year", move = FALSE)
+#'
+#' # Extracting measures of fit of CVA
+#' bp <- biplot(Africa_climate, scaled = TRUE) |> CVA(classes = Africa_climate$Region) |> fit.measures()
+#' bp <- bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+#' bp$quality
+#' bp$axis.predictivity
+#' bp$within.class.axis.predictivity
+#' bp$within.class.sample.predictivity
+moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                     scale.var = 5, shadow = FALSE)
 {
 
@@ -254,7 +270,7 @@ moveplot<- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 
 #' Move plot 2
 #'
-#' Create animated biplot on samples and variables in a biplot
+#' @description Create animated biplot on samples and variables in a biplot
 #'
 #' @param bp biplot object from biplotEZ
 #' @param time.var time variable
@@ -278,11 +294,18 @@ moveplot<- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 #' if(interactive()) {
 #' bp <- bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}}
 #'
-#' # Extracting measures of fit
+#' # Extracting measures of fit for PCA
 #' bp <- bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 #' bp$quality
 #' bp$axis.predictivity
 #'
+#' # Extracting measures of fit for CVA
+#' bp <- biplot(Africa_climate) |> CVA(classes = Africa_climate$Region)
+#' bp <- bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+#' bp$quality
+#' bp$axis.predictivity
+#' bp$within.class.axis.predictivity
+#' bp$within.class.sample.predictivity
 moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
                       scale.var = 5, align.time = NA, reflect = NA)
 {
@@ -339,8 +362,11 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
   temp_qual <- vector("list", iterations)
   temp_predix <- vector("list", iterations)
 
-  if(class(bp)[2] == "CVA")
+  if(class(bp)[2] == "CVA"){
     Zm_list <- vector("list", iterations)
+    temp_Wpredix <- vector("list", iterations)   #within.class.axis.predictivity
+    temp_Zpredix <- vector("list", iterations)    #within.class.sample.predictivity
+    }
 
   temp_qual <- vector("list", iterations)
   temp_predix <- vector("list", iterations)
@@ -350,8 +376,6 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
     # Filter data by custom years
 
     temp <- bp$raw.X |> dplyr::filter(bp$raw.X[[tvi]] == iter_levels[i])
-
-
 
     if(class(bp)[2] == "PCA") {
       bp_list[[i]] <- biplotEZ::biplot(temp,scaled=bp$scaled) |> biplotEZ::PCA(group.aes = temp[[gvi]]) |>
@@ -363,8 +387,14 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
     }
 
     if(class(bp)[2] == "CVA") {
-      bp_list[[i]] <- biplotEZ::biplot(temp,scaled=bp$scaled) |> biplotEZ::CVA(classes = temp[[gvi]])
+      bp_list[[i]] <- biplotEZ::biplot(temp,scaled=bp$scaled) |> biplotEZ::CVA(classes = temp[[gvi]]) |>
+        biplotEZ::fit.measures()
+
       bp_list[[i]]$Vr <- bp_list[[i]]$Mr
+      temp_qual[[i]] <- bp_list[[i]]$quality
+      temp_predix[[i]] <- bp_list[[i]]$axis.predictivity
+      temp_Wpredix[[i]] <- bp_list[[i]]$within.class.axis.predictivity
+      temp_Zpredix[[i]] <- bp_list[[i]]$within.class.sample.predictivity
     }
 
     if (i %in% align_levels) {
@@ -381,22 +411,27 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
     # Fit measures
     names(temp_qual) <- levels(bp$raw.X[[tvi]])
     names(temp_predix) <- levels(bp$raw.X[[tvi]])
-
-    if(class(bp)[2]=="PCA")
-    {
-      names(temp_qual) <- levels(bp$raw.X[[tvi]])
-      names(temp_predix) <- levels(bp$raw.X[[tvi]])
+    names(temp_Wpredix) <- levels(bp$raw.X[[tvi]])
+    names(temp_Zpredix) <- levels(bp$raw.X[[tvi]])
 
       bp$axis.predictivity <-  temp_predix |> purrr::compact() |>
-      purrr::map_dfr(~ as.data.frame(t(.x)), .id = "Time slice") |>
-      dplyr::mutate(across(where(is.numeric), ~ round(.x, 3))) |>
-      knitr::kable(align = "c", caption = "Axis predictivities per time slice")
+        purrr::map_dfr(~ as.data.frame(t(.x)), .id = "Time slice") |>
+        dplyr::mutate(across(where(is.numeric), ~ round(.x, 3))) |>
+        knitr::kable(align = "c", caption = "Axis predictivities per time slice")
 
-    bp$quality <-  temp_qual |> purrr::compact() |>
-      purrr::map_dfr(~ data.frame(Quality =.x), .id = "Time slice") |>
-      dplyr::mutate(across(where(is.numeric), ~ round(.x, 3))) |>
-      knitr::kable(align = "c", caption = "Biplot qualities per time slice")
-    }
+      bp$quality <-  temp_qual |> purrr::compact() |>
+        purrr::map_dfr(~ data.frame(Quality =.x), .id = "Time slice") |>
+        dplyr::mutate(across(where(is.numeric), ~ round(.x, 3))) |>
+        knitr::kable(align = "c", caption = "Biplot qualities per time slice")
+
+      if(class(bp)[2]=="CVA"){
+        bp$within.class.axis.predictivity <- temp_Wpredix |> purrr::compact() |>
+          purrr::map_dfr(~ as.data.frame(t(.x)), .id = "Time slice") |>
+          dplyr::mutate(across(where(is.numeric), ~ round(.x, 3))) |>
+          knitr::kable(align = "c", caption = "Class axis predictivities per time slice")
+
+        bp$within.class.sample.predictivity <- temp_Zpredix
+      }
 
     colnames(bp_list[[i]]$Z) <- c("V1","V2")
     Z_list[[i]] <- dplyr::as_tibble(bp_list[[i]]$Z)
@@ -563,7 +598,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
 
 #' Move plot 3
 #'
-#' Create animated biplot on samples and variables in a biplot with a given target
+#' @description Create animated biplot on samples and variables in a biplot with a given target
 #'
 #' @param bp biplot object from biplotEZ
 #' @param time.var time variable
@@ -635,21 +670,6 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   Z <- suppressMessages(dplyr::bind_cols(Z, bp$Xcat))
   colnames(Z)[1:2] <- c("V1","V2")
   Z_tbl <- dplyr::as_tibble(Z)
-
-  # Set limits
-  # xlim
-  minx <- min(Z_tbl$V1)
-  maxx <- max(Z_tbl$V1)
-  range_x <- maxx - minx
-
-  # ylim
-  miny <- min(Z_tbl$V2)
-  maxy <- max(Z_tbl$V2)
-  range_y <- maxy - miny
-
-  perc <- 20/100
-  xlim <- c(minx - perc*range_x,maxx + perc*range_x)
-  ylim <- c(miny - perc*range_y,maxy + perc*range_y)
 
   # Basis extraction
   bp_list <- vector("list", iterations)
@@ -842,4 +862,3 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
       print(bp$plot)
   bp
 }
-

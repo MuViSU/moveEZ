@@ -121,7 +121,7 @@ PCA() |> samples(col = c("firebrick4", "indianred3", "tomato", "sandybrown",
  "khaki1", "palegreen1", "darkseagreen2", "mediumaquamarine", "deepskyblue4", "mediumpurple4"))
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 
-# Extracting measures of fit
+# Extracting measures of fit of PCA
 bp <- biplot(Africa_climate, scaled = TRUE) |> PCA() |> fit.measures()
 bp <- bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 bp$quality
@@ -136,4 +136,16 @@ bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRU
 \donttest{
 if(interactive()) {
 bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = TRUE, shadow = TRUE)}}
+
+# CVA biplot
+bp <- biplot(Africa_climate, scaled = TRUE) |> CVA(class = Africa_climate$Region)
+bp |> moveplot2(group.var = "Region", time.var = "Year", move = FALSE)
+
+# Extracting measures of fit of CVA
+bp <- biplot(Africa_climate, scaled = TRUE) |> CVA(classes = Africa_climate$Region) |> fit.measures()
+bp <- bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+bp$quality
+bp$axis.predictivity
+bp$within.class.axis.predictivity
+bp$within.class.sample.predictivity
 }

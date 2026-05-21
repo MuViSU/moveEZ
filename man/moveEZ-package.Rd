@@ -6,8 +6,6 @@
 \alias{moveEZ-package}
 \title{moveEZ: Animated Biplots}
 \description{
-\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
-
 Create animated biplots that enables dynamic visualisation of temporal or sequential changes in multivariate data by animating a single biplot across the levels of a time variable. It builds on objects from the 'biplotEZ' package, Lubbe S, le Roux N, Nienkemper-Swanepoel J, Ganey R, Buys R, Adams Z, Manefeldt P (2024) \doi{10.32614/CRAN.package.biplotEZ}, allowing users to create animated biplots that reveal how both samples and variables evolve over time.
 }
 \seealso{
