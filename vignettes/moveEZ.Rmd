@@ -127,15 +127,16 @@ bp |> moveplot(time.var = "Year", group.var = "Region",
 
 ## Animated display
 
-![](anim1_moveplot.gif)
+![](anim1.gif)
 
 ```{r, echo=FALSE, eval=FALSE, warning=FALSE, message=FALSE}
 anim1 <- bp |> moveplot(time.var = "Year", group.var = "Region",
                         hulls = TRUE, move = TRUE)
-anim_rendered <- animate(anim1, renderer = gifski_renderer(),
-                         nframes = 100, fps = 10,
-                         width = 800, height = 600, res = 150)
-anim_save("vignettes/anim1.gif", animation = anim_rendered)
+anim_save("vignettes/anim1.gif", animation = last_animation())
+#anim_rendered <- animate(anim1, renderer = gifski_renderer(),
+#                         nframes = 100, fps = 10,
+#                         width = 800, height = 600, res = 150)
+#anim_save("vignettes/anim1.gif", animation = anim_rendered)
 ```
 
 The animation reveals how the regional climate configurations shift relative
@@ -310,8 +311,8 @@ results <- bp |>
 
 ## Numerical measures
 
-```{r}
-results$eval.list
+```{r echo=TRUE}
+results$eval.tab
 ```
 
 ## Fit measures over time

@@ -72,11 +72,10 @@ bp |> moveplot(time.var = "Year", group.var = "Region",
 
 - **Vignette**: a full applied demonstration of all three functions,
   including animated outputs, evaluation measures, and aesthetic
-  customisation - `vignette("moveEZ")`
-- **Paper**: the accompanying R Journal article provides the full
-  methodological treatment, including the theoretical motivation for
-  each framework and a discussion of sign indeterminacy in sequential
-  PCA biplots.
+  customisation - `vignette("moveEZ")`. Also consult the package [website](https://arxiv.org/abs/2605.22284).
+- **Paper**: the [preprint](https://arxiv.org/abs/2605.22284) provides the complete
+  methodology, including the theoretical motivation for
+  each framework.
 
 ## Report bugs and get support
 
