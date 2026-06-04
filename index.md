@@ -1,4 +1,4 @@
-# moveEZ ![](reference/figures/logo.png)
+# moveEZ
 
 `moveEZ` (pronounced *move easy*) extends the
 [biplotEZ](https://CRAN.R-project.org/package=biplotEZ) package to
