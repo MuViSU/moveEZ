@@ -72,7 +72,7 @@ bp |> moveplot(time.var = "Year", group.var = "Region",
 
 - **Vignette**: a full applied demonstration of all three functions,
   including animated outputs, evaluation measures, and aesthetic
-  customisation - `vignette("moveEZ")`. Also consult the package [website](https://arxiv.org/abs/2605.22284).
+  customisation - `vignette("moveEZ")`. Also consult the package [website](https://muvisu.github.io/moveEZ/).
 - **Paper**: the [preprint](https://arxiv.org/abs/2605.22284) provides the complete
   methodology, including the theoretical motivation for
   each framework.
