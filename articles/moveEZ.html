@@ -224,7 +224,7 @@ vectors to improve visibility.</li>
 <div class="section level3">
 <h3 id="animated-display">Animated display<a class="anchor" aria-label="anchor" href="#animated-display"></a>
 </h3>
-<p><img src="anim1_moveplot.gif"></p>
+<p><img src="anim1.gif"></p>
 <p>The animation reveals how the regional climate configurations shift
 relative to the fixed variable vectors across decades. Regions that move
 in the direction of a variable vector are increasing on that variable
@@ -414,8 +414,84 @@ systematic directional shift.</li>
 <h3 id="numerical-measures">Numerical measures<a class="anchor" aria-label="anchor" href="#numerical-measures"></a>
 </h3>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">results</span><span class="op">$</span><span class="va">eval.list</span></span>
-<span><span class="co">#&gt; NULL</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">results</span><span class="op">$</span><span class="va">eval.tab</span></span></code></pre></div>
+<table class="table">
+<caption>Measures of comparison</caption>
+<thead><tr class="header">
+<th align="left"></th>
+<th align="center">PS</th>
+<th align="center">CC</th>
+<th align="center">AMB</th>
+<th align="center">MB</th>
+<th align="center">RMSB</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Target vs. 1950</td>
+<td align="center">0.132</td>
+<td align="center">0.970</td>
+<td align="center">1.272</td>
+<td align="center">0</td>
+<td align="center">1.851</td>
+</tr>
+<tr class="even">
+<td align="left">Target vs. 1960</td>
+<td align="center">0.098</td>
+<td align="center">0.976</td>
+<td align="center">0.441</td>
+<td align="center">0</td>
+<td align="center">0.578</td>
+</tr>
+<tr class="odd">
+<td align="left">Target vs. 1970</td>
+<td align="center">0.092</td>
+<td align="center">0.980</td>
+<td align="center">0.437</td>
+<td align="center">0</td>
+<td align="center">0.570</td>
+</tr>
+<tr class="even">
+<td align="left">Target vs. 1980</td>
+<td align="center">0.077</td>
+<td align="center">0.981</td>
+<td align="center">0.390</td>
+<td align="center">0</td>
+<td align="center">0.550</td>
+</tr>
+<tr class="odd">
+<td align="left">Target vs. 1990</td>
+<td align="center">0.081</td>
+<td align="center">0.979</td>
+<td align="center">0.418</td>
+<td align="center">0</td>
+<td align="center">0.545</td>
+</tr>
+<tr class="even">
+<td align="left">Target vs. 2000</td>
+<td align="center">0.160</td>
+<td align="center">0.964</td>
+<td align="center">0.526</td>
+<td align="center">0</td>
+<td align="center">0.656</td>
+</tr>
+<tr class="odd">
+<td align="left">Target vs. 2010</td>
+<td align="center">0.080</td>
+<td align="center">0.981</td>
+<td align="center">0.434</td>
+<td align="center">0</td>
+<td align="center">0.543</td>
+</tr>
+<tr class="even">
+<td align="left">Target vs. 2020</td>
+<td align="center">0.069</td>
+<td align="center">0.981</td>
+<td align="center">0.391</td>
+<td align="center">0</td>
+<td align="center">0.507</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level3">
 <h3 id="fit-measures-over-time">Fit measures over time<a class="anchor" aria-label="anchor" href="#fit-measures-over-time"></a>

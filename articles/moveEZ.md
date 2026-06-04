@@ -130,7 +130,7 @@ bp |> moveplot(time.var = "Year", group.var = "Region",
 
 ### Animated display
 
-![](anim1_moveplot.gif)
+![](anim1.gif)
 
 The animation reveals how the regional climate configurations shift
 relative to the fixed variable vectors across decades. Regions that move
@@ -331,9 +331,21 @@ results <- bp |>
 
 ``` r
 
-results$eval.list
-#> NULL
+results$eval.tab
 ```
+
+|                 |  PS   |  CC   |  AMB  | MB  | RMSB  |
+|:----------------|:-----:|:-----:|:-----:|:---:|:-----:|
+| Target vs. 1950 | 0.132 | 0.970 | 1.272 |  0  | 1.851 |
+| Target vs. 1960 | 0.098 | 0.976 | 0.441 |  0  | 0.578 |
+| Target vs. 1970 | 0.092 | 0.980 | 0.437 |  0  | 0.570 |
+| Target vs. 1980 | 0.077 | 0.981 | 0.390 |  0  | 0.550 |
+| Target vs. 1990 | 0.081 | 0.979 | 0.418 |  0  | 0.545 |
+| Target vs. 2000 | 0.160 | 0.964 | 0.526 |  0  | 0.656 |
+| Target vs. 2010 | 0.080 | 0.981 | 0.434 |  0  | 0.543 |
+| Target vs. 2020 | 0.069 | 0.981 | 0.391 |  0  | 0.507 |
+
+Measures of comparison {.table}
 
 ### Fit measures over time
 
