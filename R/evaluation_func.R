@@ -108,7 +108,7 @@ evaluation <- function(bp, centring = TRUE)
 
     eval.tab <- eval.tab |> purrr::compact() |>
       purrr::map_dfr(~ as.data.frame(t(.x)), .id = NULL) |>
-      dplyr::mutate(across(where(is.numeric), ~ round(.x, 3))) |>
+      dplyr::mutate(dplyr::across(dplyr::where(is.numeric), ~ round(.x, 3))) |>
       knitr::kable(align = "c", caption = "Measures of comparison")
 
     fit.plot <- ggplot() +

@@ -91,10 +91,11 @@ bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = TR
 
 # CVA biplot
 bp <- biplot(Africa_climate, scaled = TRUE) |> CVA(class = Africa_climate$Region)
-bp |> moveplot2(group.var = "Region", time.var = "Year", move = FALSE)
+bp <- bp |> moveplot2(group.var = "Region", time.var = "Year", move = FALSE)
 
 # Extracting measures of fit of CVA
-bp <- biplot(Africa_climate, scaled = TRUE) |> CVA(classes = Africa_climate$Region) |> fit.measures()
+bp <- biplot(Africa_climate, scaled = TRUE) |>
+  CVA(classes = Africa_climate$Region) |> fit.measures()
 bp <- bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 bp$quality
 bp$axis.predictivity

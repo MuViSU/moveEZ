@@ -1,15 +1,13 @@
 ## Overview
 
 This is an updated submission. In this version we have: 
-- added aesthetic features
+- added two new arguments for moveplot()
+- added CVA biplots
 
-── R CMD check results ───────────────────────────────────────────────────────────────────────────────────────── moveEZ 1.2.0 ────
-Duration: 1m 54.9s
+── R CMD check results ───────────────────────────────────────────────────────────────────────────────────────────── moveEZ 1.3.0 ────
+Duration: 38.9s
 
-❯ checking for future file timestamps ... NOTE
-  unable to verify current time
-
-0 errors ✔ | 0 warnings ✔ | 1 note ✖
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
 
 ## Test environment

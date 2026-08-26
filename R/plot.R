@@ -91,10 +91,11 @@ biplotEZ::CVA
 #'
 #' # CVA biplot
 #' bp <- biplot(Africa_climate, scaled = TRUE) |> CVA(class = Africa_climate$Region)
-#' bp |> moveplot2(group.var = "Region", time.var = "Year", move = FALSE)
+#' bp <- bp |> moveplot2(group.var = "Region", time.var = "Year", move = FALSE)
 #'
 #' # Extracting measures of fit of CVA
-#' bp <- biplot(Africa_climate, scaled = TRUE) |> CVA(classes = Africa_climate$Region) |> fit.measures()
+#' bp <- biplot(Africa_climate, scaled = TRUE) |>
+#'   CVA(classes = Africa_climate$Region) |> fit.measures()
 #' bp <- bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 #' bp$quality
 #' bp$axis.predictivity
@@ -441,12 +442,12 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
 
       bp$axis.predictivity <-  temp_predix |> purrr::compact() |>
         purrr::map_dfr(~ as.data.frame(t(.x)), .id = "Time slice") |>
-        dplyr::mutate(across(where(is.numeric), ~ round(.x, 3))) |>
+        dplyr::mutate(dplyr::across(dplyr::where(is.numeric), ~ round(.x, 3))) |>
         knitr::kable(align = "c", caption = "Axis predictivities per time slice")
 
       bp$quality <-  temp_qual |> purrr::compact() |>
         purrr::map_dfr(~ data.frame(Quality =.x), .id = "Time slice") |>
-        dplyr::mutate(across(where(is.numeric), ~ round(.x, 3))) |>
+        dplyr::mutate(dplyr::across(dplyr::where(is.numeric), ~ round(.x, 3))) |>
         knitr::kable(align = "c", caption = "Biplot qualities per time slice")
 
       if(class(bp)[2]=="CVA"){
@@ -455,7 +456,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
 
         bp$within.class.axis.predictivity <- temp_Wpredix |> purrr::compact() |>
           purrr::map_dfr(~ as.data.frame(t(.x)), .id = "Time slice") |>
-          dplyr::mutate(across(where(is.numeric), ~ round(.x, 3))) |>
+          dplyr::mutate(dplyr::across(dplyr::where(is.numeric), ~ round(.x, 3))) |>
           knitr::kable(align = "c", caption = "Class axis predictivities per time slice")
 
         bp$within.class.sample.predictivity <- temp_Zpredix
