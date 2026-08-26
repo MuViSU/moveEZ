@@ -159,8 +159,8 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 
   axes_info <- axes_moveEZ(bp)
 
-  if(class(bp)[2] == "PCA") Vr <- bp$Vr
-  if(class(bp)[2] == "CVA") Vr <- bp$Mr
+  if(class(bp)[3] == "PCA") Vr <- bp$Vr
+  if(class(bp)[3] == "CVA") Vr <- bp$Mr
 
   colnames(Vr) <- c("V1","V2")
   Vr <- dplyr::as_tibble(Vr)
