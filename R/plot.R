@@ -33,6 +33,8 @@ biplotEZ::CVA
 #' @param hulls whether to display sample points or convex hulls
 #' @param scale.var scaling the vectors representing the variables
 #' @param shadow whether the animation will keep past states (only when hulls = FALSE)
+#' @param which integer index into the levels of group.var selecting which groups to display. Default (NULL) shows all groups.
+#' @param label.vars character vector of column name(s) used to label sample points, pasted together when more than one is supplied. Default (NULL) omits point labels.
 #'
 #' @returns
 #' \item{bp}{Returns the elements of the biplot object \code{bp} from \code{biplotEZ}.}
@@ -99,19 +101,25 @@ biplotEZ::CVA
 #' bp$within.class.axis.predictivity
 #' bp$within.class.sample.predictivity
 moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
-                    scale.var = 5, shadow = FALSE)
+                    scale.var = 5, shadow = FALSE, which = NULL, label.vars = NULL)
 {
 
-  if(!is.null(group.var)) bp$group.aes <- bp$raw.X[,which(colnames(bp$raw.X) == group.var)] else
+  if(!is.null(group.var)) bp$group.aes <- bp$raw.X[,base::which(colnames(bp$raw.X) == group.var)] else
     bp$group.aes = NULL
 
-  tvi <- which(colnames(bp$raw.X) == time.var)
-  gvi <- which(colnames(bp$raw.X) == group.var)
+  tvi <- base::which(colnames(bp$raw.X) == time.var)
+  gvi <- base::which(colnames(bp$raw.X) == group.var)
 
   iterations <- nlevels(bp$raw.X[[tvi]])
   iter_levels <- levels(bp$raw.X[[tvi]])
 
-  group_levels <- levels(bp$raw.X[[gvi]])
+  group_levels_all <- levels(bp$raw.X[[gvi]])
+
+  # which: integer index into group_levels_all selecting groups to display.
+  # Default (NULL) shows all groups.  All internal which() calls use
+  # base::which() to avoid shadowing this argument.
+  if(is.null(which)) which <- seq_along(group_levels_all)
+  group_levels <- group_levels_all[which]
 
   # Group colours
 
@@ -127,9 +135,9 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   } else {
     samp_pch <- c(rep(bp$samples$pch, length(group_levels)))
     samp_opac <- bp$samples$opacity
-    if(length(bp$samples$col) == 1 | (sum(bp$samples$col == grDevices::adjustcolor(EZcols[1:length(group_levels)], samp_opac)) == length(group_levels))) {
+    if(length(bp$samples$col) == 1 | (sum(bp$samples$col == grDevices::adjustcolor(EZcols[1:length(group_levels_all)], samp_opac)) == length(group_levels_all))) {
       group_palette <- stats::setNames(scales::hue_pal()(length(group_levels)), group_levels)}
-    else  group_palette <- bp$samples$col
+    else  group_palette <- stats::setNames(bp$samples$col[which], group_levels)
   }
 
   # Samples
@@ -137,6 +145,14 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   Z <- suppressMessages(dplyr::bind_cols(Z, bp$Xcat))
   colnames(Z)[1:2] <- c("V1","V2")
   Z_tbl <- dplyr::as_tibble(Z)
+
+  # Filter rows to the selected groups
+  Z_tbl <- dplyr::filter(Z_tbl, .data[[group.var]] %in% group_levels)
+  Z_tbl[[group.var]] <- factor(Z_tbl[[group.var]], levels = group_levels)
+
+  # pre-compute label column: paste one or more label.vars together
+  if(!is.null(label.vars))
+    Z_tbl$.label <- apply(Z_tbl[, label.vars, drop = FALSE], 1, paste, collapse = ":")
 
   # Group means for CVA | per time slice
   Zmeans_tbl <- Z_tbl |>
@@ -173,13 +189,16 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   chull_reg <- vector("list", iterations)
   for(i in 1:iterations)
   {
-    idx <- which(bp$raw.X[[tvi]] == iter_levels[i])
+    idx <- base::which(bp$raw.X[[tvi]] == iter_levels[i])
     Y <- Z[idx,]
     chull_reg_iter <- vector("list", length(group_levels))
     for(j in 1:length(group_levels))
     {
-      temp <- which(Y[[group.var]] == group_levels[j]) # index of the group var
-      chull_reg_iter[[j]] <- Y[temp,][grDevices::chull(Y[temp,]),]
+      temp <- base::which(Y[[group.var]] == group_levels[j]) # index of the group var
+      if(length(temp) >= 1)
+        chull_reg_iter[[j]] <- Y[temp,][grDevices::chull(Y[temp,]),]
+      else
+        chull_reg_iter[[j]] <- Y[temp,]
       chull_reg[[i]][[j]] <- chull_reg_iter[[j]]
     }
     chull_reg[[i]] <- do.call(rbind,chull_reg[[i]])
@@ -187,10 +206,11 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 
   chull_reg <- do.call(rbind,chull_reg)
   chull_reg <- dplyr::as_tibble(chull_reg)
+  chull_reg[[group.var]] <- factor(chull_reg[[group.var]], levels = group_levels)
 
   # Subset of samples for which hulls cannot be constructed
-  tvi_chull <- which(colnames(chull_reg) == time.var)
-  no_hulls <- as.numeric(names(which(table(chull_reg[[tvi_chull]])<4)))
+  tvi_chull <- base::which(colnames(chull_reg) == time.var)
+  no_hulls <- as.numeric(names(base::which(table(chull_reg[[tvi_chull]])<4)))
   Z_tbl_sub <- Z_tbl |>  dplyr::filter(Z_tbl[[tvi_chull]] %in% no_hulls)
 
   # Plotting
@@ -223,6 +243,13 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
         ggplot2::scale_colour_manual(values = group_palette),
         ggplot2::scale_fill_manual(values = scales::alpha(group_palette, samp_opac)),
         ggplot2::scale_shape_manual(values = samp_pch))
+    }} +
+    {if(!is.null(label.vars)){
+      geom_text(data = Z_tbl,
+                aes(x = V1, y = V2,
+                    label = .label,
+                    colour = .data[[group.var]]),
+                size = 3, vjust = -0.6, show.legend = FALSE)
     }} +
     {if(inherits(bp,"CVA")){
       geom_point(data = Zmeans_tbl,

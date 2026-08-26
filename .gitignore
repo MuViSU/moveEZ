@@ -52,3 +52,6 @@ docs
 .positai
 /doc/
 /Meta/
+
+# Working file not yet part of the package
+R/moveplot_func.R
