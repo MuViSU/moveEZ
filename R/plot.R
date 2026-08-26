@@ -224,7 +224,7 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
         ggplot2::scale_fill_manual(values = scales::alpha(group_palette, samp_opac)),
         ggplot2::scale_shape_manual(values = samp_pch))
     }} +
-    {if(class(bp)[2] == "CVA"){
+    {if(inherits(bp,"CVA")){
       geom_point(data = Zmeans_tbl,
                  aes(x = V1_mean, y = V2_mean,
                      colour = .data[[group.var]]),
@@ -377,7 +377,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
 
     temp <- bp$raw.X |> dplyr::filter(bp$raw.X[[tvi]] == iter_levels[i])
 
-    if(class(bp)[2] == "PCA") {
+    if(inherits(bp,"PCA")) {
       bp_list[[i]] <- biplotEZ::biplot(temp,scaled=bp$scaled) |> biplotEZ::PCA(group.aes = temp[[gvi]]) |>
         biplotEZ::fit.measures()
 
@@ -386,7 +386,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
       temp_predix[[i]] <- bp_list[[i]]$axis.predictivity
     }
 
-    if(class(bp)[2] == "CVA") {
+    if(inherits(bp,"CVA")) {
       bp_list[[i]] <- biplotEZ::biplot(temp,scaled=bp$scaled) |> biplotEZ::CVA(classes = temp[[gvi]]) |>
         biplotEZ::fit.measures()
 
@@ -811,7 +811,7 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
       ggplot2::labs(title = '{time.var}: {closest_state}',x="",y="") +
       ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.2)) +
       ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.2)) +
-      theme_classic() +
+      theme_ic() +
       theme(axis.ticks = element_blank(),
             axis.text.x = element_blank(),
             axis.text.y = element_blank(),
@@ -849,7 +849,7 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
       #ylim(ylim) +
       ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.2)) +
       ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.2)) +
-      theme_classic() +
+      theme_ic() +
       theme(axis.ticks = element_blank(),
             axis.text.x = element_blank(),
             axis.text.y = element_blank(),
