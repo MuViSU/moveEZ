@@ -149,16 +149,12 @@ bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = TR
 
 # CVA biplot
 bp <- biplot(Africa_climate, scaled = TRUE) |> CVA(class = Africa_climate$Region)
-bp |> moveplot2(group.var = "Region", time.var = "Year", move = FALSE)
+bp <- bp |> moveplot2(group.var = "Region", time.var = "Year", move = FALSE)
 
-#> Object of class biplot, based on 960 samples and 9 variables.
-#> 6 numeric variables.
-#> 3 categorical variables.
-#> 10 classes: ARP CAF ESAF MDG MED NEAF SAH SEAF WAF WSAF 
-#> Error in x$quality * 100: non-numeric argument to binary operator
 
 # Extracting measures of fit of CVA
-bp <- biplot(Africa_climate, scaled = TRUE) |> CVA(classes = Africa_climate$Region) |> fit.measures()
+bp <- biplot(Africa_climate, scaled = TRUE) |>
+  CVA(classes = Africa_climate$Region) |> fit.measures()
 bp <- bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 
 bp$quality
