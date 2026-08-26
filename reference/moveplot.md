@@ -12,7 +12,9 @@ moveplot(
   move = TRUE,
   hulls = TRUE,
   scale.var = 5,
-  shadow = FALSE
+  shadow = FALSE,
+  which = NULL,
+  label.vars = NULL
 )
 ```
 
@@ -46,6 +48,17 @@ moveplot(
 - shadow:
 
   whether the animation will keep past states (only when hulls = FALSE)
+
+- which:
+
+  integer index into the levels of group.var selecting which groups to
+  display. Default (NULL) shows all groups.
+
+- label.vars:
+
+  character vector of column name(s) used to label sample points, pasted
+  together when more than one is supplied. Default (NULL) omits point
+  labels.
 
 ## Value
 

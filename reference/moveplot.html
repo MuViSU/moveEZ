@@ -45,7 +45,9 @@
 <span>  move <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  hulls <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  scale.var <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>  shadow <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  shadow <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  which <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  label.vars <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -79,6 +81,14 @@
 
 <dt id="arg-shadow">shadow<a class="anchor" aria-label="anchor" href="#arg-shadow"></a></dt>
 <dd><p>whether the animation will keep past states (only when hulls = FALSE)</p></dd>
+
+
+<dt id="arg-which">which<a class="anchor" aria-label="anchor" href="#arg-which"></a></dt>
+<dd><p>integer index into the levels of group.var selecting which groups to display. Default (NULL) shows all groups.</p></dd>
+
+
+<dt id="arg-label-vars">label.vars<a class="anchor" aria-label="anchor" href="#arg-label-vars"></a></dt>
+<dd><p>character vector of column name(s) used to label sample points, pasted together when more than one is supplied. Default (NULL) omits point labels.</p></dd>
 
 </dl></div>
     <div class="section level2">
