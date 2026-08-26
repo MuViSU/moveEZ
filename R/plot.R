@@ -811,7 +811,7 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
       ggplot2::labs(title = '{time.var}: {closest_state}',x="",y="") +
       ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.2)) +
       ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.2)) +
-      theme_ic() +
+      theme_classic() +
       theme(axis.ticks = element_blank(),
             axis.text.x = element_blank(),
             axis.text.y = element_blank(),
@@ -849,7 +849,7 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
       #ylim(ylim) +
       ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.2)) +
       ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.2)) +
-      theme_ic() +
+      theme_classic() +
       theme(axis.ticks = element_blank(),
             axis.text.x = element_blank(),
             axis.text.y = element_blank(),
