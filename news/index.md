@@ -1,5 +1,10 @@
 # Changelog
 
+## moveEZ 1.3.1
+
+Reduced runtime of moveplot() examples to address CRAN NOTE on example
+timing.
+
 ## moveEZ 1.3.0
 
 CRAN release: 2026-08-26
