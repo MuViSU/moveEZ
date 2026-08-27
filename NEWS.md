@@ -1,3 +1,7 @@
+## moveEZ 1.3.1
+
+Reduced runtime of moveplot() examples to address CRAN NOTE on example timing.
+
 ## moveEZ 1.3.0
 
 New CRAN submission which includes additional arguments for moveplot(), and CVA biplots.
