@@ -12,5 +12,5 @@ Duration: 38.9s
 
 ## Test environment
 
-* local R installation: R version 4.5.1 (2025-06-13) -- "Great Square Root"
+* local R installation: R version 4.6.1 (2026-06-24) -- "Happy Hop"
 * other platforms checked using `check_rhub()`: linux, macos, windows

@@ -53,25 +53,33 @@ biplotEZ::CVA
 #' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
 #'
 #' # Specifying colours with colour palette in biplotEZ
+#' \donttest{
+#' if(interactive()) {
 #' bp <- biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
 #' PCA() |> samples(col = RColorBrewer::brewer.pal(10, "Paired"))
-#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)}}
 #'
 #' # Specifying plotting characters for grouping variable in biplotEZ
+#' \donttest{
+#' if(interactive()) {
 #' bp <- biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
 #' PCA() |> samples(pch = c(19, 21, 3))
-#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
+#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)}}
 #'
 #' # Specifying opacity of plotting characters and size of variable lables
+#' \donttest{
+#' if(interactive()) {
 #' bp <- biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
 #' PCA() |> samples(opacity = 0.4) |> axes(label.cex = 1.2)
-#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
+#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)}}
 #'
 #' # Specifying colours manually in biplotEZ
+#' \donttest{
+#' if(interactive()) {
 #' bp <- biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
 #' PCA() |> samples(col = c("firebrick4", "indianred3", "tomato", "sandybrown",
 #'  "khaki1", "palegreen1", "darkseagreen2", "mediumaquamarine", "deepskyblue4", "mediumpurple4"))
-#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)}}
 #'
 #' # Extracting measures of fit of PCA
 #' bp <- biplot(Africa_climate, scaled = TRUE) |> PCA() |> fit.measures()
