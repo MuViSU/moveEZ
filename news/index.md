@@ -2,6 +2,8 @@
 
 ## moveEZ 1.3.0
 
+CRAN release: 2026-08-26
+
 New CRAN submission which includes additional arguments for moveplot(),
 and CVA biplots.
 
