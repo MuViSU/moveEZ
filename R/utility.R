@@ -81,3 +81,37 @@ axes_moveEZ <- function(bp,which.var)
   retvals <- list(coords = axis.points, a = intercept, b = slope, v = v)
   return(retvals)
 }
+
+#' Convex hulls per group
+#'
+#' @description Computes the convex hull of each group for a single level of
+#'   the time variable. A hull needs at least three non-collinear observations;
+#'   groups that do not meet this are left out of the hull data and returned
+#'   separately so that they can be drawn as points instead.
+#'
+#' @param Y tibble of sample coordinates (columns V1, V2) and grouping columns
+#' @param group.var group variable
+#' @param group_levels levels of group.var to construct hulls for
+#'
+#' @returns A list with \code{hull}, the rows of \code{Y} that form the hull
+#'   vertices of each group, and \code{points}, the rows of \code{Y} for groups
+#'   with too few observations to construct a hull.
+#'
+chull_moveEZ <- function(Y, group.var, group_levels)
+{
+  hull <- vector("list", length(group_levels))
+  pts <- vector("list", length(group_levels))
+  for(j in seq_along(group_levels))
+  {
+    idx <- base::which(Y[[group.var]] == group_levels[j]) # index of the group var
+    Yj <- Y[idx,]
+    vertices <- if(length(idx) >= 3) grDevices::chull(Yj) else integer(0)
+    if(length(vertices) >= 3)
+      hull[[j]] <- Yj[vertices,]
+    else
+      pts[[j]] <- Yj
+  }
+  # Y[0,] keeps the column structure when every group falls in one branch
+  list(hull = do.call(rbind, c(list(Y[0,]), hull)),
+       points = do.call(rbind, c(list(Y[0,]), pts)))
+}

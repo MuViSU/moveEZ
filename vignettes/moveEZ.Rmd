@@ -107,9 +107,10 @@ The key arguments are:
 - `group.var`: the name of the grouping variable, used for colour-coding
   (e.g. `"Region"`).
 - `hulls`: logical; when `TRUE` convex hulls summarise group spread at each
-  time level; when `FALSE` individual sample points are displayed. Hulls
-  require at least three observations per group per time level — if fewer
-  exist, points are plotted automatically.
+  time level; when `FALSE` individual sample points are displayed. In all
+  three functions a hull requires at least three non-collinear observations
+  per group per time level — groups with fewer are plotted as points
+  automatically.
 - `move`: logical; `TRUE` produces an animation, `FALSE` produces a static
   faceted display.
 - `shadow`: logical; available only when `hulls = FALSE`. When `TRUE`, faded

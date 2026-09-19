@@ -30,7 +30,9 @@ biplotEZ::CVA
 #' @param time.var time variable
 #' @param group.var group variable
 #' @param move whether to animate (TRUE) or facet (FALSE) samples, according to time.var
-#' @param hulls whether to display sample points or convex hulls
+#' @param hulls whether to display sample points or convex hulls. A hull requires at least three
+#'   non-collinear observations per group per level of \code{time.var}; groups with fewer are
+#'   displayed as points instead.
 #' @param scale.var scaling the vectors representing the variables
 #' @param shadow whether the animation will keep past states (only when hulls = FALSE)
 #' @param which integer index into the levels of group.var selecting which groups to display. Default (NULL) shows all groups.
@@ -196,21 +198,14 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 
   # C Hulls for points
   chull_reg <- vector("list", iterations)
+  no_hulls <- vector("list", iterations)
   for(i in 1:iterations)
   {
     idx <- base::which(bp$raw.X[[tvi]] == iter_levels[i])
     Y <- Z[idx,]
-    chull_reg_iter <- vector("list", length(group_levels))
-    for(j in 1:length(group_levels))
-    {
-      temp <- base::which(Y[[group.var]] == group_levels[j]) # index of the group var
-      if(length(temp) >= 1)
-        chull_reg_iter[[j]] <- Y[temp,][grDevices::chull(Y[temp,]),]
-      else
-        chull_reg_iter[[j]] <- Y[temp,]
-      chull_reg[[i]][[j]] <- chull_reg_iter[[j]]
-    }
-    chull_reg[[i]] <- do.call(rbind,chull_reg[[i]])
+    chull_iter <- chull_moveEZ(Y, group.var, group_levels)
+    chull_reg[[i]] <- chull_iter$hull
+    no_hulls[[i]] <- chull_iter$points
   }
 
   chull_reg <- do.call(rbind,chull_reg)
@@ -218,9 +213,7 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   chull_reg[[group.var]] <- factor(chull_reg[[group.var]], levels = group_levels)
 
   # Subset of samples for which hulls cannot be constructed
-  tvi_chull <- base::which(colnames(chull_reg) == time.var)
-  no_hulls <- as.numeric(names(base::which(table(chull_reg[[tvi_chull]])<4)))
-  Z_tbl_sub <- Z_tbl |>  dplyr::filter(Z_tbl[[tvi_chull]] %in% no_hulls)
+  Z_tbl_sub <- do.call(rbind,no_hulls)
 
   # Plotting
   # move – TRUE --- Animated sliced Z
@@ -272,7 +265,7 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                                                facet_wrap(~.data[[time.var]]) }} +
     {if(move) { ggplot2::labs(title = '{time.var}: {closest_state}',x="",y="")}} +
     # Sample points for hulls that cannot be constructed
-    {if(hulls & (length(no_hulls) > 0)) {
+    {if(hulls & (nrow(Z_tbl_sub) > 0)) {
       list(
         geom_point(data = Z_tbl_sub,
                    aes(x=V1, y=V2,
@@ -312,7 +305,9 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 #' @param time.var time variable
 #' @param group.var group variable
 #' @param move whether to animate (TRUE) or facet (FALSE) samples and variables, according to time.var
-#' @param hulls whether to display sample points or convex hulls
+#' @param hulls whether to display sample points or convex hulls. A hull requires at least three
+#'   non-collinear observations per group per level of \code{time.var}; groups with fewer are
+#'   displayed as points instead.
 #' @param scale.var scaling the vectors representing the variables
 #' @param align.time a vector specifying the levels of time.var for which the biplots should be aligned. Only biplots corresponding to these time points will be used to compute the alignment transformation.
 #' @param reflect a character vector specifying the axis of reflection to apply at each corresponding time point in align.time. One of FALSE (default), "x" for reflection about the x-axis, "y" for reflection about the y-axis and "xy" for reflection about both axes.
@@ -395,6 +390,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
   Z_list <- vector("list", iterations)
   Vr_list <- vector("list", iterations)
   chull_reg <- vector("list", iterations)
+  no_hulls <- vector("list", iterations)
   temp_qual <- vector("list", iterations)
   temp_predix <- vector("list", iterations)
 
@@ -501,14 +497,9 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
 
     #idx <- which(temp[[tvi]] == iter_levels[i])
     Y <- Z_list[[i]] #[idx,]
-    chull_reg_iter <- vector("list", length(group_levels))
-    for(j in 1:length(group_levels))
-    {
-      temp2 <- which(Y[[group.var]] == group_levels[j]) # index of the group var
-      chull_reg_iter[[j]] <- Y[temp2,][grDevices::chull(Y[temp2,]),]
-      #chull_reg[[i]][[j]] <- chull_reg_iter[[j]]
-    }
-    chull_reg[[i]] <- do.call(rbind,chull_reg_iter)
+    chull_iter <- chull_moveEZ(Y, group.var, group_levels)
+    chull_reg[[i]] <- chull_iter$hull
+    no_hulls[[i]] <- chull_iter$points
 
   }
 
@@ -522,6 +513,9 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
 
   chull_reg <- do.call(rbind,chull_reg)
   chull_reg <- dplyr::as_tibble(chull_reg)
+
+  # Subset of samples for which hulls cannot be constructed
+  Z_tbl_sub <- do.call(rbind,no_hulls)
 
   # Plotting
 
@@ -562,6 +556,16 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
                    aes(x = V1, y = V2, group = .data[[group.var]],
                        colour = .data[[group.var]],fill = .data[[group.var]]),
                    size = 3,shape = 15,alpha = 1,show.legend = FALSE)
+      }} +
+      # Sample points for hulls that cannot be constructed
+      {if(hulls & (nrow(Z_tbl_sub) > 0)) {
+        list(
+          geom_point(data = Z_tbl_sub,
+                     aes(x=V1, y=V2, group = .data[[group.var]],
+                         fill = .data[[group.var]], colour = .data[[group.var]], shape = .data[[group.var]]),
+                     size = 2, alpha = 0.8, show.legend = FALSE),
+          ggplot2::scale_colour_manual(values = group_palette, drop = FALSE),
+          ggplot2::scale_shape_manual(values = samp_pch, drop = FALSE))
       }} +
       gganimate::transition_states(.data[[time.var]],
                                    transition_length = 2,
@@ -613,6 +617,16 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
                        colour = .data[[group.var]],fill = .data[[group.var]]),
                    size = 3,shape = 15,alpha = 1,show.legend = FALSE)
       }} +
+      # Sample points for hulls that cannot be constructed
+      {if(hulls & (nrow(Z_tbl_sub) > 0)) {
+        list(
+          geom_point(data = Z_tbl_sub,
+                     aes(x=V1, y=V2, group = .data[[group.var]],
+                         fill = .data[[group.var]], colour = .data[[group.var]], shape = .data[[group.var]]),
+                     size = 2, alpha = 0.8, show.legend = FALSE),
+          ggplot2::scale_colour_manual(values = group_palette, drop = FALSE),
+          ggplot2::scale_shape_manual(values = samp_pch, drop = FALSE))
+      }} +
       facet_wrap(~.data[[time.var]]) +
       ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.2)) +
       ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.2)) +
@@ -641,7 +655,9 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
 #' @param time.var time variable
 #' @param group.var group variable
 #' @param move whether to animate (TRUE) or facet (FALSE) samples and variables, according to time.var
-#' @param hulls whether to display sample points or convex hulls
+#' @param hulls whether to display sample points or convex hulls. A hull requires at least three
+#'   non-collinear observations per group per level of \code{time.var}; groups with fewer are
+#'   displayed as points instead.
 #' @param scale.var scaling the vectors representing the variables
 #' @param target Target data set to which all biplots should be matched consisting of the the same dimensions. If not specified, the centroid of all available biplot sample coordinates from \code{time.var} will be used. Default `NULL`.
 #'
@@ -775,6 +791,7 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   Z_GPA_list <- vector("list", iterations)
   Vr_GPA_list <- vector("list", iterations)
   chull_reg <- vector("list", iterations)
+  no_hulls <- vector("list", iterations)
 
   # now bind_rows() of Z_GPA_list and Vr_GPA_list and adding columns of Z_tbl and Vr_tbl
   for (i in 1:iterations)
@@ -789,19 +806,18 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 
     Y <- Z_GPA_list[[i]]
 
-    chull_reg_iter <- vector("list", length(group_levels))
-    for(j in 1:length(group_levels))
-    {
-      temp2 <- which(Y[[group.var]] == group_levels[j]) # index of the group var
-      chull_reg_iter[[j]] <- Y[temp2,][grDevices::chull(Y[temp2,]),]
-    }
-    chull_reg[[i]] <- do.call(rbind, chull_reg_iter)
+    chull_iter <- chull_moveEZ(Y, group.var, group_levels)
+    chull_reg[[i]] <- chull_iter$hull
+    no_hulls[[i]] <- chull_iter$points
 
   }
 
   Z_GPA_tbl <- do.call(rbind,Z_GPA_list)
   Vr_GPA_tbl <- do.call(rbind,Vr_GPA_list)
   chull_reg_GPA <- do.call(rbind,chull_reg)
+
+  # Subset of samples for which hulls cannot be constructed
+  Z_GPA_tbl_sub <- do.call(rbind,no_hulls)
 
   if(is.null(bp$axes$label.cex) || bp$axes$label.cex[1] == formals(biplotEZ::axes)$label.cex[1]) {
     text_size = 4
@@ -840,6 +856,16 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                        fill =.data[[group.var]],
                        colour = .data[[group.var]]),size=2, alpha=samp_opac),
         ggplot2::scale_colour_manual(values = group_palette))
+      }} +
+      # Sample points for hulls that cannot be constructed
+      {if(hulls & (nrow(Z_GPA_tbl_sub) > 0)) {
+        list(
+        geom_point(data = Z_GPA_tbl_sub,
+                   aes(x=V1, y=V2,
+                       group = .data[[group.var]],
+                       fill =.data[[group.var]],
+                       colour = .data[[group.var]]),size=2, alpha=0.8, show.legend = FALSE),
+        ggplot2::scale_colour_manual(values = group_palette, drop = FALSE))
       }} +
       gganimate::transition_states(.data[[time.var]],
                                    transition_length = 2,
@@ -880,7 +906,18 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                        fill =.data[[group.var]],
                        colour = .data[[group.var]]),size=2, alpha=samp_opac),
         ggplot2::scale_colour_manual(values = group_palette))
-      }} + facet_wrap(~.data[[time.var]]) +
+      }} +
+      # Sample points for hulls that cannot be constructed
+      {if(hulls & (nrow(Z_GPA_tbl_sub) > 0)) {
+        list(
+        geom_point(data = Z_GPA_tbl_sub,
+                   aes(x=V1, y=V2,
+                       group = .data[[group.var]],
+                       fill =.data[[group.var]],
+                       colour = .data[[group.var]]),size=2, alpha=0.8, show.legend = FALSE),
+        ggplot2::scale_colour_manual(values = group_palette, drop = FALSE))
+      }} +
+      facet_wrap(~.data[[time.var]]) +
       #xlim(xlim) +
       #ylim(ylim) +
       ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.2)) +

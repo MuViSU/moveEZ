@@ -24,7 +24,9 @@ moveplot2(
 
 \item{move}{whether to animate (TRUE) or facet (FALSE) samples and variables, according to time.var}
 
-\item{hulls}{whether to display sample points or convex hulls}
+\item{hulls}{whether to display sample points or convex hulls. A hull requires at least three
+non-collinear observations per group per level of \code{time.var}; groups with fewer are
+displayed as points instead.}
 
 \item{scale.var}{scaling the vectors representing the variables}
 

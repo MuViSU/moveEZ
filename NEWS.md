@@ -1,3 +1,7 @@
+## moveEZ (development version)
+
+`moveplot2()` and `moveplot3()` now apply the same convex hull guard as `moveplot()`: groups with fewer than three non-collinear observations at a time level are displayed as points instead of a hull, rather than being passed to `chull()` unconditionally. The guard is documented in the `hulls` argument of all three functions.
+
 ## moveEZ 1.3.1
 
 Reduced runtime of moveplot() examples to address CRAN NOTE on example timing.
