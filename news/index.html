@@ -32,6 +32,10 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="development version" id="moveez-development-version">moveEZ (development version)<a class="anchor" aria-label="anchor" href="#moveez-development-version"></a></h2>
+<p><code><a href="../reference/moveplot2.html">moveplot2()</a></code> and <code><a href="../reference/moveplot3.html">moveplot3()</a></code> now apply the same convex hull guard as <code><a href="../reference/moveplot.html">moveplot()</a></code>: groups with fewer than three non-collinear observations at a time level are displayed as points instead of a hull, rather than being passed to <code><a href="https://rdrr.io/r/grDevices/chull.html" class="external-link">chull()</a></code> unconditionally. The guard is documented in the <code>hulls</code> argument of all three functions.</p>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.3.1" id="moveez-131">moveEZ 1.3.1<a class="anchor" aria-label="anchor" href="#moveez-131"></a></h2>
 <p>Reduced runtime of moveplot() examples to address CRAN NOTE on example timing.</p>
 </div>

@@ -1,5 +1,17 @@
 # Changelog
 
+## moveEZ (development version)
+
+[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
+and
+[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md)
+now apply the same convex hull guard as
+[`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md):
+groups with fewer than three non-collinear observations at a time level
+are displayed as points instead of a hull, rather than being passed to
+[`chull()`](https://rdrr.io/r/grDevices/chull.html) unconditionally. The
+guard is documented in the `hulls` argument of all three functions.
+
 ## moveEZ 1.3.1
 
 Reduced runtime of moveplot() examples to address CRAN NOTE on example

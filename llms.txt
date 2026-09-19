@@ -100,6 +100,8 @@ Logo concept developed with assistance from OpenAI’s ChatGPT
   : Climate studies target example dataset
 - [`axes_moveEZ()`](https://muvisu.github.io/moveEZ/reference/axes_moveEZ.md)
   : Provide axes coordinates
+- [`chull_moveEZ()`](https://muvisu.github.io/moveEZ/reference/chull_moveEZ.md)
+  : Convex hulls per group
 - [`.calibrate.axis()`](https://muvisu.github.io/moveEZ/reference/dot-calibrate.axis.md)
   : Calibrate axis
 - [`evaluation()`](https://muvisu.github.io/moveEZ/reference/evaluation.md)

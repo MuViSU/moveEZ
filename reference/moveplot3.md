@@ -38,7 +38,9 @@ moveplot3(
 
 - hulls:
 
-  whether to display sample points or convex hulls
+  whether to display sample points or convex hulls. A hull requires at
+  least three non-collinear observations per group per level of
+  `time.var`; groups with fewer are displayed as points instead.
 
 - scale.var:
 
