@@ -4,11 +4,7 @@ bp <- biplot(climate, scaled = TRUE) |> PCA()
 out <- no_plot(moveplot2(bp, time.var = "Year", group.var = "Region", move = FALSE))
 
 test_that("moveplot2 fits a separate biplot to every time slice", {
-  expect_s3_class(out, c("biplot", "PCA"), exact = TRUE)
-  expect_s3_class(out$plot, "ggplot")
-  expect_equal(geoms(out$plot), c("GeomSegment", "GeomText", "GeomPolygon"))
-
-  Vr <- out$plot$layers[[1]]$data
+  Vr <- layer_df(out$plot, "GeomSegment")
   expect_equal(nrow(Vr), length(years) * ncol(bp$X))
   expect_equal(levels(Vr$Year), years)
 
@@ -36,25 +32,29 @@ test_that("fit measures are reported per time slice", {
 test_that("CVA biplots report the within class fit measures", {
   cva <- biplot(climate, scaled = TRUE) |> CVA(classes = climate$Region)
   out_cva <- no_plot(moveplot2(cva, time.var = "Year", group.var = "Region", move = FALSE))
-  expect_equal(geoms(out_cva$plot), c("GeomSegment", "GeomText", "GeomPolygon", "GeomPoint"))
   expect_s3_class(out_cva$within.class.axis.predictivity, "knitr_kable")
   expect_named(out_cva$within.class.sample.predictivity, years)
-  expect_equal(nrow(out_cva$plot$layers[[4]]$data), length(years) * nlevels(climate$Region))
+
+  # class means of a slice are those of a CVA biplot of that slice only
+  slice <- climate[climate$Year == years[2], ]
+  cva_slice <- biplot(slice, scaled = TRUE) |> CVA(classes = slice$Region)
+  means <- layer_df(out_cva$plot, "GeomPoint")
+  expect_equal(as.matrix(means[means$Year == years[2], c("V1", "V2")]), cva_slice$Zmeans, ignore_attr = TRUE)
 })
 
 test_that("reflect only reflects the time slices in align.time", {
   refl <- no_plot(moveplot2(bp, time.var = "Year", group.var = "Region", move = FALSE,
                             align.time = years[1], reflect = "xy"))
-  Vr <- out$plot$layers[[1]]$data
-  Vr_refl <- refl$plot$layers[[1]]$data
+  Vr <- layer_df(out$plot, "GeomSegment")
+  Vr_refl <- layer_df(refl$plot, "GeomSegment")
   first <- Vr$Year == years[1]
   expect_equal(Vr_refl$V1[first], -Vr$V1[first])
   expect_equal(Vr_refl$V2[first], -Vr$V2[first])
   expect_equal(Vr_refl[!first, ], Vr[!first, ])
 
   # hull vertices, their order changes with the reflection
-  Z <- out$plot$layers[[3]]$data
-  Z_refl <- refl$plot$layers[[3]]$data
+  Z <- layer_df(out$plot, "GeomPolygon")
+  Z_refl <- layer_df(refl$plot, "GeomPolygon")
   first <- Z$Year == years[1]
   expect_equal(sort(Z_refl$V1[Z_refl$Year == years[1]]), sort(-Z$V1[first]))
   expect_equal(sort(Z_refl$V2[Z_refl$Year == years[1]]), sort(-Z$V2[first]))

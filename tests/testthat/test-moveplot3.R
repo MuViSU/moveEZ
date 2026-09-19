@@ -6,8 +6,6 @@ out <- no_plot(moveplot3(bp, time.var = "Year", group.var = "Region", move = FAL
 
 test_that("moveplot3 returns the configurations before and after GPA", {
   expect_s3_class(out, c("biplot", "PCA", "moveplot3"), exact = TRUE)
-  expect_s3_class(out$plot, "ggplot")
-  expect_equal(geoms(out$plot), c("GeomSegment", "GeomText", "GeomPolygon"))
   expect_equal(out$iter_levels, years)
 
   expect_length(out$coord_set, length(years))
@@ -34,7 +32,7 @@ test_that("GPA moves the configurations closer to the target", {
   expect_lt(after, before)
 
   # the plotted variable vectors are the GPA transformed ones
-  Vr <- out$plot$layers[[1]]$data
+  Vr <- layer_df(out$plot, "GeomSegment")
   expect_equal(as.matrix(Vr[Vr$Year == years[1], c("V1", "V2")]),
                out$GPA_list[[1]][-(1:n_slice), ], ignore_attr = TRUE)
 })

@@ -6,8 +6,12 @@ no_plot <- function(expr)
   force(expr)
 }
 
-# geom of each layer of a ggplot
-geoms <- function(p) unname(vapply(p$layers, function(l) class(l$geom)[1], character(1)))
+# data of the first layer of a ggplot drawn with the given geom, e.g. "GeomSegment"
+layer_df <- function(p, geom)
+{
+  is_geom <- vapply(p$layers, function(l) inherits(l$geom, geom), logical(1))
+  p$layers[[base::which(is_geom)[1]]]$data
+}
 
 # first three years of Africa_climate, enough for a time variable and quick to plot
 climate_sub <- function()
