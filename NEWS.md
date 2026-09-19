@@ -6,6 +6,8 @@ The handling of missing values is now documented: `biplot()` removes rows contai
 
 `moveplot2()` and `moveplot3()` now apply the same convex hull guard as `moveplot()`: groups with fewer than three non-collinear observations at a time level are displayed as points instead of a hull, rather than being passed to `chull()` unconditionally. The guard is documented in the `hulls` argument of all three functions.
 
+`moveplot2()` now reflects every level supplied in `align.time`. Previously only one level was reflected when `align.time` was a vector. `align.time` values that are not levels of `time.var`, and a `reflect` that does not match `align.time`, now stop with an informative error. The documentation of `reflect` has been clarified: as in `biplotEZ::reflect()`, `"x"` reverses the direction of the x-axis (horizontal flip) and `"y"` that of the y-axis (vertical flip).
+
 ## moveEZ 1.3.1
 
 Reduced runtime of moveplot() examples to address CRAN NOTE on example timing.
