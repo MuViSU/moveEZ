@@ -154,8 +154,10 @@ Two additional arguments address this:
 
 - `align.time`: a vector of time levels at which alignment should be
   applied.
-- `reflect`: specifies the axis of reflection — `"x"`, `"y"`, or `"xy"`
-  — with each entry corresponding to a level in `align.time`. Both
+- `reflect`: specifies the axis whose direction is reversed — `"x"`
+  (horizontal flip), `"y"` (vertical flip), or `"xy"` (both) — as in
+  [`biplotEZ::reflect()`](https://rdrr.io/pkg/biplotEZ/man/reflect.html),
+  with each entry corresponding to a level in `align.time`. Both
   arguments accept vectors when alignment is needed at multiple time
   levels.
 
@@ -170,8 +172,9 @@ bp1 <- bp |> moveplot2(time.var = "Year", group.var = "Region",
 ![](moveEZ_files/figure-html/unnamed-chunk-6-1.png)
 
 Note the discontinuity between 1950 and 1960 - the variable vectors and
-sample configuration are reflected about the x-axis. This is a sign
-indeterminacy artifact, not a genuine structural change.
+sample configuration are flipped horizontally, i.e. the direction of the
+x-axis is reversed. This is a sign indeterminacy artifact, not a genuine
+structural change.
 
 ### Static faceted display (aligned)
 
@@ -184,7 +187,7 @@ bp2 <- bp |> moveplot2(time.var = "Year", group.var = "Region",
 
 ![](moveEZ_files/figure-html/unnamed-chunk-7-1.png)
 
-Applying a reflection about the x-axis at 1950 restores visual
+Reversing the x-axis at 1950 with `reflect = "x"` restores visual
 continuity across the sequence of biplots.
 
 ## Automated Alignment: `moveplot3()`

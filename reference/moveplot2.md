@@ -56,15 +56,17 @@ moveplot2(
 - align.time:
 
   a vector specifying the levels of time.var for which the biplots
-  should be aligned. Only biplots corresponding to these time points
-  will be used to compute the alignment transformation.
+  should be reflected. Default (NA) reflects none.
 
 - reflect:
 
-  a character vector specifying the axis of reflection to apply at each
-  corresponding time point in align.time. One of FALSE (default), "x"
-  for reflection about the x-axis, "y" for reflection about the y-axis
-  and "xy" for reflection about both axes.
+  a character vector, of the same length as align.time, specifying the
+  reflection to apply at each corresponding time point in align.time.
+  One of "x" to reverse the direction of the x-axis (horizontal flip),
+  "y" to reverse the direction of the y-axis (vertical flip) and "xy"
+  for both. This follows `reflect.axis` of
+  [`biplotEZ::reflect()`](https://rdrr.io/pkg/biplotEZ/man/reflect.html).
+  Default (NA) applies no reflection.
 
 ## Value
 

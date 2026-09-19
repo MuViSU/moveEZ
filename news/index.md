@@ -35,6 +35,16 @@ are displayed as points instead of a hull, rather than being passed to
 [`chull()`](https://rdrr.io/r/grDevices/chull.html) unconditionally. The
 guard is documented in the `hulls` argument of all three functions.
 
+[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
+now reflects every level supplied in `align.time`. Previously only one
+level was reflected when `align.time` was a vector. `align.time` values
+that are not levels of `time.var`, and a `reflect` that does not match
+`align.time`, now stop with an informative error. The documentation of
+`reflect` has been clarified: as in
+[`biplotEZ::reflect()`](https://rdrr.io/pkg/biplotEZ/man/reflect.html),
+`"x"` reverses the direction of the x-axis (horizontal flip) and `"y"`
+that of the y-axis (vertical flip).
+
 ## moveEZ 1.3.1
 
 Reduced runtime of moveplot() examples to address CRAN NOTE on example

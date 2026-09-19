@@ -247,10 +247,11 @@ inconsequential but visually disruptive.</p>
 <code>align.time</code>: a vector of time levels at which alignment
 should be applied.</li>
 <li>
-<code>reflect</code>: specifies the axis of reflection —
-<code>"x"</code>, <code>"y"</code>, or <code>"xy"</code> — with each
-entry corresponding to a level in <code>align.time</code>. Both
-arguments accept vectors when alignment is needed at multiple time
+<code>reflect</code>: specifies the axis whose direction is reversed
+— <code>"x"</code> (horizontal flip), <code>"y"</code> (vertical flip),
+or <code>"xy"</code> (both) — as in <code><a href="https://rdrr.io/pkg/biplotEZ/man/reflect.html" class="external-link">biplotEZ::reflect()</a></code>,
+with each entry corresponding to a level in <code>align.time</code>.
+Both arguments accept vectors when alignment is needed at multiple time
 levels.</li>
 </ul>
 <div class="section level3">
@@ -261,8 +262,9 @@ levels.</li>
 <span>                hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="672"></p>
 <p>Note the discontinuity between 1950 and 1960 - the variable vectors
-and sample configuration are reflected about the x-axis. This is a sign
-indeterminacy artifact, not a genuine structural change.</p>
+and sample configuration are flipped horizontally, i.e. the direction of
+the x-axis is reversed. This is a sign indeterminacy artifact, not a
+genuine structural change.</p>
 </div>
 <div class="section level3">
 <h3 id="static-faceted-display-aligned">Static faceted display (aligned)<a class="anchor" aria-label="anchor" href="#static-faceted-display-aligned"></a>
@@ -272,8 +274,8 @@ indeterminacy artifact, not a genuine structural change.</p>
 <span>                hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                align.time <span class="op">=</span> <span class="st">"1950"</span>, reflect <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="672"></p>
-<p>Applying a reflection about the x-axis at 1950 restores visual
-continuity across the sequence of biplots.</p>
+<p>Reversing the x-axis at 1950 with <code>reflect = "x"</code> restores
+visual continuity across the sequence of biplots.</p>
 </div>
 </div>
 <div class="section level2">
