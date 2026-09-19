@@ -27,8 +27,12 @@ biplotEZ::CVA
 #' @description Create animated biplot on samples in a biplot
 #'
 #' @param bp biplot object from biplotEZ
-#' @param time.var time variable
-#' @param group.var group variable
+#' @param time.var name of the time variable, given as a character string. Must be a factor column of the data
+#'   supplied to \code{biplot()}; the order of its levels gives the order of the time slices and levels
+#'   without observations are dropped. A numeric (e.g. integer year) or character column stops with an
+#'   error, see Details.
+#' @param group.var name of the group variable, given as a character string. Must be a factor column of the
+#'   data supplied to \code{biplot()}.
 #' @param move whether to animate (TRUE) or facet (FALSE) samples, according to time.var
 #' @param hulls whether to display sample points or convex hulls. A hull requires at least three
 #'   non-collinear observations per group per level of \code{time.var}; groups with fewer are
@@ -37,6 +41,15 @@ biplotEZ::CVA
 #' @param shadow whether the animation will keep past states (only when hulls = FALSE)
 #' @param which integer index into the levels of group.var selecting which groups to display. Default (NULL) shows all groups.
 #' @param label.vars character vector of column name(s) used to label sample points, pasted together when more than one is supplied. Default (NULL) omits point labels.
+#'
+#' @details
+#' \code{time.var} and \code{group.var} must both be factors. \code{biplot()} treats every numeric
+#' column as a variable of the biplot, so a time variable stored as a number (e.g. an integer year)
+#' has to be converted with \code{factor()} before \code{biplot()} is called, not afterwards.
+#'
+#' Missing values are handled by \code{biplot()}, which removes every row containing an \code{NA}
+#' in any column (including \code{time.var} and \code{group.var}) with a warning. The plot is
+#' constructed from the remaining rows.
 #'
 #' @returns
 #' \item{bp}{Returns the elements of the biplot object \code{bp} from \code{biplotEZ}.}
@@ -114,6 +127,8 @@ biplotEZ::CVA
 moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                     scale.var = 5, shadow = FALSE, which = NULL, label.vars = NULL)
 {
+
+  bp <- check_vars_moveEZ(bp, time.var, group.var)
 
   if(!is.null(group.var)) bp$group.aes <- bp$raw.X[,base::which(colnames(bp$raw.X) == group.var)] else
     bp$group.aes = NULL
@@ -302,8 +317,12 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 #' @description Create animated biplot on samples and variables in a biplot
 #'
 #' @param bp biplot object from biplotEZ
-#' @param time.var time variable
-#' @param group.var group variable
+#' @param time.var name of the time variable, given as a character string. Must be a factor column of the data
+#'   supplied to \code{biplot()}; the order of its levels gives the order of the time slices and levels
+#'   without observations are dropped. A numeric (e.g. integer year) or character column stops with an
+#'   error, see Details.
+#' @param group.var name of the group variable, given as a character string. Must be a factor column of the
+#'   data supplied to \code{biplot()}.
 #' @param move whether to animate (TRUE) or facet (FALSE) samples and variables, according to time.var
 #' @param hulls whether to display sample points or convex hulls. A hull requires at least three
 #'   non-collinear observations per group per level of \code{time.var}; groups with fewer are
@@ -311,6 +330,15 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 #' @param scale.var scaling the vectors representing the variables
 #' @param align.time a vector specifying the levels of time.var for which the biplots should be aligned. Only biplots corresponding to these time points will be used to compute the alignment transformation.
 #' @param reflect a character vector specifying the axis of reflection to apply at each corresponding time point in align.time. One of FALSE (default), "x" for reflection about the x-axis, "y" for reflection about the y-axis and "xy" for reflection about both axes.
+#'
+#' @details
+#' \code{time.var} and \code{group.var} must both be factors. \code{biplot()} treats every numeric
+#' column as a variable of the biplot, so a time variable stored as a number (e.g. an integer year)
+#' has to be converted with \code{factor()} before \code{biplot()} is called, not afterwards.
+#'
+#' Missing values are handled by \code{biplot()}, which removes every row containing an \code{NA}
+#' in any column (including \code{time.var} and \code{group.var}) with a warning. The plot is
+#' constructed from the remaining rows.
 #'
 #' @returns
 #' \item{bp}{Returns the elements of the biplot object \code{bp} from \code{biplotEZ}.}
@@ -340,6 +368,8 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
                       scale.var = 5, align.time = NA, reflect = NA)
 {
+
+  bp <- check_vars_moveEZ(bp, time.var, group.var)
 
   if(!is.null(group.var)) bp$group.aes <- bp$raw.X[,which(colnames(bp$raw.X) == group.var)] else
     bp$group.aes = NULL
@@ -652,14 +682,30 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
 #' @description Create animated biplot on samples and variables in a biplot with a given target
 #'
 #' @param bp biplot object from biplotEZ
-#' @param time.var time variable
-#' @param group.var group variable
+#' @param time.var name of the time variable, given as a character string. Must be a factor column of the data
+#'   supplied to \code{biplot()}; the order of its levels gives the order of the time slices and levels
+#'   without observations are dropped. A numeric (e.g. integer year) or character column stops with an
+#'   error, see Details.
+#' @param group.var name of the group variable, given as a character string. Must be a factor column of the
+#'   data supplied to \code{biplot()}.
 #' @param move whether to animate (TRUE) or facet (FALSE) samples and variables, according to time.var
 #' @param hulls whether to display sample points or convex hulls. A hull requires at least three
 #'   non-collinear observations per group per level of \code{time.var}; groups with fewer are
 #'   displayed as points instead.
 #' @param scale.var scaling the vectors representing the variables
 #' @param target Target data set to which all biplots should be matched consisting of the the same dimensions. If not specified, the centroid of all available biplot sample coordinates from \code{time.var} will be used. Default `NULL`.
+#'
+#' @details
+#' \code{time.var} and \code{group.var} must both be factors. \code{biplot()} treats every numeric
+#' column as a variable of the biplot, so a time variable stored as a number (e.g. an integer year)
+#' has to be converted with \code{factor()} before \code{biplot()} is called, not afterwards.
+#'
+#' Missing values are handled by \code{biplot()}, which removes every row containing an \code{NA}
+#' in any column (including \code{time.var} and \code{group.var}) with a warning. The plot is
+#' constructed from the remaining rows. Since \code{moveplot3()} requires the same number of
+#' observations at every level of \code{time.var}, removed rows will usually cause it to stop;
+#' impute the missing values, or remove the affected samples at every time level, beforehand.
+#' The same applies to \code{target}, which may not contain missing values.
 #'
 #' @returns
 #' \item{bp}{Returns the elements of the biplot object \code{bp} from \code{biplotEZ}.}
@@ -685,6 +731,8 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
 moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                       scale.var = 5, target = NULL)
 {
+  bp <- check_vars_moveEZ(bp, time.var, group.var)
+
   if(!is.null(group.var)) bp$group.aes <- bp$raw.X[,which(colnames(bp$raw.X) == group.var)] else
     bp$group.aes = NULL
 
@@ -711,7 +759,10 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   else group_palette <- bp$samples$col
 
   # Stop if levels of time.var are unequal, GPA cannot be performed
-  if(dplyr::n_distinct(table(bp$raw.X[[tvi]])) != 1) stop("To apply GPA, the number of observations per time.var level should be equal.")
+  if(dplyr::n_distinct(table(bp$raw.X[[tvi]])) != 1)
+    stop("To apply GPA, the number of observations per time.var level should be equal.",
+         if(length(bp$na.action) > 0) paste0("\n biplot() removed ", length(bp$na.action), " row(s) with missing values, see Details in ?moveplot3."))
+  if(!is.null(target) && anyNA(target)) stop("target contains missing values. Remove or impute these first.")
 
   # Samples
   if(is.null(bp$samples$pch)) samp_pch = c(rep(19,bp$n)) else {

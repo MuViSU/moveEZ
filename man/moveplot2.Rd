@@ -18,9 +18,13 @@ moveplot2(
 \arguments{
 \item{bp}{biplot object from biplotEZ}
 
-\item{time.var}{time variable}
+\item{time.var}{name of the time variable, given as a character string. Must be a factor column of the data
+supplied to \code{biplot()}; the order of its levels gives the order of the time slices and levels
+without observations are dropped. A numeric (e.g. integer year) or character column stops with an
+error, see Details.}
 
-\item{group.var}{group variable}
+\item{group.var}{name of the group variable, given as a character string. Must be a factor column of the
+data supplied to \code{biplot()}.}
 
 \item{move}{whether to animate (TRUE) or facet (FALSE) samples and variables, according to time.var}
 
@@ -40,6 +44,15 @@ displayed as points instead.}
 }
 \description{
 Create animated biplot on samples and variables in a biplot
+}
+\details{
+\code{time.var} and \code{group.var} must both be factors. \code{biplot()} treats every numeric
+column as a variable of the biplot, so a time variable stored as a number (e.g. an integer year)
+has to be converted with \code{factor()} before \code{biplot()} is called, not afterwards.
+
+Missing values are handled by \code{biplot()}, which removes every row containing an \code{NA}
+in any column (including \code{time.var} and \code{group.var}) with a warning. The plot is
+constructed from the remaining rows.
 }
 \examples{
 data(Africa_climate)

@@ -115,3 +115,53 @@ chull_moveEZ <- function(Y, group.var, group_levels)
   list(hull = do.call(rbind, c(list(Y[0,]), hull)),
        points = do.call(rbind, c(list(Y[0,]), pts)))
 }
+
+#' Check the time and group variables
+#'
+#' @description Validates \code{time.var} and \code{group.var} before any
+#'   plotting is attempted, so that unsuitable input stops with an informative
+#'   error instead of failing downstream. Both must name factor columns of the
+#'   data supplied to \code{biplotEZ::biplot()}, without missing values.
+#'
+#' @param bp biplot object from biplotEZ
+#' @param time.var time variable
+#' @param group.var group variable
+#'
+#' @returns \code{bp}, with unused levels of \code{time.var} dropped from
+#'   \code{bp$raw.X}.
+#'
+check_vars_moveEZ <- function(bp, time.var, group.var)
+{
+  if(!inherits(bp, "biplot")) stop("bp must be a biplot object created with biplotEZ::biplot().")
+  if(!is.data.frame(bp$raw.X))
+    stop("The data supplied to biplot() must be a data frame containing time.var and group.var as factor columns.")
+
+  vars <- list(time.var = time.var, group.var = group.var)
+  for(arg in names(vars))
+  {
+    v <- vars[[arg]]
+    if(!is.character(v) || length(v) != 1 || is.na(v))
+      stop(arg, " must be a single column name given as a character string.")
+    if(!(v %in% colnames(bp$raw.X)))
+      stop(arg, " = \"", v, "\" is not a column of the data supplied to biplot().")
+
+    x <- bp$raw.X[[v]]
+    if(!is.factor(x))
+    {
+      # biplotEZ::biplot() uses every numeric column as a biplot variable
+      if(is.numeric(x))
+        stop(arg, " = \"", v, "\" must be a factor, not ", class(x)[1], ". biplot() has treated it as ",
+             "a numeric variable of the biplot, so convert it before calling biplot(), e.g. data$",
+             v, " <- factor(data$", v, ").")
+      stop(arg, " = \"", v, "\" must be a factor, not ", class(x)[1], ". Convert it before calling ",
+           "biplot(), e.g. data$", v, " <- factor(data$", v, "), specifying levels to control the ordering.")
+    }
+    # biplot() removes rows with missing values, NAs here mean bp was altered afterwards
+    if(anyNA(x)) stop(arg, " = \"", v, "\" contains missing values. Remove or impute these before calling biplot().")
+  }
+
+  # levels without observations (e.g. after subsetting or NA removal) cannot form a time slice
+  bp$raw.X[[time.var]] <- droplevels(bp$raw.X[[time.var]])
+
+  bp
+}
