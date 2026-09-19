@@ -2,6 +2,29 @@
 
 ## moveEZ (development version)
 
+[`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md),
+[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
+and
+[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md)
+now validate `time.var` and `group.var` before plotting. Both must name
+factor columns of the data supplied to
+[`biplot()`](https://rdrr.io/pkg/biplotEZ/man/biplot.html); a numeric
+(e.g. integer year), character or misspelt column now stops with an
+informative error explaining how to fix it, instead of failing
+downstream. Levels of `time.var` without observations are dropped, which
+previously caused
+[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
+and
+[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md)
+to stop.
+
+The handling of missing values is now documented:
+[`biplot()`](https://rdrr.io/pkg/biplotEZ/man/biplot.html) removes rows
+containing `NA` with a warning.
+[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md)
+reports when this is the reason for unequal numbers of observations per
+time level, and stops if `target` contains missing values.
+
 [`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
 and
 [`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md)

@@ -59,11 +59,15 @@
 
 
 <dt id="arg-time-var">time.var<a class="anchor" aria-label="anchor" href="#arg-time-var"></a></dt>
-<dd><p>time variable</p></dd>
+<dd><p>name of the time variable, given as a character string. Must be a factor column of the data
+supplied to <code><a href="https://rdrr.io/pkg/biplotEZ/man/biplot.html" class="external-link">biplot()</a></code>; the order of its levels gives the order of the time slices and levels
+without observations are dropped. A numeric (e.g. integer year) or character column stops with an
+error, see Details.</p></dd>
 
 
 <dt id="arg-group-var">group.var<a class="anchor" aria-label="anchor" href="#arg-group-var"></a></dt>
-<dd><p>group variable</p></dd>
+<dd><p>name of the group variable, given as a character string. Must be a factor column of the
+data supplied to <code><a href="https://rdrr.io/pkg/biplotEZ/man/biplot.html" class="external-link">biplot()</a></code>.</p></dd>
 
 
 <dt id="arg-move">move<a class="anchor" aria-label="anchor" href="#arg-move"></a></dt>
@@ -99,6 +103,15 @@ displayed as points instead.</p></dd>
 <dd><p>An animated or a facet of biplots based on the dynamic frame.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p><code>time.var</code> and <code>group.var</code> must both be factors. <code><a href="https://rdrr.io/pkg/biplotEZ/man/biplot.html" class="external-link">biplot()</a></code> treats every numeric
+column as a variable of the biplot, so a time variable stored as a number (e.g. an integer year)
+has to be converted with <code><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor()</a></code> before <code><a href="https://rdrr.io/pkg/biplotEZ/man/biplot.html" class="external-link">biplot()</a></code> is called, not afterwards.</p>
+<p>Missing values are handled by <code><a href="https://rdrr.io/pkg/biplotEZ/man/biplot.html" class="external-link">biplot()</a></code>, which removes every row containing an <code>NA</code>
+in any column (including <code>time.var</code> and <code>group.var</code>) with a warning. The plot is
+constructed from the remaining rows.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>

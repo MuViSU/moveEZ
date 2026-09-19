@@ -25,11 +25,18 @@ moveplot3(
 
 - time.var:
 
-  time variable
+  name of the time variable, given as a character string. Must be a
+  factor column of the data supplied to
+  [`biplot()`](https://rdrr.io/pkg/biplotEZ/man/biplot.html); the order
+  of its levels gives the order of the time slices and levels without
+  observations are dropped. A numeric (e.g. integer year) or character
+  column stops with an error, see Details.
 
 - group.var:
 
-  group variable
+  name of the group variable, given as a character string. Must be a
+  factor column of the data supplied to
+  [`biplot()`](https://rdrr.io/pkg/biplotEZ/man/biplot.html).
 
 - move:
 
@@ -76,6 +83,26 @@ moveplot3(
 - plot:
 
   An animated or a facet of biplots based on the dynamic frame.
+
+## Details
+
+`time.var` and `group.var` must both be factors.
+[`biplot()`](https://rdrr.io/pkg/biplotEZ/man/biplot.html) treats every
+numeric column as a variable of the biplot, so a time variable stored as
+a number (e.g. an integer year) has to be converted with
+[`factor()`](https://rdrr.io/r/base/factor.html) before
+[`biplot()`](https://rdrr.io/pkg/biplotEZ/man/biplot.html) is called,
+not afterwards.
+
+Missing values are handled by
+[`biplot()`](https://rdrr.io/pkg/biplotEZ/man/biplot.html), which
+removes every row containing an `NA` in any column (including `time.var`
+and `group.var`) with a warning. The plot is constructed from the
+remaining rows. Since `moveplot3()` requires the same number of
+observations at every level of `time.var`, removed rows will usually
+cause it to stop; impute the missing values, or remove the affected
+samples at every time level, beforehand. The same applies to `target`,
+which may not contain missing values.
 
 ## Examples
 

@@ -8,6 +8,8 @@
   : Climate studies target example dataset
 - [`axes_moveEZ()`](https://muvisu.github.io/moveEZ/reference/axes_moveEZ.md)
   : Provide axes coordinates
+- [`check_vars_moveEZ()`](https://muvisu.github.io/moveEZ/reference/check_vars_moveEZ.md)
+  : Check the time and group variables
 - [`chull_moveEZ()`](https://muvisu.github.io/moveEZ/reference/chull_moveEZ.md)
   : Convex hulls per group
 - [`.calibrate.axis()`](https://muvisu.github.io/moveEZ/reference/dot-calibrate.axis.md)
