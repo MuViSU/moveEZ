@@ -17,15 +17,15 @@ Imports:
     biplotEZ,
     gganimate,
     ggplot2,
-    GPAbin
+    GPAbin,
+    knitr,
+    purrr,
+    scales
 Suggests:
     testthat,
     rmarkdown,
-    knitr,
     tibble,
-    scales,
-    RColorBrewer,
-    purrr
+    RColorBrewer
 Config/Needs/website: rmarkdown
 URL: https://muvisu.github.io/moveEZ/
 Config/roxygen2/version: 8.0.0
