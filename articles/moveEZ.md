@@ -17,12 +17,13 @@ methodological complexity:
   once on the full dataset.
 - [`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md):
   animates both sample positions and variable vectors, computed
-  separately per time slice, with optional manual alignment.
+  separately per time slice, with the axis directions of each time slice
+  aligned automatically to those of the full dataset.
 - [`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md):
   extends
   [`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
-  with automated alignment via Generalised Procrustes Analysis (GPA)
-  (Gower and Dijksterhuis 2004).
+  with full alignment via Generalised Procrustes Analysis (GPA) (Gower
+  and Dijksterhuis 2004).
 
 All three functions support both animated output (`move = TRUE`) and
 static faceted output (`move = FALSE`), the latter being useful for
@@ -150,23 +151,22 @@ slices may produce biplots that are reflections of one another. This
 sign indeterminacy is mathematically inconsequential but visually
 disruptive.
 
-Two additional arguments address this:
-
-- `align.time`: a vector of time levels at which alignment should be
-  applied.
-- `reflect`: specifies the axis whose direction is reversed — `"x"`
-  (horizontal flip), `"y"` (vertical flip), or `"xy"` (both) — as in
-  [`biplotEZ::reflect()`](https://rdrr.io/pkg/biplotEZ/man/reflect.html),
-  with each entry corresponding to a level in `align.time`. Both
-  arguments accept vectors when alignment is needed at multiple time
-  levels.
+By default (`auto.align = TRUE`),
+[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
+resolves this automatically. Each of the two dimensions of a time slice
+is compared with the corresponding dimension of the biplot of the full
+dataset, `bp`, and reflected whenever the two point in opposite
+directions (their inner product is negative). Reflections leave the fit
+measures unchanged.
 
 ### Static faceted display (unaligned)
+
+To see the problem, switch the automatic alignment off:
 
 ``` r
 
 bp1 <- bp |> moveplot2(time.var = "Year", group.var = "Region",
-                hulls = TRUE, move = FALSE)
+                hulls = TRUE, move = FALSE, auto.align = FALSE)
 ```
 
 ![](moveEZ_files/figure-html/unnamed-chunk-6-1.png)
@@ -181,14 +181,45 @@ structural change.
 ``` r
 
 bp2 <- bp |> moveplot2(time.var = "Year", group.var = "Region",
-                hulls = TRUE, move = FALSE,
-                align.time = "1950", reflect = "x")
+                hulls = TRUE, move = FALSE)
 ```
 
 ![](moveEZ_files/figure-html/unnamed-chunk-7-1.png)
 
-Reversing the x-axis at 1950 with `reflect = "x"` restores visual
+The x-axis at 1950 is reversed automatically, restoring visual
 continuity across the sequence of biplots.
+
+### Manual alignment
+
+The automatic alignment only decides the sign of each dimension. It can
+fall short when a dimension of a time slice is nearly orthogonal to that
+of the full dataset, so that the sign is decided by a small inner
+product, or when a different reference is preferred. Two further
+arguments override it:
+
+- `align.time`: a vector of time levels at which a reflection should be
+  applied.
+- `reflect`: specifies the axis whose direction is reversed — `"x"`
+  (horizontal flip), `"y"` (vertical flip), or `"xy"` (both) — as in
+  [`biplotEZ::reflect()`](https://rdrr.io/pkg/biplotEZ/man/reflect.html),
+  with each entry corresponding to a level in `align.time`. Both
+  arguments accept vectors when reflections are needed at multiple time
+  levels.
+
+These reflections are applied after the automatic alignment. With
+`auto.align = FALSE` the same result as above is obtained manually:
+
+``` r
+
+bp |> moveplot2(time.var = "Year", group.var = "Region",
+                hulls = TRUE, move = FALSE, auto.align = FALSE,
+                align.time = "1950", reflect = "x")
+```
+
+Neither the automatic nor the manual alignment can correct time slices
+whose dimensions swap order or rotate;
+[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md)
+addresses this.
 
 ## Automated Alignment: `moveplot3()`
 
@@ -222,7 +253,7 @@ bp |> moveplot3(time.var = "Year", group.var = "Region",
                 hulls = TRUE, move = FALSE, target = NULL)
 ```
 
-![](moveEZ_files/figure-html/unnamed-chunk-9-1.png)
+![](moveEZ_files/figure-html/unnamed-chunk-10-1.png)
 
     #> Object of class biplot, based on 960 samples and 9 variables.
     #> 6 numeric variables.
@@ -263,7 +294,7 @@ bp |> moveplot3(time.var = "Year", group.var = "Region",
                 target = Africa_climate_target)
 ```
 
-![](moveEZ_files/figure-html/unnamed-chunk-12-1.png)
+![](moveEZ_files/figure-html/unnamed-chunk-13-1.png)
 
     #> Object of class biplot, based on 960 samples and 9 variables.
     #> 6 numeric variables.
@@ -292,7 +323,7 @@ bp_1989 |> moveplot(time.var = "Target", group.var = "Region",
                     hulls = TRUE, move = FALSE)
 ```
 
-![](moveEZ_files/figure-html/unnamed-chunk-13-1.png)
+![](moveEZ_files/figure-html/unnamed-chunk-14-1.png)
 
     #> Object of class biplot, based on 120 samples and 10 variables.
     #> 6 numeric variables.
@@ -329,7 +360,7 @@ results <- bp |>
   evaluation()
 ```
 
-![](moveEZ_files/figure-html/unnamed-chunk-15-1.png)
+![](moveEZ_files/figure-html/unnamed-chunk-16-1.png)
 
 ### Numerical measures
 
@@ -358,7 +389,7 @@ Measures of comparison {.table}
 results$fit.plot
 ```
 
-![](moveEZ_files/figure-html/unnamed-chunk-17-1.png)
+![](moveEZ_files/figure-html/unnamed-chunk-18-1.png)
 
 The biplot for 2000 shows a notably lower CC and higher PS relative to
 other years, indicating a structural departure from the consensus
@@ -371,7 +402,7 @@ configuration that warrants closer investigation.
 results$bias.plot
 ```
 
-![](moveEZ_files/figure-html/unnamed-chunk-18-1.png)
+![](moveEZ_files/figure-html/unnamed-chunk-19-1.png)
 
 The initial bias at 1950 is high but decreases and stabilises from 1960,
 with an increase in AMB and RMSB at 2000 consistent with the fit
@@ -394,7 +425,7 @@ bp |> moveplot(time.var = "Region", group.var = "Region",
                hulls = FALSE, move = FALSE)
 ```
 
-![](moveEZ_files/figure-html/unnamed-chunk-19-1.png)
+![](moveEZ_files/figure-html/unnamed-chunk-20-1.png)
 
     #> Object of class biplot, based on 960 samples and 9 variables.
     #> 6 numeric variables.
@@ -432,7 +463,7 @@ bp_custom |> moveplot(time.var = "Year", group.var = "Region",
                       hulls = TRUE, move = FALSE)
 ```
 
-![](moveEZ_files/figure-html/unnamed-chunk-20-1.png)
+![](moveEZ_files/figure-html/unnamed-chunk-21-1.png)
 
     #> Object of class biplot, based on 960 samples and 9 variables.
     #> 6 numeric variables.
@@ -451,7 +482,7 @@ bp_pch |> moveplot(time.var = "Year", group.var = "Region",
                    hulls = FALSE, move = FALSE)
 ```
 
-![](moveEZ_files/figure-html/unnamed-chunk-21-1.png)
+![](moveEZ_files/figure-html/unnamed-chunk-22-1.png)
 
     #> Object of class biplot, based on 960 samples and 9 variables.
     #> 6 numeric variables.

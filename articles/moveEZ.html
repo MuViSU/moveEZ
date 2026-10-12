@@ -76,11 +76,12 @@ methodological complexity:</p>
 variable vectors, computed once on the full dataset.</li>
 <li>
 <code><a href="../reference/moveplot2.html">moveplot2()</a></code>: animates both sample positions and
-variable vectors, computed separately per time slice, with optional
-manual alignment.</li>
+variable vectors, computed separately per time slice, with the axis
+directions of each time slice aligned automatically to those of the full
+dataset.</li>
 <li>
-<code><a href="../reference/moveplot3.html">moveplot3()</a></code>: extends <code><a href="../reference/moveplot2.html">moveplot2()</a></code> with
-automated alignment via Generalised Procrustes Analysis (GPA) <span class="citation">(Gower and Dijksterhuis 2004)</span>.</li>
+<code><a href="../reference/moveplot3.html">moveplot3()</a></code>: extends <code><a href="../reference/moveplot2.html">moveplot2()</a></code> with full
+alignment via Generalised Procrustes Analysis (GPA) <span class="citation">(Gower and Dijksterhuis 2004)</span>.</li>
 </ul>
 <p>All three functions support both animated output
 (<code>move = TRUE</code>) and static faceted output
@@ -241,25 +242,19 @@ complication: eigenvectors are determined only up to a sign change,
 meaning that consecutive time slices may produce biplots that are
 reflections of one another. This sign indeterminacy is mathematically
 inconsequential but visually disruptive.</p>
-<p>Two additional arguments address this:</p>
-<ul>
-<li>
-<code>align.time</code>: a vector of time levels at which alignment
-should be applied.</li>
-<li>
-<code>reflect</code>: specifies the axis whose direction is reversed
-— <code>"x"</code> (horizontal flip), <code>"y"</code> (vertical flip),
-or <code>"xy"</code> (both) — as in <code><a href="https://rdrr.io/pkg/biplotEZ/man/reflect.html" class="external-link">biplotEZ::reflect()</a></code>,
-with each entry corresponding to a level in <code>align.time</code>.
-Both arguments accept vectors when alignment is needed at multiple time
-levels.</li>
-</ul>
+<p>By default (<code>auto.align = TRUE</code>), <code><a href="../reference/moveplot2.html">moveplot2()</a></code>
+resolves this automatically. Each of the two dimensions of a time slice
+is compared with the corresponding dimension of the biplot of the full
+dataset, <code>bp</code>, and reflected whenever the two point in
+opposite directions (their inner product is negative). Reflections leave
+the fit measures unchanged.</p>
 <div class="section level3">
 <h3 id="static-faceted-display-unaligned">Static faceted display (unaligned)<a class="anchor" aria-label="anchor" href="#static-faceted-display-unaligned"></a>
 </h3>
+<p>To see the problem, switch the automatic alignment off:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp1</span> <span class="op">&lt;-</span> <span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot2.html">moveplot2</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
-<span>                hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span>                hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>, auto.align <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="672"></p>
 <p>Note the discontinuity between 1950 and 1960 - the variable vectors
 and sample configuration are flipped horizontally, i.e. the direction of
@@ -271,11 +266,41 @@ genuine structural change.</p>
 </h3>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp2</span> <span class="op">&lt;-</span> <span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot2.html">moveplot2</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
-<span>                hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>                align.time <span class="op">=</span> <span class="st">"1950"</span>, reflect <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span></span></code></pre></div>
+<span>                hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="672"></p>
-<p>Reversing the x-axis at 1950 with <code>reflect = "x"</code> restores
-visual continuity across the sequence of biplots.</p>
+<p>The x-axis at 1950 is reversed automatically, restoring visual
+continuity across the sequence of biplots.</p>
+</div>
+<div class="section level3">
+<h3 id="manual-alignment">Manual alignment<a class="anchor" aria-label="anchor" href="#manual-alignment"></a>
+</h3>
+<p>The automatic alignment only decides the sign of each dimension. It
+can fall short when a dimension of a time slice is nearly orthogonal to
+that of the full dataset, so that the sign is decided by a small inner
+product, or when a different reference is preferred. Two further
+arguments override it:</p>
+<ul>
+<li>
+<code>align.time</code>: a vector of time levels at which a
+reflection should be applied.</li>
+<li>
+<code>reflect</code>: specifies the axis whose direction is reversed
+— <code>"x"</code> (horizontal flip), <code>"y"</code> (vertical flip),
+or <code>"xy"</code> (both) — as in <code><a href="https://rdrr.io/pkg/biplotEZ/man/reflect.html" class="external-link">biplotEZ::reflect()</a></code>,
+with each entry corresponding to a level in <code>align.time</code>.
+Both arguments accept vectors when reflections are needed at multiple
+time levels.</li>
+</ul>
+<p>These reflections are applied after the automatic alignment. With
+<code>auto.align = FALSE</code> the same result as above is obtained
+manually:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot2.html">moveplot2</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
+<span>                hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>, auto.align <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                align.time <span class="op">=</span> <span class="st">"1950"</span>, reflect <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span></span></code></pre></div>
+<p>Neither the automatic nor the manual alignment can correct time
+slices whose dimensions swap order or rotate; <code><a href="../reference/moveplot3.html">moveplot3()</a></code>
+addresses this.</p>
 </div>
 </div>
 <div class="section level2">
@@ -309,10 +334,10 @@ reference.</p>
 <div class="section level4">
 <h4 id="static-faceted-display-1">Static faceted display<a class="anchor" aria-label="anchor" href="#static-faceted-display-1"></a>
 </h4>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot3.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>                hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>, target <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
-<p><img src="moveEZ_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="672"></p>
+<p><img src="moveEZ_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" alt="" width="672"></p>
 <pre><code><span><span class="co">#&gt; Object of class biplot, based on 960 samples and 9 variables.</span></span>
 <span><span class="co">#&gt; 6 numeric variables.</span></span>
 <span><span class="co">#&gt; 3 categorical variables.</span></span></code></pre>
@@ -325,7 +350,7 @@ manual intervention.</p>
 <h3 id="user-supplied-target-target-africa_climate_target">User-supplied target
 (<code>target = Africa_climate_target</code>)<a class="anchor" aria-label="anchor" href="#user-supplied-target-target-africa_climate_target"></a>
 </h3>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"Africa_climate_target"</span><span class="op">)</span></span>
 <span><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span><span class="va">Africa_climate_target</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 120 × 9</span></span></span>
@@ -345,11 +370,11 @@ manual intervention.</p>
 <div class="section level4">
 <h4 id="static-faceted-display-2">Static faceted display<a class="anchor" aria-label="anchor" href="#static-faceted-display-2"></a>
 </h4>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot3.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>                hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                target <span class="op">=</span> <span class="va">Africa_climate_target</span><span class="op">)</span></span></code></pre></div>
-<p><img src="moveEZ_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" alt="" width="672"></p>
+<p><img src="moveEZ_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" alt="" width="672"></p>
 <pre><code><span><span class="co">#&gt; Object of class biplot, based on 960 samples and 9 variables.</span></span>
 <span><span class="co">#&gt; 6 numeric variables.</span></span>
 <span><span class="co">#&gt; 3 categorical variables.</span></span></code></pre>
@@ -359,7 +384,7 @@ exposing the structural differences between 1989 and each decade from
 display, it serves only as the alignment reference. To visualise the
 target configuration separately, pass it to <code><a href="../reference/moveplot.html">moveplot()</a></code>
 directly:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">viz_1989</span> <span class="op">&lt;-</span> <span class="va">Africa_climate_target</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    Target <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"1989"</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">Africa_climate_target</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -371,7 +396,7 @@ directly:</p>
 <span></span>
 <span><span class="va">bp_1989</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot.html">moveplot</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Target"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>                    hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="moveEZ_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" alt="" width="672"></p>
+<p><img src="moveEZ_files/figure-html/unnamed-chunk-14-1.png" class="r-plt" alt="" width="672"></p>
 <pre><code><span><span class="co">#&gt; Object of class biplot, based on 120 samples and 10 variables.</span></span>
 <span><span class="co">#&gt; 6 numeric variables.</span></span>
 <span><span class="co">#&gt; 4 categorical variables.</span></span></code></pre>
@@ -405,16 +430,16 @@ systematic directional shift.</li>
 <li>
 <strong>RMSB</strong> (Root Mean Squared Bias)</li>
 </ul>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="va">bp</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/moveplot3.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>            hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>, target <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/evaluation.html">evaluation</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="moveEZ_files/figure-html/unnamed-chunk-15-1.png" class="r-plt" alt="" width="672"></p>
+<p><img src="moveEZ_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" alt="" width="672"></p>
 <div class="section level3">
 <h3 id="numerical-measures">Numerical measures<a class="anchor" aria-label="anchor" href="#numerical-measures"></a>
 </h3>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span><span class="op">$</span><span class="va">eval.tab</span></span></code></pre></div>
 <table class="table">
 <caption>Measures of comparison</caption>
@@ -497,9 +522,9 @@ systematic directional shift.</li>
 <div class="section level3">
 <h3 id="fit-measures-over-time">Fit measures over time<a class="anchor" aria-label="anchor" href="#fit-measures-over-time"></a>
 </h3>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span><span class="op">$</span><span class="va">fit.plot</span></span></code></pre></div>
-<p><img src="moveEZ_files/figure-html/unnamed-chunk-17-1.png" class="r-plt" alt="" width="672"></p>
+<p><img src="moveEZ_files/figure-html/unnamed-chunk-18-1.png" class="r-plt" alt="" width="672"></p>
 <p>The biplot for 2000 shows a notably lower CC and higher PS relative
 to other years, indicating a structural departure from the consensus
 configuration that warrants closer investigation.</p>
@@ -507,9 +532,9 @@ configuration that warrants closer investigation.</p>
 <div class="section level3">
 <h3 id="bias-measures-over-time">Bias measures over time<a class="anchor" aria-label="anchor" href="#bias-measures-over-time"></a>
 </h3>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span><span class="op">$</span><span class="va">bias.plot</span></span></code></pre></div>
-<p><img src="moveEZ_files/figure-html/unnamed-chunk-18-1.png" class="r-plt" alt="" width="672"></p>
+<p><img src="moveEZ_files/figure-html/unnamed-chunk-19-1.png" class="r-plt" alt="" width="672"></p>
 <p>The initial bias at 1950 is high but decreases and stabilises from
 1960, with an increase in AMB and RMSB at 2000 consistent with the fit
 measures. The MB remains close to zero throughout, confirming no
@@ -527,10 +552,10 @@ faceted display in which each panel shows a single group rather than a
 single time level. This can be useful when group-level patterns are
 difficult to distinguish in the standard faceted display, where all
 groups appear together in each panel.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot.html">moveplot</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Region"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>               hulls <span class="op">=</span> <span class="cn">FALSE</span>, move <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="moveEZ_files/figure-html/unnamed-chunk-19-1.png" class="r-plt" alt="" width="672"></p>
+<p><img src="moveEZ_files/figure-html/unnamed-chunk-20-1.png" class="r-plt" alt="" width="672"></p>
 <pre><code><span><span class="co">#&gt; Object of class biplot, based on 960 samples and 9 variables.</span></span>
 <span><span class="co">#&gt; 6 numeric variables.</span></span>
 <span><span class="co">#&gt; 3 categorical variables.</span></span></code></pre>
@@ -556,7 +581,7 @@ animation.</p>
 <div class="section level4">
 <h4 id="custom-colour-palette-and-axis-label-size">Custom colour palette and axis label size<a class="anchor" aria-label="anchor" href="#custom-colour-palette-and-axis-label-size"></a>
 </h4>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp_custom</span> <span class="op">&lt;-</span> <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/biplot.html" class="external-link">biplot</a></span><span class="op">(</span><span class="va">Africa_climate</span>, scaled <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                               group.aes <span class="op">=</span> <span class="va">Africa_climate</span><span class="op">$</span><span class="va">Region</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/PCA.html" class="external-link">PCA</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -565,7 +590,7 @@ animation.</p>
 <span></span>
 <span><span class="va">bp_custom</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot.html">moveplot</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>                      hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="moveEZ_files/figure-html/unnamed-chunk-20-1.png" class="r-plt" alt="" width="672"></p>
+<p><img src="moveEZ_files/figure-html/unnamed-chunk-21-1.png" class="r-plt" alt="" width="672"></p>
 <pre><code><span><span class="co">#&gt; Object of class biplot, based on 960 samples and 9 variables.</span></span>
 <span><span class="co">#&gt; 6 numeric variables.</span></span>
 <span><span class="co">#&gt; 3 categorical variables.</span></span></code></pre>
@@ -573,7 +598,7 @@ animation.</p>
 <div class="section level4">
 <h4 id="custom-plotting-characters-and-opacity">Custom plotting characters and opacity<a class="anchor" aria-label="anchor" href="#custom-plotting-characters-and-opacity"></a>
 </h4>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp_pch</span> <span class="op">&lt;-</span> <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/biplot.html" class="external-link">biplot</a></span><span class="op">(</span><span class="va">Africa_climate</span>, scaled <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                            group.aes <span class="op">=</span> <span class="va">Africa_climate</span><span class="op">$</span><span class="va">Region</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/PCA.html" class="external-link">PCA</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -581,7 +606,7 @@ animation.</p>
 <span></span>
 <span><span class="va">bp_pch</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot.html">moveplot</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>                   hulls <span class="op">=</span> <span class="cn">FALSE</span>, move <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="moveEZ_files/figure-html/unnamed-chunk-21-1.png" class="r-plt" alt="" width="672"></p>
+<p><img src="moveEZ_files/figure-html/unnamed-chunk-22-1.png" class="r-plt" alt="" width="672"></p>
 <pre><code><span><span class="co">#&gt; Object of class biplot, based on 960 samples and 9 variables.</span></span>
 <span><span class="co">#&gt; 6 numeric variables.</span></span>
 <span><span class="co">#&gt; 3 categorical variables.</span></span></code></pre>

@@ -2,6 +2,17 @@
 
 ## moveEZ (development version)
 
+[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
+gains `auto.align` (default `TRUE`), which aligns the sign of the
+dimensions of every time slice to those of the biplot of all the data,
+so that slices are no longer reflections of one another because of the
+sign indeterminacy of the eigenvectors. This changes the default output
+of
+[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md);
+use `auto.align = FALSE` for the previous behaviour. `align.time` and
+`reflect` are kept as a manual override and are applied after the
+automatic alignment.
+
 [`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md),
 [`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
 and

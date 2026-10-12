@@ -12,6 +12,7 @@ moveplot2(
   move = TRUE,
   hulls = TRUE,
   scale.var = 5,
+  auto.align = TRUE,
   align.time = NA,
   reflect = NA
 )
@@ -53,10 +54,19 @@ moveplot2(
 
   scaling the vectors representing the variables
 
+- auto.align:
+
+  whether to align the sign of the biplot axes of every time slice to
+  the biplot of all the data (`bp`) automatically. Default (TRUE). See
+  Details.
+
 - align.time:
 
   a vector specifying the levels of time.var for which the biplots
-  should be reflected. Default (NA) reflects none.
+  should be reflected, to override `auto.align` where it does not give
+  the desired orientation. The reflections are applied after
+  `auto.align`; set `auto.align = FALSE` to reflect the unaligned
+  biplots instead. Default (NA) reflects none.
 
 - reflect:
 
@@ -88,6 +98,23 @@ a number (e.g. an integer year) has to be converted with
 [`biplot()`](https://rdrr.io/pkg/biplotEZ/man/biplot.html) is called,
 not afterwards.
 
+The eigenvectors (PCA) or canonical vectors (CVA) of each time slice are
+only determined up to sign, so the biplot of one time slice can be a
+reflection of that of the next, which makes comparisons over time
+meaningless. With `auto.align = TRUE` each of the two dimensions of a
+time slice is reflected whenever its inner product with the
+corresponding dimension of the biplot of all the data in `bp` is
+negative. Reflections do not change the fit measures.
+
+The sign of a dimension is decided by a small inner product when that
+dimension is nearly orthogonal to the corresponding dimension of `bp`,
+and the automatic alignment may then not give the desired orientation.
+`align.time` and `reflect` override it for the given levels of
+`time.var`. Time slices whose dimensions swap order or rotate cannot be
+aligned by reflections, see
+[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md)
+instead.
+
 Missing values are handled by
 [`biplot()`](https://rdrr.io/pkg/biplotEZ/man/biplot.html), which
 removes every row containing an `NA` in any column (including `time.var`
@@ -105,6 +132,13 @@ bp <- bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, mov
 
 # Extracting measures of fit for PCA
 bp <- bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+
+
+# Manual alignment instead of auto.align, reflect the x-axis at 1950
+# \donttest{
+bp2 <- biplot(Africa_climate, scaled = TRUE) |> PCA() |>
+  moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE,
+            auto.align = FALSE, align.time = "1950", reflect = "x")# }
 
 bp$quality
 #> 
