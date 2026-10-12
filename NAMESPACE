@@ -10,25 +10,29 @@ export(moveplot)
 export(moveplot2)
 export(moveplot3)
 export(samples)
-importFrom(biplotEZ,CVA)
-importFrom(biplotEZ,PCA)
-importFrom(biplotEZ,axes)
-importFrom(biplotEZ,biplot)
-importFrom(biplotEZ,fit.measures)
-importFrom(biplotEZ,samples)
-importFrom(ggplot2,aes)
-importFrom(ggplot2,arrow)
-importFrom(ggplot2,element_blank)
-importFrom(ggplot2,facet_wrap)
-importFrom(ggplot2,geom_path)
-importFrom(ggplot2,geom_point)
-importFrom(ggplot2,geom_polygon)
-importFrom(ggplot2,geom_segment)
-importFrom(ggplot2,geom_text)
-importFrom(ggplot2,ggplot)
-importFrom(ggplot2,labs)
-importFrom(ggplot2,theme)
-importFrom(ggplot2,theme_classic)
-importFrom(ggplot2,unit)
-importFrom(ggplot2,xlim)
-importFrom(ggplot2,ylim)
+importFrom(biplotEZ,
+  CVA,
+  PCA,
+  axes,
+  biplot,
+  fit.measures,
+  samples
+)
+importFrom(ggplot2,
+  aes,
+  arrow,
+  element_blank,
+  facet_wrap,
+  geom_path,
+  geom_point,
+  geom_polygon,
+  geom_segment,
+  geom_text,
+  ggplot,
+  labs,
+  theme,
+  theme_classic,
+  unit,
+  xlim,
+  ylim
+)

@@ -40,7 +40,7 @@ methodological complexity:
 | Function | PCA computed | Variable vectors | Alignment |
 |---|---|---|---|
 | `moveplot()` | Once, on full dataset | Fixed | Not required |
-| `moveplot2()` | Per time slice | Dynamic | Manual (`align.time`, `reflect`) |
+| `moveplot2()` | Per time slice | Dynamic | Sign alignment (automatic, manual override) |
 | `moveplot3()` | Per time slice | Dynamic | Automated (GPA) |
 
 All three functions support animated output (`move = TRUE`) and static

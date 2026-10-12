@@ -1,7 +1,7 @@
 climate <- climate_sub()
 years <- levels(climate$Year)
 bp <- biplot(climate, scaled = TRUE) |> PCA()
-out <- no_plot(moveplot2(bp, time.var = "Year", group.var = "Region", move = FALSE))
+out <- no_plot(moveplot2(bp, time.var = "Year", group.var = "Region", move = FALSE, auto.align = FALSE))
 
 test_that("moveplot2 fits a separate biplot to every time slice", {
   Vr <- layer_df(out$plot, "GeomSegment")
@@ -31,7 +31,7 @@ test_that("fit measures are reported per time slice", {
 
 test_that("CVA biplots report the within class fit measures", {
   cva <- biplot(climate, scaled = TRUE) |> CVA(classes = climate$Region)
-  out_cva <- no_plot(moveplot2(cva, time.var = "Year", group.var = "Region", move = FALSE))
+  out_cva <- no_plot(moveplot2(cva, time.var = "Year", group.var = "Region", move = FALSE, auto.align = FALSE))
   expect_s3_class(out_cva$within.class.axis.predictivity, "knitr_kable")
   expect_named(out_cva$within.class.sample.predictivity, years)
 
@@ -44,7 +44,7 @@ test_that("CVA biplots report the within class fit measures", {
 
 test_that("reflect only reflects the time slices in align.time", {
   refl <- no_plot(moveplot2(bp, time.var = "Year", group.var = "Region", move = FALSE,
-                            align.time = years[1], reflect = "xy"))
+                            auto.align = FALSE, align.time = years[1], reflect = "xy"))
   Vr <- layer_df(out$plot, "GeomSegment")
   Vr_refl <- layer_df(refl$plot, "GeomSegment")
   first <- Vr$Year == years[1]
@@ -65,12 +65,12 @@ test_that("reflect follows biplotEZ::reflect(), x reverses the x-axis and y the 
   Vr <- layer_df(out$plot, "GeomSegment")
   first <- Vr$Year == years[1]
   refl_x <- layer_df(no_plot(moveplot2(bp, time.var = "Year", group.var = "Region", move = FALSE,
-                                       align.time = years[1], reflect = "x"))$plot, "GeomSegment")
+                                       auto.align = FALSE, align.time = years[1], reflect = "x"))$plot, "GeomSegment")
   expect_equal(refl_x$V1[first], -Vr$V1[first])
   expect_equal(refl_x$V2[first], Vr$V2[first])
 
   refl_y <- layer_df(no_plot(moveplot2(bp, time.var = "Year", group.var = "Region", move = FALSE,
-                                       align.time = years[1], reflect = "y"))$plot, "GeomSegment")
+                                       auto.align = FALSE, align.time = years[1], reflect = "y"))$plot, "GeomSegment")
   expect_equal(refl_y$V1[first], Vr$V1[first])
   expect_equal(refl_y$V2[first], -Vr$V2[first])
 
@@ -82,12 +82,61 @@ test_that("reflect follows biplotEZ::reflect(), x reverses the x-axis and y the 
 test_that("every level in align.time is reflected, in the order supplied", {
   Vr <- layer_df(out$plot, "GeomSegment")
   refl <- layer_df(no_plot(moveplot2(bp, time.var = "Year", group.var = "Region", move = FALSE,
-                                     align.time = years[c(3, 1)], reflect = c("y", "x")))$plot, "GeomSegment")
+                                     auto.align = FALSE, align.time = years[c(3, 1)], reflect = c("y", "x")))$plot, "GeomSegment")
   first <- Vr$Year == years[1]
   third <- Vr$Year == years[3]
   expect_equal(refl[first, c("V1", "V2")], transform(Vr[first, c("V1", "V2")], V1 = -V1), ignore_attr = TRUE)
   expect_equal(refl[third, c("V1", "V2")], transform(Vr[third, c("V1", "V2")], V2 = -V2), ignore_attr = TRUE)
   expect_equal(refl[!first & !third, ], Vr[!first & !third, ])
+})
+
+test_that("auto.align points every time slice in the direction of the biplot of all the data", {
+  for(cls in c("PCA", "CVA"))
+  {
+    bp_all <- if(cls == "PCA") bp else biplot(climate, scaled = TRUE) |> CVA(classes = climate$Region)
+    V_ref <- if(cls == "PCA") bp_all$Vr else bp_all$Mr
+    raw <- layer_df(no_plot(moveplot2(bp_all, time.var = "Year", group.var = "Region", move = FALSE,
+                                      auto.align = FALSE))$plot, "GeomSegment")
+    aligned <- layer_df(no_plot(moveplot2(bp_all, time.var = "Year", group.var = "Region",
+                                          move = FALSE))$plot, "GeomSegment")
+    for(y in years)
+    {
+      V_raw <- as.matrix(raw[raw$Year == y, c("V1", "V2")])
+      V_aligned <- as.matrix(aligned[aligned$Year == y, c("V1", "V2")])
+      expect_true(all(colSums(V_aligned * V_ref) >= 0))
+      # only reflections, each dimension is either kept or reversed
+      expect_equal(abs(V_aligned), abs(V_raw), ignore_attr = TRUE)
+      expect_true(all(abs(colSums(V_aligned * V_raw)) == colSums(V_raw^2)))
+    }
+  }
+})
+
+test_that("auto.align leaves the fit measures unchanged", {
+  aligned <- no_plot(moveplot2(bp, time.var = "Year", group.var = "Region", move = FALSE))
+  expect_equal(aligned$quality, out$quality)
+  expect_equal(aligned$axis.predictivity, out$axis.predictivity)
+})
+
+test_that("align.time and reflect are applied on top of auto.align", {
+  aligned <- layer_df(no_plot(moveplot2(bp, time.var = "Year", group.var = "Region",
+                                        move = FALSE))$plot, "GeomSegment")
+  refl <- layer_df(no_plot(moveplot2(bp, time.var = "Year", group.var = "Region", move = FALSE,
+                                     align.time = years[2], reflect = "xy"))$plot, "GeomSegment")
+  second <- aligned$Year == years[2]
+  expect_equal(refl$V1[second], -aligned$V1[second])
+  expect_equal(refl$V2[second], -aligned$V2[second])
+  expect_equal(refl[!second, ], aligned[!second, ])
+})
+
+test_that("auto.align reproduces the manual alignment of Africa_climate at 1950", {
+  data(Africa_climate)
+  bp_full <- biplot(Africa_climate, scaled = TRUE) |> PCA()
+  auto <- layer_df(no_plot(moveplot2(bp_full, time.var = "Year", group.var = "Region",
+                                     move = FALSE))$plot, "GeomSegment")
+  manual <- layer_df(no_plot(moveplot2(bp_full, time.var = "Year", group.var = "Region", move = FALSE,
+                                       auto.align = FALSE, align.time = "1950", reflect = "x"))$plot,
+                     "GeomSegment")
+  expect_equal(auto, manual)
 })
 
 test_that("unsuitable align.time and reflect stop with an informative error", {

@@ -328,7 +328,11 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 #'   non-collinear observations per group per level of \code{time.var}; groups with fewer are
 #'   displayed as points instead.
 #' @param scale.var scaling the vectors representing the variables
-#' @param align.time a vector specifying the levels of time.var for which the biplots should be reflected. Default (NA) reflects none.
+#' @param auto.align whether to align the sign of the biplot axes of every time slice to the biplot of all the data
+#'   (\code{bp}) automatically. Default (TRUE). See Details.
+#' @param align.time a vector specifying the levels of time.var for which the biplots should be reflected, to override
+#'   \code{auto.align} where it does not give the desired orientation. The reflections are applied after \code{auto.align};
+#'   set \code{auto.align = FALSE} to reflect the unaligned biplots instead. Default (NA) reflects none.
 #' @param reflect a character vector, of the same length as align.time, specifying the reflection to apply at each corresponding
 #'   time point in align.time. One of "x" to reverse the direction of the x-axis (horizontal flip), "y" to reverse the direction
 #'   of the y-axis (vertical flip) and "xy" for both. This follows \code{reflect.axis} of \code{biplotEZ::reflect()}. Default (NA)
@@ -338,6 +342,18 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 #' \code{time.var} and \code{group.var} must both be factors. \code{biplot()} treats every numeric
 #' column as a variable of the biplot, so a time variable stored as a number (e.g. an integer year)
 #' has to be converted with \code{factor()} before \code{biplot()} is called, not afterwards.
+#'
+#' The eigenvectors (PCA) or canonical vectors (CVA) of each time slice are only determined up to sign, so
+#' the biplot of one time slice can be a reflection of that of the next, which makes comparisons over time
+#' meaningless. With \code{auto.align = TRUE} each of the two dimensions of a time slice is reflected
+#' whenever its inner product with the corresponding dimension of the biplot of all the data in \code{bp}
+#' is negative. Reflections do not change the fit measures.
+#'
+#' The sign of a dimension is decided by a small inner product when that dimension is nearly orthogonal to
+#' the corresponding dimension of \code{bp}, and the automatic alignment may then not give the desired
+#' orientation. \code{align.time} and \code{reflect} override it for the given levels of \code{time.var}.
+#' Time slices whose dimensions swap order or rotate cannot be aligned by reflections, see
+#' \code{\link{moveplot3}()} instead.
 #'
 #' Missing values are handled by \code{biplot()}, which removes every row containing an \code{NA}
 #' in any column (including \code{time.var} and \code{group.var}) with a warning. The plot is
@@ -358,6 +374,12 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 #'
 #' # Extracting measures of fit for PCA
 #' bp <- bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+#'
+#' # Manual alignment instead of auto.align, reflect the x-axis at 1950
+#' \donttest{
+#' bp2 <- biplot(Africa_climate, scaled = TRUE) |> PCA() |>
+#'   moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE,
+#'             auto.align = FALSE, align.time = "1950", reflect = "x")}
 #' bp$quality
 #' bp$axis.predictivity
 #'
@@ -369,7 +391,7 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 #' bp$within.class.axis.predictivity
 #' bp$within.class.sample.predictivity
 moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
-                      scale.var = 5, align.time = NA, reflect = NA)
+                      scale.var = 5, auto.align = TRUE, align.time = NA, reflect = NA)
 {
 
   bp <- check_vars_moveEZ(bp, time.var, group.var)
@@ -417,6 +439,9 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
       stop("reflect must be one of \"x\", \"y\" or \"xy\" for each level in align.time.")
   }
   align_levels <- match(align.time, iter_levels)
+
+  # Reference for auto.align: the biplot of all the data
+  V_ref <- if(inherits(bp, "CVA")) bp$Mr else bp$Vr
 
   # Samples
 
@@ -470,16 +495,19 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
       temp_Zpredix[[i]] <- bp_list[[i]]$within.class.sample.predictivity
     }
 
-    if (i %in% align_levels) {
-      reflect.mat <- diag(2)
-      if (reflect[which(align_levels == i)] == "x") reflect.mat[1, 1] <- -1
-      if (reflect[which(align_levels == i)] == "y") reflect.mat[2, 2] <- -1
-      if (reflect[which(align_levels == i)] == "xy") reflect.mat[1:2, 1:2] <- diag(-1, 2)
+    # Sign indeterminacy: reflect the dimensions pointing away from the reference
+    reflect.mat <- diag(2)
+    if (auto.align) diag(reflect.mat) <- ifelse(colSums(bp_list[[i]]$Vr * V_ref[, 1:2]) < 0, -1, 1)
 
-      bp_list[[i]]$Z <- bp_list[[i]]$Z %*% reflect.mat
-      bp_list[[i]]$Vr <- bp_list[[i]]$Vr %*% reflect.mat
-      if(class(bp)[2] == "CVA") bp_list[[i]]$Zmeans <- bp_list[[i]]$Zmeans %*% reflect.mat
+    if (i %in% align_levels) {
+      if (reflect[which(align_levels == i)] %in% c("x", "xy")) reflect.mat[1, 1] <- -reflect.mat[1, 1]
+      if (reflect[which(align_levels == i)] %in% c("y", "xy")) reflect.mat[2, 2] <- -reflect.mat[2, 2]
     }
+
+    bp_list[[i]]$Z <- bp_list[[i]]$Z %*% reflect.mat
+    bp_list[[i]]$Vr <- bp_list[[i]]$Vr %*% reflect.mat
+    bp_list[[i]]$ax.one.unit <- bp_list[[i]]$ax.one.unit %*% reflect.mat
+    if(class(bp)[2] == "CVA") bp_list[[i]]$Zmeans <- bp_list[[i]]$Zmeans %*% reflect.mat
 
     # Fit measures
     names(temp_qual) <- levels(bp$raw.X[[tvi]])

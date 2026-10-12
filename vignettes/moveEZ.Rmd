@@ -43,8 +43,9 @@ complexity:
 - `moveplot()`: animates sample positions against fixed variable vectors,
   computed once on the full dataset.
 - `moveplot2()`: animates both sample positions and variable vectors,
-  computed separately per time slice, with optional manual alignment.
-- `moveplot3()`: extends `moveplot2()` with automated alignment via
+  computed separately per time slice, with the axis directions of each time
+  slice aligned automatically to those of the full dataset.
+- `moveplot3()`: extends `moveplot2()` with full alignment via
   Generalised Procrustes Analysis (GPA) [@Proc].
 
 All three functions support both animated output (`move = TRUE`) and static
@@ -155,20 +156,19 @@ determined only up to a sign change, meaning that consecutive time slices
 may produce biplots that are reflections of one another. This sign
 indeterminacy is mathematically inconsequential but visually disruptive.
 
-Two additional arguments address this:
-
-- `align.time`: a vector of time levels at which alignment should be applied.
-- `reflect`: specifies the axis whose direction is reversed — `"x"`
-  (horizontal flip), `"y"` (vertical flip), or `"xy"` (both) — as in
-  `biplotEZ::reflect()`, with each entry corresponding to a level in
-  `align.time`. Both arguments accept vectors when alignment is needed at
-  multiple time levels.
+By default (`auto.align = TRUE`), `moveplot2()` resolves this automatically.
+Each of the two dimensions of a time slice is compared with the corresponding
+dimension of the biplot of the full dataset, `bp`, and reflected whenever the
+two point in opposite directions (their inner product is negative). Reflections
+leave the fit measures unchanged.
 
 ## Static faceted display (unaligned)
 
+To see the problem, switch the automatic alignment off:
+
 ```{r, warning=FALSE}
 bp1 <- bp |> moveplot2(time.var = "Year", group.var = "Region",
-                hulls = TRUE, move = FALSE)
+                hulls = TRUE, move = FALSE, auto.align = FALSE)
 ```
 
 Note the discontinuity between 1950 and 1960 - the variable vectors and
@@ -179,18 +179,42 @@ x-axis is reversed. This is a sign indeterminacy artifact, not a genuine structu
 
 ```{r, warning=FALSE}
 bp2 <- bp |> moveplot2(time.var = "Year", group.var = "Region",
-                hulls = TRUE, move = FALSE,
+                hulls = TRUE, move = FALSE)
+```
+
+The x-axis at 1950 is reversed automatically, restoring visual continuity
+across the sequence of biplots.
+
+## Manual alignment
+
+The automatic alignment only decides the sign of each dimension. It can fall
+short when a dimension of a time slice is nearly orthogonal to that of the
+full dataset, so that the sign is decided by a small inner product, or when a
+different reference is preferred. Two further arguments override it:
+
+- `align.time`: a vector of time levels at which a reflection should be applied.
+- `reflect`: specifies the axis whose direction is reversed — `"x"`
+  (horizontal flip), `"y"` (vertical flip), or `"xy"` (both) — as in
+  `biplotEZ::reflect()`, with each entry corresponding to a level in
+  `align.time`. Both arguments accept vectors when reflections are needed at
+  multiple time levels.
+
+These reflections are applied after the automatic alignment. With
+`auto.align = FALSE` the same result as above is obtained manually:
+
+```{r, eval=FALSE}
+bp |> moveplot2(time.var = "Year", group.var = "Region",
+                hulls = TRUE, move = FALSE, auto.align = FALSE,
                 align.time = "1950", reflect = "x")
 ```
 
-Reversing the x-axis at 1950 with `reflect = "x"` restores visual continuity
-across the sequence of biplots.
+Neither the automatic nor the manual alignment can correct time slices whose
+dimensions swap order or rotate; `moveplot3()` addresses this.
 
 
 ```{r, echo=FALSE, eval=FALSE, warning=FALSE, message=FALSE}
 anim2 <- bp |> moveplot2(time.var = "Year", group.var = "Region",
-                         hulls = TRUE, move = TRUE,
-                         align.time = "1950", reflect = "x")
+                         hulls = TRUE, move = TRUE)
 anim_rendered <- animate(anim2, renderer = gifski_renderer(),
                          nframes = 100, fps = 10,
                          width = 800, height = 600, res = 150)

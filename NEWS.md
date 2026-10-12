@@ -1,5 +1,7 @@
 ## moveEZ (development version)
 
+`moveplot2()` gains `auto.align` (default `TRUE`), which aligns the sign of the dimensions of every time slice to those of the biplot of all the data, so that slices are no longer reflections of one another because of the sign indeterminacy of the eigenvectors. This changes the default output of `moveplot2()`; use `auto.align = FALSE` for the previous behaviour. `align.time` and `reflect` are kept as a manual override and are applied after the automatic alignment.
+
 `moveplot()`, `moveplot2()` and `moveplot3()` now validate `time.var` and `group.var` before plotting. Both must name factor columns of the data supplied to `biplot()`; a numeric (e.g. integer year), character or misspelt column now stops with an informative error explaining how to fix it, instead of failing downstream. Levels of `time.var` without observations are dropped, which previously caused `moveplot2()` and `moveplot3()` to stop.
 
 The handling of missing values is now documented: `biplot()` removes rows containing `NA` with a warning. `moveplot3()` reports when this is the reason for unequal numbers of observations per time level, and stops if `target` contains missing values.
