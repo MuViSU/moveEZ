@@ -54,6 +54,7 @@ biplotEZ::CVA
 #' @returns
 #' \item{bp}{Returns the elements of the biplot object \code{bp} from \code{biplotEZ}.}
 #' \item{plot}{An animated or a facet of biplots based on the dynamic frame.}
+#' \item{time.var, group.var}{The names of the time and group variables, used by \code{\link{evaluation}()}.}
 #'
 #' @export
 #'
@@ -303,6 +304,11 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
           axis.title.y = element_blank(),
           plot.title = ggplot2::element_text(size=30, face ="bold"),
           legend.position = if (length(group_levels) == 1) "none" else "right")
+
+  # time.var and group.var are kept for evaluation()
+  bp$time.var <- time.var
+  bp$group.var <- group.var
+  if(!inherits(bp, "moveplot")) class(bp) <- append(class(bp), "moveplot")
 
   if(move==TRUE)
     print(gganimate::animate(bp$plot, duration = 15, fps = 10, end_pause = 20)) else

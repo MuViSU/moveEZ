@@ -44,6 +44,7 @@ displayed as points instead.}
 \value{
 \item{bp}{Returns the elements of the biplot object \code{bp} from \code{biplotEZ}.}
 \item{plot}{An animated or a facet of biplots based on the dynamic frame.}
+\item{time.var, group.var}{The names of the time and group variables, used by \code{\link{evaluation}()}.}
 }
 \description{
 Create animated biplot on samples in a biplot
