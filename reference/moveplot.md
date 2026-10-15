@@ -79,6 +79,11 @@ moveplot(
 
   An animated or a facet of biplots based on the dynamic frame.
 
+- time.var, group.var:
+
+  The names of the time and group variables, used by
+  [`evaluation()`](https://muvisu.github.io/moveEZ/reference/evaluation.md).
+
 ## Details
 
 `time.var` and `group.var` must both be factors.

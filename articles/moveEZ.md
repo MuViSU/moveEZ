@@ -139,6 +139,97 @@ relative to the fixed variable vectors across decades. Regions that move
 in the direction of a variable vector are increasing on that variable
 over time; regions moving against the vector are decreasing.
 
+### Is a fixed frame adequate?
+
+[`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md)
+assumes that the variance–covariance structure of the data is stable
+over time, so that the variable vectors of the biplot of all the data
+represent every time slice. Applying
+[`evaluation()`](https://muvisu.github.io/moveEZ/reference/evaluation.md)
+to the output of
+[`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md)
+checks this assumption. A biplot is fitted to each time slice and
+compared with the biplot of all the data through three quantities:
+
+- the proportion of variance explained by the first dimension,
+- the largest principal angle between the two-dimensional subspace of
+  the time slice and that of the biplot of all the data (0 degrees means
+  the time slice spans the same plane),
+- the loadings of the variables on the first dimension. Since
+  eigenvectors are determined only up to sign, the dimensions of each
+  time slice are first reflected to point in the same direction as those
+  of the biplot of all the data.
+
+``` r
+
+fixed <- bp |>
+  moveplot(time.var = "Year", group.var = "Region",
+           hulls = TRUE, move = FALSE) |>
+  evaluation()
+```
+
+![](moveEZ_files/figure-html/unnamed-chunk-6-1.png)
+
+``` r
+
+fixed$var.plot
+```
+
+![](moveEZ_files/figure-html/unnamed-chunk-7-1.png)
+
+``` r
+
+fixed$angle.plot
+```
+
+![](moveEZ_files/figure-html/unnamed-chunk-7-2.png)
+
+``` r
+
+fixed$loadings.plot
+```
+
+![](moveEZ_files/figure-html/unnamed-chunk-7-3.png)
+
+A Spearman rank correlation between the order of the time levels and
+each quantity tests for a monotone drift over time:
+
+``` r
+
+fixed$drift.tab
+```
+
+| Quantity       |  rho   |   p   | sig |
+|:---------------|:------:|:-----:|:---:|
+| pc1_var        | -0.738 | 0.046 | \*  |
+| angle_deg      | 0.119  | 0.793 | \-  |
+| load1_AccPrec  | 0.405  | 0.327 | \-  |
+| load1_DailyEva | 0.190  | 0.665 | \-  |
+| load1_Temp     | -0.238 | 0.582 | \-  |
+| load1_SoilMois | 0.524  | 0.197 | \-  |
+| load1_SPI6     | -0.524 | 0.197 | \-  |
+| load1_wind     | -0.071 | 0.882 | \-  |
+
+Spearman drift test {.table}
+
+A p-value of 0.05 or more fails to reject zero correlation, i.e. there
+is no evidence that the structure changes over time and the fixed frame
+of [`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md)
+is adequate. A p-value below 0.05 (marked `*`) indicates a drift, and a
+biplot should be constructed for each time slice with
+[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
+or
+[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md).
+The per-slice values are available in `fixed$structure`.
+
+For `Africa_climate`, the proportion of variance explained by the first
+dimension decreases significantly over the decades. The test only
+detects monotone trends, so the plots should be inspected as well: the
+angle with the biplot of all the data reaches more than 45 degrees in
+1950, and the loading of SPI6 changes sign over time without a monotone
+trend. Together these indicate that the variable vectors should be
+allowed to change over time.
+
 ## Dynamic Frame: `moveplot2()`
 
 [`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
@@ -169,7 +260,7 @@ bp1 <- bp |> moveplot2(time.var = "Year", group.var = "Region",
                 hulls = TRUE, move = FALSE, auto.align = FALSE)
 ```
 
-![](moveEZ_files/figure-html/unnamed-chunk-6-1.png)
+![](moveEZ_files/figure-html/unnamed-chunk-9-1.png)
 
 Note the discontinuity between 1950 and 1960 - the variable vectors and
 sample configuration are flipped horizontally, i.e. the direction of the
@@ -184,7 +275,7 @@ bp2 <- bp |> moveplot2(time.var = "Year", group.var = "Region",
                 hulls = TRUE, move = FALSE)
 ```
 
-![](moveEZ_files/figure-html/unnamed-chunk-7-1.png)
+![](moveEZ_files/figure-html/unnamed-chunk-10-1.png)
 
 The x-axis at 1950 is reversed automatically, restoring visual
 continuity across the sequence of biplots.
@@ -253,7 +344,7 @@ bp |> moveplot3(time.var = "Year", group.var = "Region",
                 hulls = TRUE, move = FALSE, target = NULL)
 ```
 
-![](moveEZ_files/figure-html/unnamed-chunk-10-1.png)
+![](moveEZ_files/figure-html/unnamed-chunk-13-1.png)
 
     #> Object of class biplot, based on 960 samples and 9 variables.
     #> 6 numeric variables.
@@ -294,7 +385,7 @@ bp |> moveplot3(time.var = "Year", group.var = "Region",
                 target = Africa_climate_target)
 ```
 
-![](moveEZ_files/figure-html/unnamed-chunk-13-1.png)
+![](moveEZ_files/figure-html/unnamed-chunk-16-1.png)
 
     #> Object of class biplot, based on 960 samples and 9 variables.
     #> 6 numeric variables.
@@ -323,13 +414,20 @@ bp_1989 |> moveplot(time.var = "Target", group.var = "Region",
                     hulls = TRUE, move = FALSE)
 ```
 
-![](moveEZ_files/figure-html/unnamed-chunk-14-1.png)
+![](moveEZ_files/figure-html/unnamed-chunk-17-1.png)
 
     #> Object of class biplot, based on 120 samples and 10 variables.
     #> 6 numeric variables.
     #> 4 categorical variables.
 
 ## Evaluation
+
+Whether a biplot should be constructed for each time slice at all is
+evaluated by applying
+[`evaluation()`](https://muvisu.github.io/moveEZ/reference/evaluation.md)
+to
+[`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md),
+see [Is a fixed frame adequate?](#is-a-fixed-frame-adequate).
 
 The
 [`evaluation()`](https://muvisu.github.io/moveEZ/reference/evaluation.md)
@@ -360,7 +458,7 @@ results <- bp |>
   evaluation()
 ```
 
-![](moveEZ_files/figure-html/unnamed-chunk-16-1.png)
+![](moveEZ_files/figure-html/unnamed-chunk-19-1.png)
 
 ### Numerical measures
 
@@ -389,7 +487,7 @@ Measures of comparison {.table}
 results$fit.plot
 ```
 
-![](moveEZ_files/figure-html/unnamed-chunk-18-1.png)
+![](moveEZ_files/figure-html/unnamed-chunk-21-1.png)
 
 The biplot for 2000 shows a notably lower CC and higher PS relative to
 other years, indicating a structural departure from the consensus
@@ -402,7 +500,7 @@ configuration that warrants closer investigation.
 results$bias.plot
 ```
 
-![](moveEZ_files/figure-html/unnamed-chunk-19-1.png)
+![](moveEZ_files/figure-html/unnamed-chunk-22-1.png)
 
 The initial bias at 1950 is high but decreases and stabilises from 1960,
 with an increase in AMB and RMSB at 2000 consistent with the fit
@@ -425,7 +523,7 @@ bp |> moveplot(time.var = "Region", group.var = "Region",
                hulls = FALSE, move = FALSE)
 ```
 
-![](moveEZ_files/figure-html/unnamed-chunk-20-1.png)
+![](moveEZ_files/figure-html/unnamed-chunk-23-1.png)
 
     #> Object of class biplot, based on 960 samples and 9 variables.
     #> 6 numeric variables.
@@ -463,7 +561,7 @@ bp_custom |> moveplot(time.var = "Year", group.var = "Region",
                       hulls = TRUE, move = FALSE)
 ```
 
-![](moveEZ_files/figure-html/unnamed-chunk-21-1.png)
+![](moveEZ_files/figure-html/unnamed-chunk-24-1.png)
 
     #> Object of class biplot, based on 960 samples and 9 variables.
     #> 6 numeric variables.
@@ -482,7 +580,7 @@ bp_pch |> moveplot(time.var = "Year", group.var = "Region",
                    hulls = FALSE, move = FALSE)
 ```
 
-![](moveEZ_files/figure-html/unnamed-chunk-22-1.png)
+![](moveEZ_files/figure-html/unnamed-chunk-25-1.png)
 
     #> Object of class biplot, based on 960 samples and 9 variables.
     #> 6 numeric variables.
