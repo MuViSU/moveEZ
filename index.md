@@ -39,9 +39,9 @@ methodological complexity:
 
 | Function | PCA computed | Variable vectors | Alignment |
 |----|----|----|----|
-| [`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md) | Once, on full dataset | Fixed | Not required |
-| [`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md) | Per time slice | Dynamic | Sign alignment (automatic, manual override) |
-| [`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md) | Per time slice | Dynamic | Automated (GPA) |
+| [`moveplot()`](https://muvisu.github.io/moveEZ/reference/movefixed.md) | Once, on full dataset | Fixed | Not required |
+| [`moveplot2()`](https://muvisu.github.io/moveEZ/reference/movedynamic.md) | Per time slice | Dynamic | Sign alignment (automatic, manual override) |
+| [`moveplot3()`](https://muvisu.github.io/moveEZ/reference/movegpa.md) | Per time slice | Dynamic | Automated (GPA) |
 
 All three functions support animated output (`move = TRUE`) and static
 faceted output (`move = FALSE`).

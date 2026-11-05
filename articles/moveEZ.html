@@ -72,15 +72,15 @@ levels as a continuous animation.</p>
 methodological complexity:</p>
 <ul>
 <li>
-<code><a href="../reference/moveplot.html">moveplot()</a></code>: animates sample positions against fixed
+<code><a href="../reference/movefixed.html">moveplot()</a></code>: animates sample positions against fixed
 variable vectors, computed once on the full dataset.</li>
 <li>
-<code><a href="../reference/moveplot2.html">moveplot2()</a></code>: animates both sample positions and
+<code><a href="../reference/movedynamic.html">moveplot2()</a></code>: animates both sample positions and
 variable vectors, computed separately per time slice, with the axis
 directions of each time slice aligned automatically to those of the full
 dataset.</li>
 <li>
-<code><a href="../reference/moveplot3.html">moveplot3()</a></code>: extends <code><a href="../reference/moveplot2.html">moveplot2()</a></code> with full
+<code><a href="../reference/movegpa.html">moveplot3()</a></code>: extends <code><a href="../reference/movedynamic.html">moveplot2()</a></code> with full
 alignment via Generalised Procrustes Analysis (GPA) <span class="citation">(Gower and Dijksterhuis 2004)</span>.</li>
 </ul>
 <p>All three functions support both animated output
@@ -176,7 +176,7 @@ each <code>moveplot</code> function via the pipe operator:</p>
 <div class="section level2">
 <h2 id="fixed-variable-frame-moveplot">Fixed Variable Frame: <code>moveplot()</code><a class="anchor" aria-label="anchor" href="#fixed-variable-frame-moveplot"></a>
 </h2>
-<p><code><a href="../reference/moveplot.html">moveplot()</a></code> computes a single PCA decomposition on the
+<p><code><a href="../reference/movefixed.html">moveplot()</a></code> computes a single PCA decomposition on the
 full dataset. The variable vectors remain fixed throughout the
 animation, providing a stable reference frame. Only the sample
 positions, sliced according to the levels of the time variable, are
@@ -214,7 +214,7 @@ vectors to improve visibility.</li>
 <h3 id="static-faceted-display">Static faceted display<a class="anchor" aria-label="anchor" href="#static-faceted-display"></a>
 </h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot.html">moveplot</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/movefixed.html">moveplot</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>               hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="672"></p>
 <pre><code><span><span class="co">#&gt; Object of class biplot, based on 960 samples and 9 variables.</span></span>
@@ -233,10 +233,10 @@ over time; regions moving against the vector are decreasing.</p>
 <div class="section level3">
 <h3 id="is-a-fixed-frame-adequate">Is a fixed frame adequate?<a class="anchor" aria-label="anchor" href="#is-a-fixed-frame-adequate"></a>
 </h3>
-<p><code><a href="../reference/moveplot.html">moveplot()</a></code> assumes that the variance–covariance
+<p><code><a href="../reference/movefixed.html">moveplot()</a></code> assumes that the variance–covariance
 structure of the data is stable over time, so that the variable vectors
 of the biplot of all the data represent every time slice. Applying
-<code><a href="../reference/evaluation.html">evaluation()</a></code> to the output of <code><a href="../reference/moveplot.html">moveplot()</a></code>
+<code><a href="../reference/evaluation.html">evaluation()</a></code> to the output of <code><a href="../reference/movefixed.html">moveplot()</a></code>
 checks this assumption. A biplot is fitted to each time slice and
 compared with the biplot of all the data through three quantities:</p>
 <ul>
@@ -251,7 +251,7 @@ biplot of all the data.</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fixed</span> <span class="op">&lt;-</span> <span class="va">bp</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/moveplot.html">moveplot</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
+<span>  <span class="fu"><a href="../reference/movefixed.html">moveplot</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>           hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/evaluation.html">evaluation</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="672"></p>
@@ -329,10 +329,10 @@ each quantity tests for a monotone drift over time:</p>
 </table>
 <p>A p-value of 0.05 or more fails to reject zero correlation,
 i.e. there is no evidence that the structure changes over time and the
-fixed frame of <code><a href="../reference/moveplot.html">moveplot()</a></code> is adequate. A p-value below 0.05
+fixed frame of <code><a href="../reference/movefixed.html">moveplot()</a></code> is adequate. A p-value below 0.05
 (marked <code>*</code>) indicates a drift, and a biplot should be
-constructed for each time slice with <code><a href="../reference/moveplot2.html">moveplot2()</a></code> or
-<code><a href="../reference/moveplot3.html">moveplot3()</a></code>. The per-slice values are available in
+constructed for each time slice with <code><a href="../reference/movedynamic.html">moveplot2()</a></code> or
+<code><a href="../reference/movegpa.html">moveplot3()</a></code>. The per-slice values are available in
 <code>fixed$structure</code>.</p>
 <p>For <code>Africa_climate</code>, the proportion of variance explained
 by the first dimension decreases significantly over the decades. The
@@ -346,7 +346,7 @@ should be allowed to change over time.</p>
 <div class="section level2">
 <h2 id="dynamic-frame-moveplot2">Dynamic Frame: <code>moveplot2()</code><a class="anchor" aria-label="anchor" href="#dynamic-frame-moveplot2"></a>
 </h2>
-<p><code><a href="../reference/moveplot2.html">moveplot2()</a></code> computes a separate PCA decomposition for
+<p><code><a href="../reference/movedynamic.html">moveplot2()</a></code> computes a separate PCA decomposition for
 each time slice, allowing both sample positions and variable vectors to
 evolve across levels. This provides a more faithful depiction of
 time-varying variance–covariance structures but introduces a practical
@@ -354,7 +354,7 @@ complication: eigenvectors are determined only up to a sign change,
 meaning that consecutive time slices may produce biplots that are
 reflections of one another. This sign indeterminacy is mathematically
 inconsequential but visually disruptive.</p>
-<p>By default (<code>auto.align = TRUE</code>), <code><a href="../reference/moveplot2.html">moveplot2()</a></code>
+<p>By default (<code>auto.align = TRUE</code>), <code><a href="../reference/movedynamic.html">moveplot2()</a></code>
 resolves this automatically. Each of the two dimensions of a time slice
 is compared with the corresponding dimension of the biplot of the full
 dataset, <code>bp</code>, and reflected whenever the two point in
@@ -365,7 +365,7 @@ the fit measures unchanged.</p>
 </h3>
 <p>To see the problem, switch the automatic alignment off:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bp1</span> <span class="op">&lt;-</span> <span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot2.html">moveplot2</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
+<code class="sourceCode R"><span><span class="va">bp1</span> <span class="op">&lt;-</span> <span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/movedynamic.html">moveplot2</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>                hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>, auto.align <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="672"></p>
 <p>Note the discontinuity between 1950 and 1960 - the variable vectors
@@ -377,7 +377,7 @@ genuine structural change.</p>
 <h3 id="static-faceted-display-aligned">Static faceted display (aligned)<a class="anchor" aria-label="anchor" href="#static-faceted-display-aligned"></a>
 </h3>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bp2</span> <span class="op">&lt;-</span> <span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot2.html">moveplot2</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
+<code class="sourceCode R"><span><span class="va">bp2</span> <span class="op">&lt;-</span> <span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/movedynamic.html">moveplot2</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>                hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" alt="" width="672"></p>
 <p>The x-axis at 1950 is reversed automatically, restoring visual
@@ -407,18 +407,18 @@ time levels.</li>
 <code>auto.align = FALSE</code> the same result as above is obtained
 manually:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot2.html">moveplot2</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/movedynamic.html">moveplot2</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>                hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>, auto.align <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                align.time <span class="op">=</span> <span class="st">"1950"</span>, reflect <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span></span></code></pre></div>
 <p>Neither the automatic nor the manual alignment can correct time
-slices whose dimensions swap order or rotate; <code><a href="../reference/moveplot3.html">moveplot3()</a></code>
+slices whose dimensions swap order or rotate; <code><a href="../reference/movegpa.html">moveplot3()</a></code>
 addresses this.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="automated-alignment-moveplot3">Automated Alignment: <code>moveplot3()</code><a class="anchor" aria-label="anchor" href="#automated-alignment-moveplot3"></a>
 </h2>
-<p><code><a href="../reference/moveplot3.html">moveplot3()</a></code> automates the alignment of sequential
+<p><code><a href="../reference/movegpa.html">moveplot3()</a></code> automates the alignment of sequential
 biplots using GPA <span class="citation">(Gower and Dijksterhuis
 2004)</span>, implemented via the <code>GPAbin</code> package <span class="citation">(Nienkemper-Swanepoel et al. 2023)</span>. GPA
 iteratively applies admissible transformations: translation, reflection,
@@ -447,7 +447,7 @@ reference.</p>
 <h4 id="static-faceted-display-1">Static faceted display<a class="anchor" aria-label="anchor" href="#static-faceted-display-1"></a>
 </h4>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot3.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/movegpa.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>                hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>, target <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" alt="" width="672"></p>
 <pre><code><span><span class="co">#&gt; Object of class biplot, based on 960 samples and 9 variables.</span></span>
@@ -483,7 +483,7 @@ manual intervention.</p>
 <h4 id="static-faceted-display-2">Static faceted display<a class="anchor" aria-label="anchor" href="#static-faceted-display-2"></a>
 </h4>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot3.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/movegpa.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>                hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                target <span class="op">=</span> <span class="va">Africa_climate_target</span><span class="op">)</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" alt="" width="672"></p>
@@ -494,7 +494,7 @@ manual intervention.</p>
 exposing the structural differences between 1989 and each decade from
 1950 to 2020. Note that the target biplot itself is not shown in this
 display, it serves only as the alignment reference. To visualise the
-target configuration separately, pass it to <code><a href="../reference/moveplot.html">moveplot()</a></code>
+target configuration separately, pass it to <code><a href="../reference/movefixed.html">moveplot()</a></code>
 directly:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">viz_1989</span> <span class="op">&lt;-</span> <span class="va">Africa_climate_target</span> <span class="op">|&gt;</span></span>
@@ -506,7 +506,7 @@ directly:</p>
 <span><span class="va">bp_1989</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/biplot.html" class="external-link">biplot</a></span><span class="op">(</span><span class="va">viz_1989</span>, scaled <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/PCA.html" class="external-link">PCA</a></span><span class="op">(</span>group.aes <span class="op">=</span> <span class="va">viz_1989</span><span class="op">$</span><span class="va">Region</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">bp_1989</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot.html">moveplot</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Target"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
+<span><span class="va">bp_1989</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/movefixed.html">moveplot</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Target"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>                    hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-17-1.png" class="r-plt" alt="" width="672"></p>
 <pre><code><span><span class="co">#&gt; Object of class biplot, based on 120 samples and 10 variables.</span></span>
@@ -520,11 +520,11 @@ directly:</p>
 </h2>
 <p>Whether a biplot should be constructed for each time slice at all is
 evaluated by applying <code><a href="../reference/evaluation.html">evaluation()</a></code> to
-<code><a href="../reference/moveplot.html">moveplot()</a></code>, see <a href="#is-a-fixed-frame-adequate">Is a
+<code><a href="../reference/movefixed.html">moveplot()</a></code>, see <a href="#is-a-fixed-frame-adequate">Is a
 fixed frame adequate?</a>.</p>
 <p>The <code><a href="../reference/evaluation.html">evaluation()</a></code> function quantifies the magnitude of
 structural change between each time slice and the target configuration
-specified in <code><a href="../reference/moveplot3.html">moveplot3()</a></code>. It provides five measures based
+specified in <code><a href="../reference/movegpa.html">moveplot3()</a></code>. It provides five measures based
 on orthogonal Procrustes analysis, in two categories:</p>
 <p><strong>Fit measures</strong> (values closer to their optimal
 indicate better similarity):</p>
@@ -548,99 +548,24 @@ systematic directional shift.</li>
 </ul>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="va">bp</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/moveplot3.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
+<span>  <span class="fu"><a href="../reference/movegpa.html">moveplot3</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>            hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span>, target <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/evaluation.html">evaluation</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-19-1.png" class="r-plt" alt="" width="672"></p>
+<pre><code><span><span class="co">#&gt; [1] "Evaluation measures can only be applied for moveplot() and moveplot3()."</span></span></code></pre>
 <div class="section level3">
 <h3 id="numerical-measures">Numerical measures<a class="anchor" aria-label="anchor" href="#numerical-measures"></a>
 </h3>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">results</span><span class="op">$</span><span class="va">eval.tab</span></span></code></pre></div>
-<table class="table">
-<caption>Measures of comparison</caption>
-<thead><tr class="header">
-<th align="left"></th>
-<th align="center">PS</th>
-<th align="center">CC</th>
-<th align="center">AMB</th>
-<th align="center">MB</th>
-<th align="center">RMSB</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">Target vs. 1950</td>
-<td align="center">0.132</td>
-<td align="center">0.970</td>
-<td align="center">1.272</td>
-<td align="center">0</td>
-<td align="center">1.851</td>
-</tr>
-<tr class="even">
-<td align="left">Target vs. 1960</td>
-<td align="center">0.098</td>
-<td align="center">0.976</td>
-<td align="center">0.441</td>
-<td align="center">0</td>
-<td align="center">0.578</td>
-</tr>
-<tr class="odd">
-<td align="left">Target vs. 1970</td>
-<td align="center">0.092</td>
-<td align="center">0.980</td>
-<td align="center">0.437</td>
-<td align="center">0</td>
-<td align="center">0.570</td>
-</tr>
-<tr class="even">
-<td align="left">Target vs. 1980</td>
-<td align="center">0.077</td>
-<td align="center">0.981</td>
-<td align="center">0.390</td>
-<td align="center">0</td>
-<td align="center">0.550</td>
-</tr>
-<tr class="odd">
-<td align="left">Target vs. 1990</td>
-<td align="center">0.081</td>
-<td align="center">0.979</td>
-<td align="center">0.418</td>
-<td align="center">0</td>
-<td align="center">0.545</td>
-</tr>
-<tr class="even">
-<td align="left">Target vs. 2000</td>
-<td align="center">0.160</td>
-<td align="center">0.964</td>
-<td align="center">0.526</td>
-<td align="center">0</td>
-<td align="center">0.656</td>
-</tr>
-<tr class="odd">
-<td align="left">Target vs. 2010</td>
-<td align="center">0.080</td>
-<td align="center">0.981</td>
-<td align="center">0.434</td>
-<td align="center">0</td>
-<td align="center">0.543</td>
-</tr>
-<tr class="even">
-<td align="left">Target vs. 2020</td>
-<td align="center">0.069</td>
-<td align="center">0.981</td>
-<td align="center">0.391</td>
-<td align="center">0</td>
-<td align="center">0.507</td>
-</tr>
-</tbody>
-</table>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">results</span><span class="op">$</span><span class="va">eval.tab</span></span>
+<span><span class="co">#&gt; NULL</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="fit-measures-over-time">Fit measures over time<a class="anchor" aria-label="anchor" href="#fit-measures-over-time"></a>
 </h3>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">results</span><span class="op">$</span><span class="va">fit.plot</span></span></code></pre></div>
-<p><img src="moveEZ_files/figure-html/unnamed-chunk-21-1.png" class="r-plt" alt="" width="672"></p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">results</span><span class="op">$</span><span class="va">fit.plot</span></span>
+<span><span class="co">#&gt; NULL</span></span></code></pre></div>
 <p>The biplot for 2000 shows a notably lower CC and higher PS relative
 to other years, indicating a structural departure from the consensus
 configuration that warrants closer investigation.</p>
@@ -648,9 +573,9 @@ configuration that warrants closer investigation.</p>
 <div class="section level3">
 <h3 id="bias-measures-over-time">Bias measures over time<a class="anchor" aria-label="anchor" href="#bias-measures-over-time"></a>
 </h3>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">results</span><span class="op">$</span><span class="va">bias.plot</span></span></code></pre></div>
-<p><img src="moveEZ_files/figure-html/unnamed-chunk-22-1.png" class="r-plt" alt="" width="672"></p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">results</span><span class="op">$</span><span class="va">bias.plot</span></span>
+<span><span class="co">#&gt; NULL</span></span></code></pre></div>
 <p>The initial bias at 1950 is high but decreases and stabilises from
 1960, with an increase in AMB and RMSB at 2000 consistent with the fit
 measures. The MB remains close to zero throughout, confirming no
@@ -668,8 +593,8 @@ faceted display in which each panel shows a single group rather than a
 single time level. This can be useful when group-level patterns are
 difficult to distinguish in the standard faceted display, where all
 groups appear together in each panel.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot.html">moveplot</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Region"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/movefixed.html">moveplot</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Region"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>               hulls <span class="op">=</span> <span class="cn">FALSE</span>, move <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-23-1.png" class="r-plt" alt="" width="672"></p>
 <pre><code><span><span class="co">#&gt; Object of class biplot, based on 960 samples and 9 variables.</span></span>
@@ -697,14 +622,14 @@ animation.</p>
 <div class="section level4">
 <h4 id="custom-colour-palette-and-axis-label-size">Custom colour palette and axis label size<a class="anchor" aria-label="anchor" href="#custom-colour-palette-and-axis-label-size"></a>
 </h4>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp_custom</span> <span class="op">&lt;-</span> <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/biplot.html" class="external-link">biplot</a></span><span class="op">(</span><span class="va">Africa_climate</span>, scaled <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                               group.aes <span class="op">=</span> <span class="va">Africa_climate</span><span class="op">$</span><span class="va">Region</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/PCA.html" class="external-link">PCA</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/samples.html" class="external-link">samples</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fu">RColorBrewer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html" class="external-link">brewer.pal</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"Paired"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/axes.html" class="external-link">axes</a></span><span class="op">(</span>label.cex <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">bp_custom</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot.html">moveplot</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
+<span><span class="va">bp_custom</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/movefixed.html">moveplot</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>                      hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-24-1.png" class="r-plt" alt="" width="672"></p>
 <pre><code><span><span class="co">#&gt; Object of class biplot, based on 960 samples and 9 variables.</span></span>
@@ -714,13 +639,13 @@ animation.</p>
 <div class="section level4">
 <h4 id="custom-plotting-characters-and-opacity">Custom plotting characters and opacity<a class="anchor" aria-label="anchor" href="#custom-plotting-characters-and-opacity"></a>
 </h4>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp_pch</span> <span class="op">&lt;-</span> <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/biplot.html" class="external-link">biplot</a></span><span class="op">(</span><span class="va">Africa_climate</span>, scaled <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                            group.aes <span class="op">=</span> <span class="va">Africa_climate</span><span class="op">$</span><span class="va">Region</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/PCA.html" class="external-link">PCA</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">biplotEZ</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biplotEZ/man/samples.html" class="external-link">samples</a></span><span class="op">(</span>pch <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">22</span>, <span class="fl">21</span>, <span class="fl">24</span>, <span class="fl">23</span><span class="op">)</span>, opacity <span class="op">=</span> <span class="fl">0.4</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">bp_pch</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/moveplot.html">moveplot</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
+<span><span class="va">bp_pch</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/movefixed.html">moveplot</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>                   hulls <span class="op">=</span> <span class="cn">FALSE</span>, move <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="moveEZ_files/figure-html/unnamed-chunk-25-1.png" class="r-plt" alt="" width="672"></p>
 <pre><code><span><span class="co">#&gt; Object of class biplot, based on 960 samples and 9 variables.</span></span>

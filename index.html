@@ -84,19 +84,19 @@
 </tr></thead>
 <tbody>
 <tr>
-<td><code><a href="reference/moveplot.html">moveplot()</a></code></td>
+<td><code><a href="reference/movefixed.html">moveplot()</a></code></td>
 <td>Once, on full dataset</td>
 <td>Fixed</td>
 <td>Not required</td>
 </tr>
 <tr>
-<td><code><a href="reference/moveplot2.html">moveplot2()</a></code></td>
+<td><code><a href="reference/movedynamic.html">moveplot2()</a></code></td>
 <td>Per time slice</td>
 <td>Dynamic</td>
 <td>Sign alignment (automatic, manual override)</td>
 </tr>
 <tr>
-<td><code><a href="reference/moveplot3.html">moveplot3()</a></code></td>
+<td><code><a href="reference/movegpa.html">moveplot3()</a></code></td>
 <td>Per time slice</td>
 <td>Dynamic</td>
 <td>Automated (GPA)</td>
@@ -120,11 +120,11 @@
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Static faceted display</span></span>
-<span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/moveplot.html">moveplot</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
+<span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/movefixed.html">moveplot</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>               hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Animated display</span></span>
-<span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/moveplot.html">moveplot</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
+<span><span class="va">bp</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/movefixed.html">moveplot</a></span><span class="op">(</span>time.var <span class="op">=</span> <span class="st">"Year"</span>, group.var <span class="op">=</span> <span class="st">"Region"</span>,</span>
 <span>               hulls <span class="op">=</span> <span class="cn">TRUE</span>, move <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">

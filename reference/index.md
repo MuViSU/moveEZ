@@ -16,9 +16,12 @@
   : Calibrate axis
 - [`evaluation()`](https://muvisu.github.io/moveEZ/reference/evaluation.md)
   : Measures of comparison for move plot 3
-- [`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md)
-  : Move plot
-- [`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
-  : Move plot 2
-- [`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md)
-  : Move plot 3
+- [`movedynamic()`](https://muvisu.github.io/moveEZ/reference/movedynamic.md)
+  [`moveplot2()`](https://muvisu.github.io/moveEZ/reference/movedynamic.md)
+  : movedynamic
+- [`movefixed()`](https://muvisu.github.io/moveEZ/reference/movefixed.md)
+  [`moveplot()`](https://muvisu.github.io/moveEZ/reference/movefixed.md)
+  : movefixed
+- [`movegpa()`](https://muvisu.github.io/moveEZ/reference/movegpa.md)
+  [`moveplot3()`](https://muvisu.github.io/moveEZ/reference/movegpa.md)
+  : movegpa

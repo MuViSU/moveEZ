@@ -2,21 +2,21 @@
 
 ## moveEZ (development version)
 
-[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
+[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/movedynamic.md)
 gains `auto.align` (default `TRUE`), which aligns the sign of the
 dimensions of every time slice to those of the biplot of all the data,
 so that slices are no longer reflections of one another because of the
 sign indeterminacy of the eigenvectors. This changes the default output
 of
-[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md);
+[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/movedynamic.md);
 use `auto.align = FALSE` for the previous behaviour. `align.time` and
 `reflect` are kept as a manual override and are applied after the
 automatic alignment.
 
-[`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md),
-[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
+[`moveplot()`](https://muvisu.github.io/moveEZ/reference/movefixed.md),
+[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/movedynamic.md)
 and
-[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md)
+[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/movegpa.md)
 now validate `time.var` and `group.var` before plotting. Both must name
 factor columns of the data supplied to
 [`biplot()`](https://rdrr.io/pkg/biplotEZ/man/biplot.html); a numeric
@@ -24,29 +24,29 @@ factor columns of the data supplied to
 informative error explaining how to fix it, instead of failing
 downstream. Levels of `time.var` without observations are dropped, which
 previously caused
-[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
+[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/movedynamic.md)
 and
-[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md)
-to stop.
+[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/movegpa.md) to
+stop.
 
 The handling of missing values is now documented:
 [`biplot()`](https://rdrr.io/pkg/biplotEZ/man/biplot.html) removes rows
 containing `NA` with a warning.
-[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md)
+[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/movegpa.md)
 reports when this is the reason for unequal numbers of observations per
 time level, and stops if `target` contains missing values.
 
-[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
+[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/movedynamic.md)
 and
-[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md)
+[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/movegpa.md)
 now apply the same convex hull guard as
-[`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md):
+[`moveplot()`](https://muvisu.github.io/moveEZ/reference/movefixed.md):
 groups with fewer than three non-collinear observations at a time level
 are displayed as points instead of a hull, rather than being passed to
 [`chull()`](https://rdrr.io/r/grDevices/chull.html) unconditionally. The
 guard is documented in the `hulls` argument of all three functions.
 
-[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
+[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/movedynamic.md)
 now reflects every level supplied in `align.time`. Previously only one
 level was reflected when `align.time` was a vector. `align.time` values
 that are not levels of `time.var`, and a `reflect` that does not match

@@ -71,14 +71,14 @@ evaluation(bp, centring = TRUE)
 ## Details
 
 For `moveplot`, the function evaluates whether the fixed frame of
-[`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md),
+[`moveplot()`](https://muvisu.github.io/moveEZ/reference/movefixed.md),
 where the variable vectors are computed once on all the data, is
 adequate, or whether a biplot should be constructed for each time slice
 with
-[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
+[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/movedynamic.md)
 or
-[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md).
-A PCA (or CVA) biplot is fitted to each level of the time variable and
+[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/movegpa.md). A
+PCA (or CVA) biplot is fitted to each level of the time variable and
 compared with the biplot of all the data, see Details.
 
 For `moveplot`, the following are computed for each level of the time
@@ -95,7 +95,7 @@ variable, in the order of its levels:
   eigenvector is arbitrary, so the dimensions of each time slice are
   reflected to point in the same direction as those of the biplot of all
   the data (as `auto.align` in
-  [`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md))
+  [`moveplot2()`](https://muvisu.github.io/moveEZ/reference/movedynamic.md))
   before the loadings are compared.
 
 A Spearman rank correlation test between the order of the time levels
@@ -103,11 +103,10 @@ and each of these quantities tests for a monotone drift over time. A
 p-value of 0.05 or more fails to reject zero correlation: there is no
 evidence that the structure of the biplot changes over time, the fixed
 frame of
-[`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md) is
-adequate, and
-[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
-or
-[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md)
+[`moveplot()`](https://muvisu.github.io/moveEZ/reference/movefixed.md)
+is adequate, and
+[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/movedynamic.md)
+or [`moveplot3()`](https://muvisu.github.io/moveEZ/reference/movegpa.md)
 are not needed. A p-value below 0.05 indicates a drift, and a biplot
 should be constructed for each time slice. The test only detects
 monotone trends; large but non-monotone changes are visible in the
@@ -122,25 +121,13 @@ bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
 results <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 move = FALSE, target = NULL) |> evaluation()
 
+#> [1] "Evaluation measures can only be applied for moveplot() and moveplot3()."
 results$eval.tab
-#> 
-#> 
-#> Table: Measures of comparison
-#> 
-#> |                |  PS   |  CC   |  AMB  | MB | RMSB  |
-#> |:---------------|:-----:|:-----:|:-----:|:--:|:-----:|
-#> |Target vs. 1950 | 0.132 | 0.970 | 1.272 | 0  | 1.851 |
-#> |Target vs. 1960 | 0.098 | 0.976 | 0.441 | 0  | 0.578 |
-#> |Target vs. 1970 | 0.092 | 0.980 | 0.437 | 0  | 0.570 |
-#> |Target vs. 1980 | 0.077 | 0.981 | 0.390 | 0  | 0.550 |
-#> |Target vs. 1990 | 0.081 | 0.979 | 0.418 | 0  | 0.545 |
-#> |Target vs. 2000 | 0.160 | 0.964 | 0.526 | 0  | 0.656 |
-#> |Target vs. 2010 | 0.080 | 0.981 | 0.434 | 0  | 0.543 |
-#> |Target vs. 2020 | 0.069 | 0.981 | 0.391 | 0  | 0.507 |
+#> NULL
 results$fit.plot
-
+#> NULL
 results$bias.plot
-
+#> NULL
 
 data(Africa_climate)
 data(Africa_climate_target)
@@ -148,25 +135,13 @@ bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
 results <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
 move = FALSE, target = Africa_climate_target) |> evaluation()
 
+#> [1] "Evaluation measures can only be applied for moveplot() and moveplot3()."
 results$eval.tab
-#> 
-#> 
-#> Table: Measures of comparison
-#> 
-#> |                |  PS   |  CC   |  AMB  | MB | RMSB  |
-#> |:---------------|:-----:|:-----:|:-----:|:--:|:-----:|
-#> |Target vs. 1950 | 0.211 | 0.956 | 0.498 | 0  | 0.655 |
-#> |Target vs. 1960 | 0.174 | 0.956 | 1.629 | 0  | 2.337 |
-#> |Target vs. 1970 | 0.205 | 0.952 | 1.647 | 0  | 2.345 |
-#> |Target vs. 1980 | 0.157 | 0.960 | 1.582 | 0  | 2.319 |
-#> |Target vs. 1990 | 0.170 | 0.960 | 1.625 | 0  | 2.332 |
-#> |Target vs. 2000 | 0.247 | 0.945 | 1.698 | 0  | 2.349 |
-#> |Target vs. 2010 | 0.162 | 0.964 | 1.603 | 0  | 2.318 |
-#> |Target vs. 2020 | 0.128 | 0.971 | 1.578 | 0  | 2.283 |
+#> NULL
 results$fit.plot
-
+#> NULL
 results$bias.plot
-
+#> NULL
 
 # Should a biplot be constructed for each time slice?
 bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()

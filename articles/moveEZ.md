@@ -12,16 +12,16 @@ renders transitions between levels as a continuous animation.
 The package provides three animation functions of increasing
 methodological complexity:
 
-- [`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md):
+- [`moveplot()`](https://muvisu.github.io/moveEZ/reference/movefixed.md):
   animates sample positions against fixed variable vectors, computed
   once on the full dataset.
-- [`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md):
+- [`moveplot2()`](https://muvisu.github.io/moveEZ/reference/movedynamic.md):
   animates both sample positions and variable vectors, computed
   separately per time slice, with the axis directions of each time slice
   aligned automatically to those of the full dataset.
-- [`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md):
+- [`moveplot3()`](https://muvisu.github.io/moveEZ/reference/movegpa.md):
   extends
-  [`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
+  [`moveplot2()`](https://muvisu.github.io/moveEZ/reference/movedynamic.md)
   with full alignment via Generalised Procrustes Analysis (GPA) (Gower
   and Dijksterhuis 2004).
 
@@ -88,7 +88,7 @@ bp <- biplot(Africa_climate, scaled = TRUE) |>
 
 ## Fixed Variable Frame: `moveplot()`
 
-[`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md)
+[`moveplot()`](https://muvisu.github.io/moveEZ/reference/movefixed.md)
 computes a single PCA decomposition on the full dataset. The variable
 vectors remain fixed throughout the animation, providing a stable
 reference frame. Only the sample positions, sliced according to the
@@ -141,13 +141,13 @@ over time; regions moving against the vector are decreasing.
 
 ### Is a fixed frame adequate?
 
-[`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md)
+[`moveplot()`](https://muvisu.github.io/moveEZ/reference/movefixed.md)
 assumes that the variance–covariance structure of the data is stable
 over time, so that the variable vectors of the biplot of all the data
 represent every time slice. Applying
 [`evaluation()`](https://muvisu.github.io/moveEZ/reference/evaluation.md)
 to the output of
-[`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md)
+[`moveplot()`](https://muvisu.github.io/moveEZ/reference/movefixed.md)
 checks this assumption. A biplot is fitted to each time slice and
 compared with the biplot of all the data through three quantities:
 
@@ -214,12 +214,13 @@ Spearman drift test {.table}
 
 A p-value of 0.05 or more fails to reject zero correlation, i.e. there
 is no evidence that the structure changes over time and the fixed frame
-of [`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md)
+of
+[`moveplot()`](https://muvisu.github.io/moveEZ/reference/movefixed.md)
 is adequate. A p-value below 0.05 (marked `*`) indicates a drift, and a
 biplot should be constructed for each time slice with
-[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
+[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/movedynamic.md)
 or
-[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md).
+[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/movegpa.md).
 The per-slice values are available in `fixed$structure`.
 
 For `Africa_climate`, the proportion of variance explained by the first
@@ -232,7 +233,7 @@ allowed to change over time.
 
 ## Dynamic Frame: `moveplot2()`
 
-[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
+[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/movedynamic.md)
 computes a separate PCA decomposition for each time slice, allowing both
 sample positions and variable vectors to evolve across levels. This
 provides a more faithful depiction of time-varying variance–covariance
@@ -243,7 +244,7 @@ sign indeterminacy is mathematically inconsequential but visually
 disruptive.
 
 By default (`auto.align = TRUE`),
-[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/moveplot2.md)
+[`moveplot2()`](https://muvisu.github.io/moveEZ/reference/movedynamic.md)
 resolves this automatically. Each of the two dimensions of a time slice
 is compared with the corresponding dimension of the biplot of the full
 dataset, `bp`, and reflected whenever the two point in opposite
@@ -309,12 +310,12 @@ bp |> moveplot2(time.var = "Year", group.var = "Region",
 
 Neither the automatic nor the manual alignment can correct time slices
 whose dimensions swap order or rotate;
-[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md)
+[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/movegpa.md)
 addresses this.
 
 ## Automated Alignment: `moveplot3()`
 
-[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md)
+[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/movegpa.md)
 automates the alignment of sequential biplots using GPA (Gower and
 Dijksterhuis 2004), implemented via the `GPAbin` package
 (Nienkemper-Swanepoel et al. 2023). GPA iteratively applies admissible
@@ -396,7 +397,7 @@ the structural differences between 1989 and each decade from 1950 to
 2020. Note that the target biplot itself is not shown in this display,
 it serves only as the alignment reference. To visualise the target
 configuration separately, pass it to
-[`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md)
+[`moveplot()`](https://muvisu.github.io/moveEZ/reference/movefixed.md)
 directly:
 
 ``` r
@@ -426,14 +427,14 @@ Whether a biplot should be constructed for each time slice at all is
 evaluated by applying
 [`evaluation()`](https://muvisu.github.io/moveEZ/reference/evaluation.md)
 to
-[`moveplot()`](https://muvisu.github.io/moveEZ/reference/moveplot.md),
+[`moveplot()`](https://muvisu.github.io/moveEZ/reference/movefixed.md),
 see [Is a fixed frame adequate?](#is-a-fixed-frame-adequate).
 
 The
 [`evaluation()`](https://muvisu.github.io/moveEZ/reference/evaluation.md)
 function quantifies the magnitude of structural change between each time
 slice and the target configuration specified in
-[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/moveplot3.md).
+[`moveplot3()`](https://muvisu.github.io/moveEZ/reference/movegpa.md).
 It provides five measures based on orthogonal Procrustes analysis, in
 two categories:
 
@@ -460,34 +461,23 @@ results <- bp |>
 
 ![](moveEZ_files/figure-html/unnamed-chunk-19-1.png)
 
+    #> [1] "Evaluation measures can only be applied for moveplot() and moveplot3()."
+
 ### Numerical measures
 
 ``` r
 
 results$eval.tab
+#> NULL
 ```
-
-|                 |  PS   |  CC   |  AMB  | MB  | RMSB  |
-|:----------------|:-----:|:-----:|:-----:|:---:|:-----:|
-| Target vs. 1950 | 0.132 | 0.970 | 1.272 |  0  | 1.851 |
-| Target vs. 1960 | 0.098 | 0.976 | 0.441 |  0  | 0.578 |
-| Target vs. 1970 | 0.092 | 0.980 | 0.437 |  0  | 0.570 |
-| Target vs. 1980 | 0.077 | 0.981 | 0.390 |  0  | 0.550 |
-| Target vs. 1990 | 0.081 | 0.979 | 0.418 |  0  | 0.545 |
-| Target vs. 2000 | 0.160 | 0.964 | 0.526 |  0  | 0.656 |
-| Target vs. 2010 | 0.080 | 0.981 | 0.434 |  0  | 0.543 |
-| Target vs. 2020 | 0.069 | 0.981 | 0.391 |  0  | 0.507 |
-
-Measures of comparison {.table}
 
 ### Fit measures over time
 
 ``` r
 
 results$fit.plot
+#> NULL
 ```
-
-![](moveEZ_files/figure-html/unnamed-chunk-21-1.png)
 
 The biplot for 2000 shows a notably lower CC and higher PS relative to
 other years, indicating a structural departure from the consensus
@@ -498,9 +488,8 @@ configuration that warrants closer investigation.
 ``` r
 
 results$bias.plot
+#> NULL
 ```
-
-![](moveEZ_files/figure-html/unnamed-chunk-22-1.png)
 
 The initial bias at 1950 is high but decreases and stabilises from 1960,
 with an increase in AMB and RMSB at 2000 consistent with the fit
