@@ -22,9 +22,9 @@ biplotEZ::fit.measures
 #' @export
 biplotEZ::CVA
 
-#' Move plot
+#' movefixed
 #'
-#' @description Create animated biplot on samples in a biplot
+#' @description Create animated biplots of the samples, with a fixed frame used to visualise the variables.
 #'
 #' @param bp biplot object from biplotEZ
 #' @param time.var name of the time variable, given as a character string. Must be a factor column of the data
@@ -56,6 +56,7 @@ biplotEZ::CVA
 #' \item{plot}{An animated or a facet of biplots based on the dynamic frame.}
 #' \item{time.var, group.var}{The names of the time and group variables, used by \code{\link{evaluation}()}.}
 #'
+#' @aliases moveplot
 #' @export
 #'
 #' @examples
@@ -63,31 +64,31 @@ biplotEZ::CVA
 #' bp <- biplot(Africa_climate, scaled = TRUE) |> PCA()
 #'
 #' # Convex hulls facet plot
-#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+#' bp |> movefixed(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 #'
 #' # Samples facet plot
-#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
+#' bp |> movefixed(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)
 #'
 #' # Specifying colours with colour palette in biplotEZ
 #' \donttest{
 #' if(interactive()) {
 #' bp <- biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
 #' PCA() |> samples(col = RColorBrewer::brewer.pal(10, "Paired"))
-#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)}}
+#' bp |> movefixed(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)}}
 #'
 #' # Specifying plotting characters for grouping variable in biplotEZ
 #' \donttest{
 #' if(interactive()) {
 #' bp <- biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
 #' PCA() |> samples(pch = c(19, 21, 3))
-#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)}}
+#' bp |> movefixed(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)}}
 #'
 #' # Specifying opacity of plotting characters and size of variable lables
 #' \donttest{
 #' if(interactive()) {
 #' bp <- biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
 #' PCA() |> samples(opacity = 0.4) |> axes(label.cex = 1.2)
-#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)}}
+#' bp |> movefixed(time.var = "Year", group.var = "Region", hulls = FALSE, move = FALSE)}}
 #'
 #' # Specifying colours manually in biplotEZ
 #' \donttest{
@@ -95,27 +96,27 @@ biplotEZ::CVA
 #' bp <- biplot(Africa_climate, scaled = TRUE, group.aes = Africa_climate$Region) |>
 #' PCA() |> samples(col = c("firebrick4", "indianred3", "tomato", "sandybrown",
 #'  "khaki1", "palegreen1", "darkseagreen2", "mediumaquamarine", "deepskyblue4", "mediumpurple4"))
-#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)}}
+#' bp |> movefixed(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)}}
 #'
 #' # Extracting measures of fit of PCA
 #' bp <- biplot(Africa_climate, scaled = TRUE) |> PCA() |> fit.measures()
-#' bp <- bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+#' bp <- bp |> movefixed(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 #' bp$quality
 #' bp$axis.predictivity
 #'
 #' # Convex hulls move plot
 #' \donttest{
 #' if(interactive()) {
-#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}}
+#' bp |> movefixed(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}}
 #'
 #' # Samples move plot with shadows
 #' \donttest{
 #' if(interactive()) {
-#' bp |> moveplot(time.var = "Year", group.var = "Region", hulls = FALSE, move = TRUE, shadow = TRUE)}}
+#' bp |> movefixed(time.var = "Year", group.var = "Region", hulls = FALSE, move = TRUE, shadow = TRUE)}}
 #'
 #' # CVA biplot
 #' bp <- biplot(Africa_climate, scaled = TRUE) |> CVA(class = Africa_climate$Region)
-#' bp <- bp |> moveplot2(group.var = "Region", time.var = "Year", move = FALSE)
+#' bp <- bp |> movedynamic(group.var = "Region", time.var = "Year", move = FALSE)
 #'
 #' # Extracting measures of fit of CVA
 #' bp <- biplot(Africa_climate, scaled = TRUE) |>
@@ -125,7 +126,7 @@ biplotEZ::CVA
 #' bp$axis.predictivity
 #' bp$within.class.axis.predictivity
 #' bp$within.class.sample.predictivity
-moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
+movefixed <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                     scale.var = 5, shadow = FALSE, which = NULL, label.vars = NULL)
 {
 
@@ -316,11 +317,13 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   bp
 }
 
+#' @rdname movefixed
+#' @export
+moveplot <- movefixed
 
-
-#' Move plot 2
+#' movedynamic
 #'
-#' @description Create animated biplot on samples and variables in a biplot
+#' @description The samples are animated as in \code{movefixed} with the addition of a dynamic frame to animate the variables.
 #'
 #' @param bp biplot object from biplotEZ
 #' @param time.var name of the time variable, given as a character string. Must be a factor column of the data
@@ -359,7 +362,7 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 #' the corresponding dimension of \code{bp}, and the automatic alignment may then not give the desired
 #' orientation. \code{align.time} and \code{reflect} override it for the given levels of \code{time.var}.
 #' Time slices whose dimensions swap order or rotate cannot be aligned by reflections, see
-#' \code{\link{moveplot3}()} instead.
+#' \code{\link{movegpa}()} instead.
 #'
 #' Missing values are handled by \code{biplot()}, which removes every row containing an \code{NA}
 #' in any column (including \code{time.var} and \code{group.var}) with a warning. The plot is
@@ -376,27 +379,27 @@ moveplot <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 #' bp <- biplot(Africa_climate, scaled = TRUE) |> PCA()
 #' \donttest{
 #' if(interactive()) {
-#' bp <- bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}}
+#' bp <- bp |> movedynamic(time.var = "Year", group.var = "Region", hulls = TRUE, move = TRUE)}}
 #'
 #' # Extracting measures of fit for PCA
-#' bp <- bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+#' bp <- bp |> movedynamic(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 #'
 #' # Manual alignment instead of auto.align, reflect the x-axis at 1950
 #' \donttest{
 #' bp2 <- biplot(Africa_climate, scaled = TRUE) |> PCA() |>
-#'   moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE,
+#'   movedynamic(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE,
 #'             auto.align = FALSE, align.time = "1950", reflect = "x")}
 #' bp$quality
 #' bp$axis.predictivity
 #'
 #' # Extracting measures of fit for CVA
 #' bp <- biplot(Africa_climate) |> CVA(classes = Africa_climate$Region)
-#' bp <- bp |> moveplot2(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
+#' bp <- bp |> movedynamic(time.var = "Year", group.var = "Region", hulls = TRUE, move = FALSE)
 #' bp$quality
 #' bp$axis.predictivity
 #' bp$within.class.axis.predictivity
 #' bp$within.class.sample.predictivity
-moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
+movedynamic <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
                       scale.var = 5, auto.align = TRUE, align.time = NA, reflect = NA)
 {
 
@@ -721,8 +724,11 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
   bp
 }
 
+#' @rdname movedynamic
+#' @export
+moveplot2 <- movedynamic
 
-#' Move plot 3
+#' movegpa
 #'
 #' @description Create animated biplot on samples and variables in a biplot with a given target
 #'
@@ -747,7 +753,7 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
 #'
 #' Missing values are handled by \code{biplot()}, which removes every row containing an \code{NA}
 #' in any column (including \code{time.var} and \code{group.var}) with a warning. The plot is
-#' constructed from the remaining rows. Since \code{moveplot3()} requires the same number of
+#' constructed from the remaining rows. Since \code{movegpa()} requires the same number of
 #' observations at every level of \code{time.var}, removed rows will usually cause it to stop;
 #' impute the missing values, or remove the affected samples at every time level, beforehand.
 #' The same applies to \code{target}, which may not contain missing values.
@@ -765,15 +771,15 @@ moveplot2 <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
 #' data(Africa_climate)
 #' data(Africa_climate_target)
 #' bp <- biplot(Africa_climate, scaled = TRUE) |> PCA()
-#' bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
+#' bp |> movegpa(time.var = "Year", group.var = "Region", hulls = TRUE,
 #' move = FALSE, target = NULL)
 #' \donttest{
 #' if(interactive()) {
-#' bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
+#' bp |> movegpa(time.var = "Year", group.var = "Region", hulls = TRUE,
 #' move = TRUE, target = NULL)}}
-#' bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
+#' bp |> movegpa(time.var = "Year", group.var = "Region", hulls = TRUE,
 #' move = FALSE, target = Africa_climate_target)
-moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
+movegpa <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
                       scale.var = 5, target = NULL)
 {
   bp <- check_vars_moveEZ(bp, time.var, group.var)
@@ -806,7 +812,7 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   # Stop if levels of time.var are unequal, GPA cannot be performed
   if(dplyr::n_distinct(table(bp$raw.X[[tvi]])) != 1)
     stop("To apply GPA, the number of observations per time.var level should be equal.",
-         if(length(bp$na.action) > 0) paste0("\n biplot() removed ", length(bp$na.action), " row(s) with missing values, see Details in ?moveplot3."))
+         if(length(bp$na.action) > 0) paste0("\n biplot() removed ", length(bp$na.action), " row(s) with missing values, see Details in ?movegpa."))
   if(!is.null(target) && anyNA(target)) stop("target contains missing values. Remove or impute these first.")
 
   # Samples
@@ -1026,9 +1032,13 @@ moveplot3 <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
             axis.title.y = element_blank(),
             legend.position = if (length(group_levels) == 1) "none" else "right")
   }
-  class(bp) <- append(class(bp), "moveplot3")
+  class(bp) <- append(class(bp), "movegpa")
   if(move==TRUE)
     print(gganimate::animate(bp$plot,duration = 15,fps=10)) else
       print(bp$plot)
   bp
 }
+
+#' @rdname movegpa
+#' @export
+moveplot3 <- movegpa
