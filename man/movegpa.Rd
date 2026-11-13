@@ -52,6 +52,7 @@ displayed as points instead.}
 \item{coord_set}{The coordinates of the configurations before applying Generalised Orthogonal Procrustes Analysis.}
 \item{GPA_list}{The coordinates of the configurations after applying Generalised Orthogonal Procrustes Analysis.}
 \item{plot}{An animated or a facet of biplots based on the dynamic frame.}
+\item{target.plot}{PCA biplot of the target data set plotted in a separate figure.}
 }
 \description{
 Create animated biplot on samples and variables in a biplot with a given target

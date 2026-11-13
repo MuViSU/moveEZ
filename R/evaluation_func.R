@@ -1,33 +1,32 @@
-#' Measures of comparison for move plot 3
+#' Evaluation measures
 #'
 #' This function calculates measures of comparison after generalised orthogonal Procrustes Analysis
-#' is performed in \code{moveplot3}. Orthogonal Procrustes Analysis is used to compare a target to a testee configuration.
+#' is performed in \code{movegpa}. Orthogonal Procrustes Analysis is used to compare a target to a testee configuration.
 #' The following measures are calculate: Procrustes Statistic (PS), Congruence Coefficient (CC), Absolute Mean Bias (AMB),
 #' Mean Bias (MB) and Root Mean Squared Bias (RMSB).
 #'
-#' For \code{moveplot}, the function evaluates whether the fixed frame of \code{moveplot()}, where the variable
+#' For \code{movefixed}, the function evaluates whether the fixed frame of \code{movefixed()}, where the variable
 #' vectors are computed once on all the data, is adequate, or whether a biplot should be constructed for each time
-#' slice with \code{moveplot2()} or \code{moveplot3()}. A PCA (or CVA) biplot is fitted to each level of the time
+#' slice with \code{movedynamic()} or \code{movegpa()}. A PCA (or CVA) biplot is fitted to each level of the time
 #' variable and compared with the biplot of all the data, see Details.
 #'
 #'
 #' @param bp biplot object from \code{moveEZ}
-#' @param centring logical argument to apply centring or not (default is \code{TRUE})
 #'
 #' @details
-#' For \code{moveplot}, the following are computed for each level of the time variable, in the order of its levels:
+#' For \code{movefixed}, the following are computed for each level of the time variable, in the order of its levels:
 #' \itemize{
 #'   \item the proportion of variance explained by the first dimension of the biplot of that time slice,
 #'   \item the largest principal angle (in degrees) between the two dimensional subspace of the biplot of that time
 #'     slice and that of the biplot of all the data. Zero means that the time slice spans the same plane,
 #'   \item the loadings of the variables on the first dimension. The sign of each eigenvector is arbitrary, so the
 #'     dimensions of each time slice are reflected to point in the same direction as those of the biplot of all the
-#'     data (as \code{auto.align} in \code{moveplot2()}) before the loadings are compared.
+#'     data (as \code{auto.align} in \code{movedynamic()}) before the loadings are compared.
 #' }
 #' A Spearman rank correlation test between the order of the time levels and each of these quantities tests for a
 #' monotone drift over time. A p-value of 0.05 or more fails to reject zero correlation: there is no evidence that
-#' the structure of the biplot changes over time, the fixed frame of \code{moveplot()} is adequate, and
-#' \code{moveplot2()} or \code{moveplot3()} are not needed. A p-value below 0.05 indicates a drift, and a biplot
+#' the structure of the biplot changes over time, the fixed frame of \code{movefixed()} is adequate, and
+#' \code{movedynamic()} or \code{movegpa()} are not needed. A p-value below 0.05 indicates a drift, and a biplot
 #' should be constructed for each time slice. The test only detects monotone trends; large but non-monotone
 #' changes are visible in the plots.
 #'
@@ -35,12 +34,12 @@
 #' \item{eval.tab}{Returns a table of the measures of comparison for each level of the time variable compared to the target.}
 #' \item{fit.plot}{Returns a line plot with the fit measures that are bounded between zero and one: PS and CC. A small PS value and large CC value indicate good fit.}
 #' \item{bias.plot}{Returns a line plot with bias measures that are unbounded: AMB, MB and RMSB. Small values indicate low bias.}
-#' \item{structure}{For \code{moveplot}, a data frame with the proportion of variance of the first dimension, the
+#' \item{structure}{For \code{movefixed}, a data frame with the proportion of variance of the first dimension, the
 #'   principal angle and the loadings on the first dimension for each level of the time variable.}
-#' \item{var.plot}{For \code{moveplot}, a line plot of the proportion of variance of the first dimension over time.}
-#' \item{angle.plot}{For \code{moveplot}, a line plot of the principal angle with the biplot of all the data over time.}
-#' \item{loadings.plot}{For \code{moveplot}, a line plot of the loadings of the variables on the first dimension over time.}
-#' \item{drift.tab}{For \code{moveplot}, a table of the Spearman rank correlations (rho) of each quantity with time,
+#' \item{var.plot}{For \code{movefixed}, a line plot of the proportion of variance of the first dimension over time.}
+#' \item{angle.plot}{For \code{movefixed}, a line plot of the principal angle with the biplot of all the data over time.}
+#' \item{loadings.plot}{For \code{movefixed}, a line plot of the loadings of the variables on the first dimension over time.}
+#' \item{drift.tab}{For \code{movefixed}, a table of the Spearman rank correlations (rho) of each quantity with time,
 #'   their p-values and whether they are significant at the 5% level (*).}
 #'
 #' @export
@@ -49,7 +48,7 @@
 #' data(Africa_climate)
 #' data(Africa_climate_target)
 #' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
-#' results <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
+#' results <- bp |> movegpa(time.var = "Year", group.var = "Region", hulls = TRUE,
 #' move = FALSE, target = NULL) |> evaluation()
 #' results$eval.tab
 #' results$fit.plot
@@ -58,7 +57,7 @@
 #' data(Africa_climate)
 #' data(Africa_climate_target)
 #' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
-#' results <- bp |> moveplot3(time.var = "Year", group.var = "Region", hulls = TRUE,
+#' results <- bp |> movegpa(time.var = "Year", group.var = "Region", hulls = TRUE,
 #' move = FALSE, target = Africa_climate_target) |> evaluation()
 #' results$eval.tab
 #' results$fit.plot
@@ -66,20 +65,21 @@
 #'
 #' # Should a biplot be constructed for each time slice?
 #' bp <- biplotEZ::biplot(Africa_climate, scaled = TRUE) |> biplotEZ::PCA()
-#' results <- bp |> moveplot(time.var = "Year", group.var = "Region", hulls = TRUE,
+#' results <- bp |> movefixed(time.var = "Year", group.var = "Region", hulls = TRUE,
 #' move = FALSE) |> evaluation()
 #' results$drift.tab
 #' results$var.plot
 #' results$angle.plot
 #' results$loadings.plot
 #'
-evaluation <- function(bp, centring = TRUE)
+evaluation <- function(bp)
 {
-  if (inherits(bp, "moveplot3")){
+  if (inherits(bp, "movegpa")){
     eval.tab <- vector("list", length(bp$coord_set))
 
     target <- bp$G.target
 
+    OPA_res <- vector("list", length(bp$coord_set))
     for (i in 1:length(bp$coord_set))
     {
 
@@ -92,30 +92,20 @@ evaluation <- function(bp, centring = TRUE)
       p.X <- ncol(testee)
       testee <- as.matrix(testee)
 
-      if(!centring)
-      {
-        testee <- testee
-        target <- target
-      }
-      else
-      {
-        testee <- scale(testee, TRUE, FALSE)
-        #centre=T, scale=F results are similar to Cox and Cox, Gower and
-        #Dijkersthuis, Borg and Groenen
-        target <- scale(target, TRUE, FALSE)
-      }
-
-      #transformations
+      #Orthogonal Procrustes Analysis (OPA)
       C.mat <- t(target)%*%testee
       svd.C <- svd(C.mat)
       A.mat <- svd.C[[3]]%*%t(svd.C[[2]])
       s.fact <- sum(diag(t(target)%*%testee%*%A.mat))/sum(diag(t(testee)%*%testee))
-      #Gower and Dijksterhuis P32
+
+      #translation should be close to zero, since PCA solutions are centred
       b.fact <- as.vector(1/n.Y * t(target - s.fact * testee %*% A.mat)%*%rep(1,n.Y))
+
       X.new <- b.fact + s.fact*testee%*%A.mat
+
       Res.SS <- sum(diag(t(((s.fact*testee%*%A.mat)-target))%*%((s.fact*testee%*%A.mat)-target)))
-      Tot.SS <- s.fact^2*sum(diag(t(testee)%*%testee))+sum(diag(t(target)%*%target))
-      Fit.SS <- 2*s.fact*sum(diag(svd.C[[1]]))
+
+      #OPA_res[[i]] <- list(A.mat, s.fact, b.fact)
 
       PS <- Res.SS/sum(diag(t(target)%*%target))
       CC <- sum(stats::dist(testee) * stats::dist(target))/(sqrt(sum(stats::dist(testee)^2)) * sqrt(sum(stats::dist(target)^2)))
@@ -164,9 +154,10 @@ evaluation <- function(bp, centring = TRUE)
     bp$bias.plot <- bias.plot
     bp$fit.plot <- fit.plot
     bp$eval.tab <- eval.tab
+    #bp$OPA_res <- OPA_res
     bp
 
-  } else if (inherits(bp, "moveplot")) {
+  } else if (inherits(bp, "movefixed")) {
 
     time.var <- bp$time.var
     tvi <- base::which(colnames(bp$raw.X) == time.var)
@@ -262,7 +253,7 @@ evaluation <- function(bp, centring = TRUE)
     bp
 
   } else
-    print("Evaluation measures can only be applied for moveplot() and moveplot3().")
+    print("Evaluation measures can only be applied for movefixed() and movegpa().")
 
   bp
 

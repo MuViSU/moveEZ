@@ -309,7 +309,7 @@ movefixed <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   # time.var and group.var are kept for evaluation()
   bp$time.var <- time.var
   bp$group.var <- group.var
-  if(!inherits(bp, "moveplot")) class(bp) <- append(class(bp), "moveplot")
+  if(!inherits(bp, "movefixed")) class(bp) <- append(class(bp), "movefixed")
 
   if(move==TRUE)
     print(gganimate::animate(bp$plot, duration = 15, fps = 10, end_pause = 20)) else
@@ -403,7 +403,7 @@ movedynamic <- function(bp, time.var, group.var, move = TRUE,hulls = TRUE,
                       scale.var = 5, auto.align = TRUE, align.time = NA, reflect = NA)
 {
 
-  bp <- check_vars_moveEZ(bp, time.var, group.var)
+  bp <- check_vars_moveEZ(bp, time.var, group.var, target = NULL)
 
   if(!is.null(group.var)) bp$group.aes <- bp$raw.X[,which(colnames(bp$raw.X) == group.var)] else
     bp$group.aes = NULL
@@ -764,6 +764,7 @@ moveplot2 <- movedynamic
 #' \item{coord_set}{The coordinates of the configurations before applying Generalised Orthogonal Procrustes Analysis.}
 #' \item{GPA_list}{The coordinates of the configurations after applying Generalised Orthogonal Procrustes Analysis.}
 #' \item{plot}{An animated or a facet of biplots based on the dynamic frame.}
+#' \item{target.plot}{PCA biplot of the target data set plotted in a separate figure.}
 #'
 #' @export
 #'
@@ -789,6 +790,7 @@ movegpa <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 
   tvi <- which(colnames(bp$raw.X) == time.var)
   gvi <- which(colnames(bp$raw.X) == group.var)
+  tviT <- which(colnames(target) == time.var)
   gviT <- which(colnames(target) == group.var)
 
   iterations <- nlevels(bp$raw.X[[tvi]])
@@ -813,7 +815,7 @@ movegpa <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   if(dplyr::n_distinct(table(bp$raw.X[[tvi]])) != 1)
     stop("To apply GPA, the number of observations per time.var level should be equal.",
          if(length(bp$na.action) > 0) paste0("\n biplot() removed ", length(bp$na.action), " row(s) with missing values, see Details in ?movegpa."))
-  if(!is.null(target) && anyNA(target)) stop("target contains missing values. Remove or impute these first.")
+  if(!is.null(target) && anyNA(target)) stop("Target contains missing values. Remove or impute these first.")
 
   # Samples
   if(is.null(bp$samples$pch)) samp_pch = c(rep(19,bp$n)) else {
@@ -854,6 +856,7 @@ movegpa <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
 
   # GPA preparation
 
+  bp$target <- target #appending original target
   tviGZ <- which(colnames(Z_tbl) == time.var)
   tviGVr <- which(colnames(Vr_tbl) == time.var)
 
@@ -874,10 +877,21 @@ movegpa <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   if(!is.null(target))
   {
     temp <- biplotEZ::biplot(target,scaled=bp$scaled) |> biplotEZ::PCA(group.aes = target[[gviT]])
+
     G.target <- rbind(temp$Z, temp$Vr)
-    GPA.out <- GPAbin::GPA(coord_set,G.target=G.target)
+
+    # check that target is the same length as single time slice,
+    # since rbind(Z,Vr), both dimensions included
+    if(!all(vapply(coord_set, nrow, integer(1))==nrow(G.target)))
+      stop("movegpa() can only be performed when the dimensions (rows and columns) of the target matches the dimensions per time slice.")
+
+    GPA.out <- GPAbin::GPA(coord_set, G.target=G.target)
+
+    #printing PCA biplot of target
+    bp$target.plot <- biplotEZ::biplot(target,scaled=bp$scaled) |> biplotEZ::PCA() |>
+      movefixed(time.var = colnames(target)[tviT], group.var = colnames(target)[gviT], move = FALSE, hulls = TRUE)
   } else {
-    GPA.out <- GPAbin::GPA(coord_set,G.target=NULL)
+    GPA.out <- GPAbin::GPA(coord_set, G.target=NULL)
   }
 
   G.target <- GPA.out[[4]] # centroid configuration
@@ -889,6 +903,9 @@ movegpa <- function(bp, time.var, group.var, move = TRUE, hulls = TRUE,
   bp$G.target <- G.target
   bp$coord_set <- coord_set
   bp$GPA_list <- GPA_list
+  #added to test JNS
+  bp$GPA_scal <- s.list
+  bp$GPA_rot <- Q.list
 
   Z_GPA_list <- vector("list", iterations)
   Vr_GPA_list <- vector("list", iterations)
